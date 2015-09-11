@@ -1,0 +1,1306 @@
+module SimpleServer {
+  // @JAUS(id="urn:jaus:exp:dds:SimpleServer", version="1.0")
+  // Simple Server used for unit testing during JDDS development and testing
+  module JAUSDDS {
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageRecordFixedField {
+      // @JAUS(query,id=B001)
+      // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleRecordFixedField {
+          typedef struct SimpleRecordFixedField {
+            long SimpleFixedField; // @JAUS(units=one,index=1)
+          } SimpleRecordFixedField_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleRecordFixedField::SimpleRecordFixedField_ SimpleBodyRecordFixedField;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageRecordFixedField
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageRecord {
+      // @JAUS(query,id=B00C)
+      // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleRecord {
+          typedef struct SimpleRecord {
+            octet presence_vector;
+            string<2> FixedLengthStringField; // @JAUS(optional,index=1)
+            string VariableLengthStringField; // @JAUS(optional,index=2,length=<0,100>)
+            octet FixedField1; // @JAUS(units=one,optional,index=3)
+            short FixedField2; // @JAUS(units=one,index=4)
+            long FixedField4; // @JAUS(units=one,index=5)
+            long long FixedField8; // @JAUS(units=one,optional,index=6)
+          } SimpleRecord_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleRecord::SimpleRecord_ SimpleBodyRecord;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageRecord
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageList {
+      // @JAUS(query,id=B00E)
+      // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleList  {
+          module SimpleRecordFixedLengthString {
+            typedef struct SimpleRecordFixedLengthString {
+              string<20> SimpleFixedLengthString; // @JAUS(index=1)
+            } SimpleRecordFixedLengthString_;
+          };
+          typedef sequence<SimpleRecordFixedLengthString::SimpleRecordFixedLengthString_,10> SimpleList_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleList::SimpleList_ SimpleBodyList;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageList
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageListListRecordFixedLengthString {
+      // @JAUS(query,id=B00F)
+      // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleListListRecordFixedLengthString  {
+          module SimpleListRecordFixedLengthString  {
+            module SimpleRecordFixedLengthString {
+              typedef struct SimpleRecordFixedLengthString {
+                string<20> SimpleFixedLengthString; // @JAUS(index=1)
+              } SimpleRecordFixedLengthString_;
+            };
+            typedef sequence<SimpleRecordFixedLengthString::SimpleRecordFixedLengthString_,10> SimpleListRecordFixedLengthString_;
+          };
+          typedef sequence<SimpleListRecordFixedLengthString::SimpleListRecordFixedLengthString_,50> SimpleListListRecordFixedLengthString_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleListListRecordFixedLengthString::SimpleListListRecordFixedLengthString_ SimpleBodyListListRecordFixedLengthString;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageListListRecordFixedLengthString
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageSequence {
+      // @JAUS(query,id=B010)
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleSequence {
+          module SimpleListRecordFixedLengthString  {
+            module SimpleRecordFixedLengthString {
+              typedef struct SimpleRecordFixedLengthString {
+                string<20> SimpleFixedLengthString; // @JAUS(index=1)
+              } SimpleRecordFixedLengthString_;
+            };
+            typedef sequence<SimpleRecordFixedLengthString::SimpleRecordFixedLengthString_,10> SimpleListRecordFixedLengthString_;
+          };
+          module SimpleRecordArrayFixedLengthString {
+            typedef struct SimpleRecordArrayFixedLengthString {
+                string<20> SimpleFixedLengthString[8];
+            // @JAUS(index=1)
+            } SimpleRecordArrayFixedLengthString_;
+          };
+          module SimpleRecordVariableLengthString {
+            typedef struct SimpleRecordVariableLengthString {
+              string SimpleVariableLengthString; // @JAUS(index=1,length=<0,100>)
+            } SimpleRecordVariableLengthString_;
+          };
+          module SimpleRecordFixedField {
+            typedef struct SimpleRecordFixedField {
+              long SimpleFixedField; // @JAUS(units=one,index=1)
+            } SimpleRecordFixedField_;
+          };
+          typedef struct SimpleSequence {
+            SimpleListRecordFixedLengthString::SimpleListRecordFixedLengthString_ SimpleListRecordFixedLengthString_; // @JAUS(index=1)
+            SimpleRecordArrayFixedLengthString::SimpleRecordArrayFixedLengthString_ SimpleRecordArrayFixedLengthString_; // @JAUS(index=2)
+            SimpleRecordVariableLengthString::SimpleRecordVariableLengthString_ SimpleRecordVariableLengthString_; // @JAUS(index=3)
+            SimpleRecordFixedField::SimpleRecordFixedField_ SimpleRecordFixedField_; // @JAUS(index=4)
+          } SimpleSequence_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleSequence::SimpleSequence_ SimpleBodySequence;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageSequence
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageVariant {
+      // @JAUS(query,id=B011)
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleVariant {
+          module SimpleListRecordFixedLengthString  {
+            module SimpleRecordFixedLengthString {
+              typedef struct SimpleRecordFixedLengthString {
+                string<20> SimpleFixedLengthString; // @JAUS(index=1)
+              } SimpleRecordFixedLengthString_;
+            };
+            typedef sequence<SimpleRecordFixedLengthString::SimpleRecordFixedLengthString_,10> SimpleListRecordFixedLengthString_;
+          };
+          module SimpleRecordArrayFixedLengthString {
+            typedef struct SimpleRecordArrayFixedLengthString {
+                string<20> SimpleFixedLengthString[8];
+            // @JAUS(index=1)
+            } SimpleRecordArrayFixedLengthString_;
+          };
+          module SimpleRecordVariableLengthString {
+            typedef struct SimpleRecordVariableLengthString {
+              string SimpleVariableLengthString; // @JAUS(index=1,length=<0,100>)
+            } SimpleRecordVariableLengthString_;
+          };
+          module SimpleRecordFixedField {
+            typedef struct SimpleRecordFixedField {
+              long SimpleFixedField; // @JAUS(units=one,index=1)
+            } SimpleRecordFixedField_;
+          };
+          typedef union SimpleVariant switch (octet) {
+            // @JAUS(min_tag=0,max_tag=3
+            case 0:
+              SimpleListRecordFixedLengthString::SimpleListRecordFixedLengthString_ SimpleListRecordFixedLengthString_;
+            case 1:
+              SimpleRecordArrayFixedLengthString::SimpleRecordArrayFixedLengthString_ SimpleRecordArrayFixedLengthString_;
+            case 2:
+              SimpleRecordVariableLengthString::SimpleRecordVariableLengthString_ SimpleRecordVariableLengthString_;
+            case 3:
+              SimpleRecordFixedField::SimpleRecordFixedField_ SimpleRecordFixedField_;
+          } SimpleVariant_;
+        };
+
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleVariant::SimpleVariant_ SimpleBodyVariant;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageVariant
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageRecordFixedLengthString {
+      // @JAUS(query,id=B002)
+      // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleRecordFixedLengthString {
+          typedef struct SimpleRecordFixedLengthString {
+            string<20> SimpleFixedLengthString; // @JAUS(index=1)
+          } SimpleRecordFixedLengthString_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleRecordFixedLengthString::SimpleRecordFixedLengthString_ SimpleBodyRecordFixedLengthString;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageRecordFixedLengthString
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageRecordVariableLengthString {
+      // @JAUS(query,id=B003)
+      // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleRecordVariableLengthString {
+          typedef struct SimpleRecordVariableLengthString {
+            string SimpleVariableLengthString; // @JAUS(index=1,length=<0,100>)
+          } SimpleRecordVariableLengthString_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleRecordVariableLengthString::SimpleRecordVariableLengthString_ SimpleBodyRecordVariableLengthString;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageRecordVariableLengthString
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageRecordVariableField {
+      // @JAUS(query,id=B004)
+      // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleRecordVariableField {
+          typedef struct SimpleRecordVariableField {
+            union SimpleVariableField switch(unsigned short) {
+              case 0:
+                short degree_Celsius;
+              case 1:
+                unsigned short kelvin;
+            } SimpleVariableField;
+          } SimpleRecordVariableField_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleRecordVariableField::SimpleRecordVariableField_ SimpleBodyRecordVariableField;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageRecordVariableField
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageRecordBitField {
+      // @JAUS(query,id=B005)
+      // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleRecordBitField {
+          typedef struct SimpleRecordBitField {
+            unsigned long SimpleBitField; // @JAUS(bitfield,index=1)
+              // SubField0_3[0:3], EDeviceError = 2, one
+              // SubField4_15[4:15], [0,4095], one
+              // SubField16_31[16:31], [0,65535], one
+          } SimpleRecordBitField_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleRecordBitField::SimpleRecordBitField_ SimpleBodyRecordBitField;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageRecordBitField
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageRecordVariableLengthField {
+      // @JAUS(query,id=B006)
+      // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleRecordVariableLengthField {
+          typedef struct SimpleRecordVariableLengthField {
+            sequence<octet,1000> SimpleVariableLengthField; // @JAUS(format=RAW,index=1,length=<0,1000>)
+          } SimpleRecordVariableLengthField_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleRecordVariableLengthField::SimpleRecordVariableLengthField_ SimpleBodyRecordVariableLengthField;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageRecordVariableLengthField
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageRecordVariableFormatField {
+      // @JAUS(query,id=B007)
+      // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleRecordVariableFormatField {
+          typedef struct SimpleRecordVariableFormatField {
+            enum SimpleVariableFormatField_format {
+              BMP = 2,
+              JPEG = 1,
+              RAW = 0,
+            };
+            struct SimpleVariableFormatField {
+              SimpleVariableFormatField_format format;
+              sequence<octet,100000> SimpleVariableFormatField_data;
+            } SimpleVariableFormatField_; // @JAUS(index=1)
+              // 
+          } SimpleRecordVariableFormatField_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleRecordVariableFormatField::SimpleRecordVariableFormatField_ SimpleBodyRecordVariableFormatField;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageRecordVariableFormatField
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageRecordArray {
+      // @JAUS(query,id=B008)
+      // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleRecordArray {
+          typedef struct SimpleRecordArray {
+              long SimpleFixedField[4][8]; // @JAUS(units=one)
+          // @JAUS(index=1)
+              union SimpleVariableField switch(unsigned short) {
+                case 0:
+                  short degree_Celsius;
+                case 1:
+                  unsigned short kelvin;
+              } SimpleVariableField;
+          // @JAUS(index=2)
+              string<20> SimpleFixedLengthString[8];
+          // @JAUS(index=3)
+              string SimpleVariableLengthString[16]; // @JAUS(length=<0,100>)
+          // @JAUS(index=4)
+              unsigned long SimpleBitField; // @JAUS(bitfield)
+                // SubField0_3[0:3], EDeviceError = 2, one
+                // SubField4_15[4:15], [0,4095], one
+                // SubField16_31[16:31], [0,65535], one
+          // @JAUS(index=5)
+              sequence<octet,1000> SimpleVariableLengthField[4]; // @JAUS(format=RAW,length=<0,1000>)
+          // @JAUS(index=6)
+              enum SimpleVariableFormatField_format {
+                BMP = 2,
+                JPEG = 1,
+                RAW = 0,
+              };
+              struct SimpleVariableFormatField {
+                SimpleVariableFormatField_format format;
+                sequence<octet,100000> SimpleVariableFormatField_data;
+              } SimpleVariableFormatField_[8];
+          // @JAUS(index=7)
+          } SimpleRecordArray_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleRecordArray::SimpleRecordArray_ SimpleBodyRecordArray;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageRecordArray
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageRecordArrayFixedField {
+      // @JAUS(query,id=B009)
+      // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleRecordArrayFixedField {
+          typedef struct SimpleRecordArrayFixedField {
+              long SimpleFixedField[4]; // @JAUS(units=one)
+          // @JAUS(index=1)
+          } SimpleRecordArrayFixedField_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleRecordArrayFixedField::SimpleRecordArrayFixedField_ SimpleBodyRecordArrayFixedField;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageRecordArrayFixedField
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageRecordArrayFixedLengthString {
+      // @JAUS(query,id=B00A)
+      // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleRecordArrayFixedLengthString {
+          typedef struct SimpleRecordArrayFixedLengthString {
+              string<20> SimpleFixedLengthString[8];
+          // @JAUS(index=1)
+          } SimpleRecordArrayFixedLengthString_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleRecordArrayFixedLengthString::SimpleRecordArrayFixedLengthString_ SimpleBodyRecordArrayFixedLengthString;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageRecordArrayFixedLengthString
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageRecordArrayVariableLengthString {
+      // @JAUS(query,id=B00B)
+      // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleRecordArrayVariableLengthString {
+          typedef struct SimpleRecordArrayVariableLengthString {
+              string SimpleVariableLengthString[16]; // @JAUS(length=<0,100>)
+          // @JAUS(index=1)
+          } SimpleRecordArrayVariableLengthString_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleRecordArrayVariableLengthString::SimpleRecordArrayVariableLengthString_ SimpleBodyRecordArrayVariableLengthString;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageRecordArrayVariableLengthString
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageRecordFixedField {
+      // @JAUS(inform,id=B001)
+      // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleRecordFixedField {
+          typedef struct SimpleRecordFixedField {
+            long SimpleFixedField; // @JAUS(units=one,index=1)
+          } SimpleRecordFixedField_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleRecordFixedField::SimpleRecordFixedField_ SimpleBodyRecordFixedField;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageRecordFixedField
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageRecord {
+      // @JAUS(inform,id=B00C)
+      // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleRecord {
+          typedef struct SimpleRecord {
+            octet presence_vector;
+            string<2> FixedLengthStringField; // @JAUS(optional,index=1)
+            string VariableLengthStringField; // @JAUS(optional,index=2,length=<0,100>)
+            octet FixedField1; // @JAUS(units=one,optional,index=3)
+            short FixedField2; // @JAUS(units=one,index=4)
+            long FixedField4; // @JAUS(units=one,index=5)
+            long long FixedField8; // @JAUS(units=one,optional,index=6)
+          } SimpleRecord_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleRecord::SimpleRecord_ SimpleBodyRecord;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageRecord
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageList {
+      // @JAUS(inform,id=B00E)
+      // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleList  {
+          module SimpleRecordFixedLengthString {
+            typedef struct SimpleRecordFixedLengthString {
+              string<20> SimpleFixedLengthString; // @JAUS(index=1)
+            } SimpleRecordFixedLengthString_;
+          };
+          typedef sequence<SimpleRecordFixedLengthString::SimpleRecordFixedLengthString_,10> SimpleList_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleList::SimpleList_ SimpleBodyList;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageList
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageListListRecordFixedLengthString {
+      // @JAUS(inform,id=B00F)
+      // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleListListRecordFixedLengthString  {
+          module SimpleListRecordFixedLengthString  {
+            module SimpleRecordFixedLengthString {
+              typedef struct SimpleRecordFixedLengthString {
+                string<20> SimpleFixedLengthString; // @JAUS(index=1)
+              } SimpleRecordFixedLengthString_;
+            };
+            typedef sequence<SimpleRecordFixedLengthString::SimpleRecordFixedLengthString_,10> SimpleListRecordFixedLengthString_;
+          };
+          typedef sequence<SimpleListRecordFixedLengthString::SimpleListRecordFixedLengthString_,50> SimpleListListRecordFixedLengthString_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleListListRecordFixedLengthString::SimpleListListRecordFixedLengthString_ SimpleBodyListListRecordFixedLengthString;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageListListRecordFixedLengthString
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageSequence {
+      // @JAUS(inform,id=B010)
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleSequence {
+          module SimpleListRecordFixedLengthString  {
+            module SimpleRecordFixedLengthString {
+              typedef struct SimpleRecordFixedLengthString {
+                string<20> SimpleFixedLengthString; // @JAUS(index=1)
+              } SimpleRecordFixedLengthString_;
+            };
+            typedef sequence<SimpleRecordFixedLengthString::SimpleRecordFixedLengthString_,10> SimpleListRecordFixedLengthString_;
+          };
+          module SimpleRecordArrayFixedLengthString {
+            typedef struct SimpleRecordArrayFixedLengthString {
+                string<20> SimpleFixedLengthString[8];
+            // @JAUS(index=1)
+            } SimpleRecordArrayFixedLengthString_;
+          };
+          module SimpleRecordVariableLengthString {
+            typedef struct SimpleRecordVariableLengthString {
+              string SimpleVariableLengthString; // @JAUS(index=1,length=<0,100>)
+            } SimpleRecordVariableLengthString_;
+          };
+          module SimpleRecordFixedField {
+            typedef struct SimpleRecordFixedField {
+              long SimpleFixedField; // @JAUS(units=one,index=1)
+            } SimpleRecordFixedField_;
+          };
+          typedef struct SimpleSequence {
+            SimpleListRecordFixedLengthString::SimpleListRecordFixedLengthString_ SimpleListRecordFixedLengthString_; // @JAUS(index=1)
+            SimpleRecordArrayFixedLengthString::SimpleRecordArrayFixedLengthString_ SimpleRecordArrayFixedLengthString_; // @JAUS(index=2)
+            SimpleRecordVariableLengthString::SimpleRecordVariableLengthString_ SimpleRecordVariableLengthString_; // @JAUS(index=3)
+            SimpleRecordFixedField::SimpleRecordFixedField_ SimpleRecordFixedField_; // @JAUS(index=4)
+          } SimpleSequence_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleSequence::SimpleSequence_ SimpleBodySequence;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageSequence
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageVariant {
+      // @JAUS(inform,id=B011)
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleVariant {
+          module SimpleListRecordFixedLengthString  {
+            module SimpleRecordFixedLengthString {
+              typedef struct SimpleRecordFixedLengthString {
+                string<20> SimpleFixedLengthString; // @JAUS(index=1)
+              } SimpleRecordFixedLengthString_;
+            };
+            typedef sequence<SimpleRecordFixedLengthString::SimpleRecordFixedLengthString_,10> SimpleListRecordFixedLengthString_;
+          };
+          module SimpleRecordArrayFixedLengthString {
+            typedef struct SimpleRecordArrayFixedLengthString {
+                string<20> SimpleFixedLengthString[8];
+            // @JAUS(index=1)
+            } SimpleRecordArrayFixedLengthString_;
+          };
+          module SimpleRecordVariableLengthString {
+            typedef struct SimpleRecordVariableLengthString {
+              string SimpleVariableLengthString; // @JAUS(index=1,length=<0,100>)
+            } SimpleRecordVariableLengthString_;
+          };
+          module SimpleRecordFixedField {
+            typedef struct SimpleRecordFixedField {
+              long SimpleFixedField; // @JAUS(units=one,index=1)
+            } SimpleRecordFixedField_;
+          };
+          typedef union SimpleVariant switch (octet) {
+            // @JAUS(min_tag=0,max_tag=3
+            case 0:
+              SimpleListRecordFixedLengthString::SimpleListRecordFixedLengthString_ SimpleListRecordFixedLengthString_;
+            case 1:
+              SimpleRecordArrayFixedLengthString::SimpleRecordArrayFixedLengthString_ SimpleRecordArrayFixedLengthString_;
+            case 2:
+              SimpleRecordVariableLengthString::SimpleRecordVariableLengthString_ SimpleRecordVariableLengthString_;
+            case 3:
+              SimpleRecordFixedField::SimpleRecordFixedField_ SimpleRecordFixedField_;
+          } SimpleVariant_;
+        };
+
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleVariant::SimpleVariant_ SimpleBodyVariant;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageVariant
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageRecordFixedLengthString {
+      // @JAUS(inform,id=B002)
+      // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleRecordFixedLengthString {
+          typedef struct SimpleRecordFixedLengthString {
+            string<20> SimpleFixedLengthString; // @JAUS(index=1)
+          } SimpleRecordFixedLengthString_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleRecordFixedLengthString::SimpleRecordFixedLengthString_ SimpleBodyRecordFixedLengthString;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageRecordFixedLengthString
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageRecordVariableLengthString {
+      // @JAUS(inform,id=B003)
+      // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleRecordVariableLengthString {
+          typedef struct SimpleRecordVariableLengthString {
+            string SimpleVariableLengthString; // @JAUS(index=1,length=<0,100>)
+          } SimpleRecordVariableLengthString_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleRecordVariableLengthString::SimpleRecordVariableLengthString_ SimpleBodyRecordVariableLengthString;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageRecordVariableLengthString
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageRecordVariableField {
+      // @JAUS(inform,id=B004)
+      // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleRecordVariableField {
+          typedef struct SimpleRecordVariableField {
+            union SimpleVariableField switch(unsigned short) {
+              case 0:
+                short degree_Celsius;
+              case 1:
+                unsigned short kelvin;
+            } SimpleVariableField;
+          } SimpleRecordVariableField_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleRecordVariableField::SimpleRecordVariableField_ SimpleBodyRecordVariableField;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageRecordVariableField
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageRecordBitField {
+      // @JAUS(inform,id=B005)
+      // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleRecordBitField {
+          typedef struct SimpleRecordBitField {
+            unsigned long SimpleBitField; // @JAUS(bitfield,index=1)
+              // SubField0_3[0:3], EDeviceError = 2, one
+              // SubField4_15[4:15], [0,4095], one
+              // SubField16_31[16:31], [0,65535], one
+          } SimpleRecordBitField_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleRecordBitField::SimpleRecordBitField_ SimpleBodyRecordBitField;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageRecordBitField
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageRecordVariableLengthField {
+      // @JAUS(inform,id=B006)
+      // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleRecordVariableLengthField {
+          typedef struct SimpleRecordVariableLengthField {
+            sequence<octet,1000> SimpleVariableLengthField; // @JAUS(format=RAW,index=1,length=<0,1000>)
+          } SimpleRecordVariableLengthField_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleRecordVariableLengthField::SimpleRecordVariableLengthField_ SimpleBodyRecordVariableLengthField;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageRecordVariableLengthField
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageRecordVariableFormatField {
+      // @JAUS(inform,id=B007)
+      // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleRecordVariableFormatField {
+          typedef struct SimpleRecordVariableFormatField {
+            enum SimpleVariableFormatField_format {
+              BMP = 2,
+              JPEG = 1,
+              RAW = 0,
+            };
+            struct SimpleVariableFormatField {
+              SimpleVariableFormatField_format format;
+              sequence<octet,100000> SimpleVariableFormatField_data;
+            } SimpleVariableFormatField_; // @JAUS(index=1)
+              // 
+          } SimpleRecordVariableFormatField_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleRecordVariableFormatField::SimpleRecordVariableFormatField_ SimpleBodyRecordVariableFormatField;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageRecordVariableFormatField
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageRecordArray {
+      // @JAUS(inform,id=B008)
+      // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleRecordArray {
+          typedef struct SimpleRecordArray {
+              long SimpleFixedField[4][8]; // @JAUS(units=one)
+          // @JAUS(index=1)
+              union SimpleVariableField switch(unsigned short) {
+                case 0:
+                  short degree_Celsius;
+                case 1:
+                  unsigned short kelvin;
+              } SimpleVariableField;
+          // @JAUS(index=2)
+              string<20> SimpleFixedLengthString[8];
+          // @JAUS(index=3)
+              string SimpleVariableLengthString[16]; // @JAUS(length=<0,100>)
+          // @JAUS(index=4)
+              unsigned long SimpleBitField; // @JAUS(bitfield)
+                // SubField0_3[0:3], EDeviceError = 2, one
+                // SubField4_15[4:15], [0,4095], one
+                // SubField16_31[16:31], [0,65535], one
+          // @JAUS(index=5)
+              sequence<octet,1000> SimpleVariableLengthField[4]; // @JAUS(format=RAW,length=<0,1000>)
+          // @JAUS(index=6)
+              enum SimpleVariableFormatField_format {
+                BMP = 2,
+                JPEG = 1,
+                RAW = 0,
+              };
+              struct SimpleVariableFormatField {
+                SimpleVariableFormatField_format format;
+                sequence<octet,100000> SimpleVariableFormatField_data;
+              } SimpleVariableFormatField_[8];
+          // @JAUS(index=7)
+          } SimpleRecordArray_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleRecordArray::SimpleRecordArray_ SimpleBodyRecordArray;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageRecordArray
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageRecordArrayFixedField {
+      // @JAUS(inform,id=B009)
+      // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleRecordArrayFixedField {
+          typedef struct SimpleRecordArrayFixedField {
+              long SimpleFixedField[4]; // @JAUS(units=one)
+          // @JAUS(index=1)
+          } SimpleRecordArrayFixedField_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleRecordArrayFixedField::SimpleRecordArrayFixedField_ SimpleBodyRecordArrayFixedField;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageRecordArrayFixedField
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageRecordArrayFixedLengthString {
+      // @JAUS(inform,id=B00A)
+      // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleRecordArrayFixedLengthString {
+          typedef struct SimpleRecordArrayFixedLengthString {
+              string<20> SimpleFixedLengthString[8];
+          // @JAUS(index=1)
+          } SimpleRecordArrayFixedLengthString_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleRecordArrayFixedLengthString::SimpleRecordArrayFixedLengthString_ SimpleBodyRecordArrayFixedLengthString;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageRecordArrayFixedLengthString
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SimpleMessageRecordArrayVariableLengthString {
+      // @JAUS(inform,id=B00B)
+      // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module SimpleRecordArrayVariableLengthString {
+          typedef struct SimpleRecordArrayVariableLengthString {
+              string SimpleVariableLengthString[16]; // @JAUS(length=<0,100>)
+          // @JAUS(index=1)
+          } SimpleRecordArrayVariableLengthString_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::SimpleRecordArrayVariableLengthString::SimpleRecordArrayVariableLengthString_ SimpleBodyRecordArrayVariableLengthString;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SimpleMessageRecordArrayVariableLengthString
+  };
+};

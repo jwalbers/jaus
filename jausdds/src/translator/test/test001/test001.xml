@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<declared_type_set xmlns="urn:jaus:jsidl:1.0" name="CommandClass"
+                   id="urn:jaus:test001:MessageSet:CommandClass" version="1.0">
+  <message_def name="SimpleMessage" message_id="B001" is_command="false">
+    <description>A SimpleMessage sends a single 32-bit signed integer.</description>
+    <header name="JTS_Header">
+      <record name="HeaderRec" optional="false">
+        <fixed_field name="MessageID"
+                     optional="false"
+                     field_units="one"
+                     field_type="unsigned short integer"/>
+      </record>
+    </header>
+    <body name="SimpleBody">
+      <record name="SimpleRecord" optional="false">
+        <fixed_field name="SimpleFixedField"
+                     optional="false"
+                     field_units="one"
+                     field_type="integer"/>
+      </record>
+    </body>
+    <footer name="EmptyFooter"/>
+  </message_def>
+</declared_type_set>

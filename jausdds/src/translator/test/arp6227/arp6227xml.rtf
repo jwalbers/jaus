@@ -1,0 +1,1011 @@
+{\rtf1\ansi\deff0{\fonttbl{\f0\fmodern\fprq1\fcharset0 Consolas;}}{\colortbl;\red128\green128\blue128;\red187\green68\blue68;\red0\green64\blue208;\red102\green102\blue102;\red0\green136\blue0;\red160\green160\blue0;\red184\green134\blue11;\red170\green34\blue255;\red187\green102\blue136;\red187\green102\blue34;\red136\green0\blue0;\red153\green153\blue153;\red0\green160\blue0;\red160\green0\blue0;\red255\green0\blue0;\red128\green0\blue128;\red0\green187\blue0;\red187\green187\blue187;\red0\green0\blue255;\red0\green0\blue128;\red0\green128\blue0;\red210\green65\blue58;}\f0\fs18{\cf5 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>}\par
+{\cf21\b <service_def} {\cf2 name=}{\cf2 "SimpleServer"} {\cf2 id=}{\cf2 "urn:jaus:exp:dds:SimpleServer"} {\cf2 version=}{\cf2 "1.0"} {\cf2 xmlns:ns2=}{\cf2 "urn:jaus:jsidl:1.1"} {\cf2 xmlns=}{\cf2 "urn:jaus:jsidl:1.0"} {\cf2 xmlns:ns3=}{\cf2 "urn:jaus:jsidl:plus"}{\cf21\b >}\par
+    {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}Simple Server used for unit testing during JDDS development and testing{\cf21\b </description>}\par
+    {\cf21\b <assumptions} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}{\cf21\b </assumptions>}\par
+    {\cf21\b <references}{\cf21\b />}\par
+    {\cf21\b <message_set}{\cf21\b >}\par
+        {\cf21\b <input_set}{\cf21\b >}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageRecordFixedField"} {\cf2 message_id=}{\cf2 "B001"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyRecordFixedField"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordFixedField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "SimpleFixedField"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageRecord"} {\cf2 message_id=}{\cf2 "B00C"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyRecord"}{\cf21\b >}\par
+{\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecord"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+  {\cf21\b <presence_vector} {\cf2 field_type_unsigned=}{\cf2 "unsigned byte"}{\cf21\b />}\par
+  {\cf21\b <fixed_length_string} {\cf2 name=}{\cf2 "FixedLengthStringField"}\par
+                       {\cf2 string_length=}{\cf2 "2"}\par
+                       {\cf2 optional=}{\cf2 "true"}{\cf21\b />}\par
+  {\cf21\b <variable_length_string} {\cf2 name=}{\cf2 "VariableLengthStringField"}\par
+                          {\cf2 optional=}{\cf2 "true"}{\cf21\b >}\par
+    {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "100"}\par
+                 {\cf2 field_type_unsigned=}{\cf2 "unsigned byte"}{\cf21\b />}\par
+  {\cf21\b </variable_length_string>}\par
+  {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "FixedField1"}\par
+               {\cf2 optional=}{\cf2 "true"} {\cf2 field_type=}{\cf2 "byte"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+  {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "FixedField2"}\par
+               {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+  {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "FixedField4"}\par
+               {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+  {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "FixedField8"}\par
+               {\cf2 optional=}{\cf2 "true"} {\cf2 field_type=}{\cf2 "long integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+{\cf21\b </record>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageList"} {\cf2 message_id=}{\cf2 "B00E"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyList"}{\cf21\b >}\par
+{\cf21\b <list} {\cf2 name=}{\cf2 "SimpleList"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+  {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "10"}\par
+               {\cf2 field_type_unsigned=}{\cf2 "unsigned byte"}{\cf21\b />}\par
+  {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordFixedLengthString"}\par
+          {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+    {\cf21\b <fixed_length_string} {\cf2 name=}{\cf2 "SimpleFixedLengthString"}\par
+                         {\cf2 string_length=}{\cf2 "20"} {\cf2 optional=}{\cf2 "false"}{\cf21\b />}\par
+  {\cf21\b </record>}\par
+{\cf21\b </list>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageListListRecordFixedLengthString"} {\cf2 message_id=}{\cf2 "B00F"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyListListRecordFixedLengthString"}{\cf21\b >}\par
+                    {\cf21\b <list} {\cf2 name=}{\cf2 "SimpleListListRecordFixedLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "50"} {\cf2 field_type_unsigned=}{\cf2 "unsigned byte"}{\cf21\b />}\par
+                        {\cf21\b <list} {\cf2 name=}{\cf2 "SimpleListRecordFixedLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "10"} {\cf2 field_type_unsigned=}{\cf2 "unsigned byte"}{\cf21\b />}\par
+                            {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordFixedLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                                {\cf21\b <fixed_length_string} {\cf2 name=}{\cf2 "SimpleFixedLengthString"} {\cf2 string_length=}{\cf2 "20"} {\cf2 optional=}{\cf2 "false"}{\cf21\b />}\par
+                            {\cf21\b </record>}\par
+                        {\cf21\b </list>}\par
+                    {\cf21\b </list>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageSequence"} {\cf2 message_id=}{\cf2 "B010"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodySequence"}{\cf21\b >}\par
+{\cf21\b <sequence} {\cf2 name=}{\cf2 "SimpleSequence"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+  {\cf21\b <list} {\cf2 name=}{\cf2 "SimpleListRecordFixedLengthString"}\par
+        {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+    {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "10"}\par
+                 {\cf2 field_type_unsigned=}{\cf2 "unsigned byte"}{\cf21\b />}\par
+    {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordFixedLengthString"}\par
+            {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+      {\cf21\b <fixed_length_string} {\cf2 name=}{\cf2 "SimpleFixedLengthString"}\par
+                           {\cf2 string_length=}{\cf2 "20"} {\cf2 optional=}{\cf2 "false"}{\cf21\b />}\par
+    {\cf21\b </record>}\par
+  {\cf21\b </list>}\par
+  {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordArrayFixedLengthString"}\par
+          {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+    {\cf21\b <array} {\cf2 name=}{\cf2 "SimpleArrayFixedLengthString"}\par
+           {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+      {\cf21\b <fixed_length_string} {\cf2 name=}{\cf2 "SimpleFixedLengthString"} {\cf2 string_length=}{\cf2 "20"}\par
+                           {\cf2 optional=}{\cf2 "false"}{\cf21\b />}\par
+      {\cf21\b <dimension} {\cf2 name=}{\cf2 "SimpleArrayDimension8"} {\cf2 size=}{\cf2 "8"}{\cf21\b />}\par
+    {\cf21\b </array>}\par
+  {\cf21\b </record>}\par
+  {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordVariableLengthString"}\par
+          {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+    {\cf21\b <variable_length_string} {\cf2 name=}{\cf2 "SimpleVariableLengthString"}\par
+                            {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+      {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "100"} {\cf2 field_type_unsigned=}{\cf2 "unsigned byte"}{\cf21\b />}\par
+    {\cf21\b </variable_length_string>}\par
+  {\cf21\b </record>}\par
+  {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordFixedField"}\par
+          {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+    {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "SimpleFixedField"}\par
+                 {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+  {\cf21\b </record>}\par
+{\cf21\b </sequence>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageVariant"} {\cf2 message_id=}{\cf2 "B011"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyVariant"}{\cf21\b >}\par
+{\cf21\b <variant} {\cf2 name=}{\cf2 "SimpleVariant"}\par
+         {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+  {\cf21\b <vtag_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "3"}\par
+              {\cf2 field_type_unsigned=}{\cf2 "unsigned byte"}{\cf21\b />}\par
+  {\cf21\b <list} {\cf2 name=}{\cf2 "SimpleListRecordFixedLengthString"}\par
+        {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+    {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "10"}\par
+                 {\cf2 field_type_unsigned=}{\cf2 "unsigned byte"}{\cf21\b />}\par
+    {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordFixedLengthString"}\par
+            {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+      {\cf21\b <fixed_length_string} {\cf2 name=}{\cf2 "SimpleFixedLengthString"} {\cf2 string_length=}{\cf2 "20"}\par
+                           {\cf2 optional=}{\cf2 "false"}{\cf21\b />}\par
+    {\cf21\b </record>}\par
+  {\cf21\b </list>}\par
+  {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordArrayFixedLengthString"}\par
+          {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+    {\cf21\b <array} {\cf2 name=}{\cf2 "SimpleArrayFixedLengthString"}\par
+           {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+      {\cf21\b <fixed_length_string} {\cf2 name=}{\cf2 "SimpleFixedLengthString"} {\cf2 string_length=}{\cf2 "20"}\par
+                           {\cf2 optional=}{\cf2 "false"}{\cf21\b />}\par
+      {\cf21\b <dimension} {\cf2 name=}{\cf2 "SimpleArrayDimension8"} {\cf2 size=}{\cf2 "8"}{\cf21\b />}\par
+    {\cf21\b </array>}\par
+  {\cf21\b </record>}\par
+  {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordVariableLengthString"}\par
+          {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+    {\cf21\b <variable_length_string} {\cf2 name=}{\cf2 "SimpleVariableLengthString"}\par
+                            {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+      {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "100"}\par
+                   {\cf2 field_type_unsigned=}{\cf2 "unsigned byte"}{\cf21\b />}\par
+    {\cf21\b </variable_length_string>}\par
+  {\cf21\b </record>}\par
+  {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordFixedField"}\par
+          {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+    {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "SimpleFixedField"}\par
+                 {\cf2 optional=}{\cf2 "false"}\par
+                 {\cf2 field_type=}{\cf2 "integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+  {\cf21\b </record>}\par
+{\cf21\b </variant>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageRecordFixedLengthString"} {\cf2 message_id=}{\cf2 "B002"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyRecordFixedLengthString"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordFixedLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_length_string} {\cf2 name=}{\cf2 "SimpleFixedLengthString"} {\cf2 string_length=}{\cf2 "20"} {\cf2 optional=}{\cf2 "false"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageRecordVariableLengthString"} {\cf2 message_id=}{\cf2 "B003"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyRecordVariableLengthString"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordVariableLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <variable_length_string} {\cf2 name=}{\cf2 "SimpleVariableLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "100"} {\cf2 field_type_unsigned=}{\cf2 "unsigned byte"}{\cf21\b />}\par
+                        {\cf21\b </variable_length_string>}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageRecordVariableField"} {\cf2 message_id=}{\cf2 "B004"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyRecordVariableField"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordVariableField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+{\cf21\b <variable_field} {\cf2 name=}{\cf2 "SimpleVariableField"}\par
+                {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+  {\cf21\b <type_and_units_field}{\cf21\b >}\par
+    {\cf21\b <type_and_units_enum} {\cf2 name=}{\cf2 "celsius_type"}\par
+                         {\cf2 index=}{\cf2 "0"}\par
+                         {\cf2 field_units=}{\cf2 "degree Celsius"}\par
+                         {\cf2 field_type=}{\cf2 "short integer"}{\cf21\b />}\par
+    {\cf21\b <type_and_units_enum} {\cf2 name=}{\cf2 "kelvin_type"}\par
+                         {\cf2 index=}{\cf2 "1"}\par
+                         {\cf2 field_units=}{\cf2 "kelvin"}\par
+                         {\cf2 field_type=}{\cf2 "unsigned short integer"}{\cf21\b />}\par
+  {\cf21\b </type_and_units_field>}\par
+{\cf21\b </variable_field>}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageRecordBitField"} {\cf2 message_id=}{\cf2 "B005"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyRecordBitField"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordBitField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+{\cf21\b <bit_field} {\cf2 name=}{\cf2 "SimpleBitField"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type_unsigned=}{\cf2 "unsigned integer"}{\cf21\b >}\par
+  {\cf21\b <sub_field} {\cf2 name=}{\cf2 "SubField0_3"}{\cf21\b >}\par
+    {\cf21\b <bit_range} {\cf2 from_index=}{\cf2 "0"} {\cf2 to_index=}{\cf2 "3"}{\cf21\b />}\par
+    {\cf21\b <value_set} {\cf2 offset_to_lower_limit=}{\cf2 "false"}{\cf21\b >}\par
+      {\cf21\b <value_enum} {\cf2 enum_index=}{\cf2 "0"} {\cf2 enum_const=}{\cf2 "ESuccess"}{\cf21\b />}\par
+      {\cf21\b <value_enum} {\cf2 enum_index=}{\cf2 "1"} {\cf2 enum_const=}{\cf2 "EFileError"}{\cf21\b />}\par
+      {\cf21\b <value_enum} {\cf2 enum_index=}{\cf2 "2"} {\cf2 enum_const=}{\cf2 "EDeviceError"}{\cf21\b />}\par
+    {\cf21\b </value_set>}\par
+  {\cf21\b </sub_field>}\par
+  {\cf21\b <sub_field} {\cf2 name=}{\cf2 "SubField4_15"}{\cf21\b >}\par
+    {\cf21\b <bit_range} {\cf2 from_index=}{\cf2 "4"} {\cf2 to_index=}{\cf2 "15"}{\cf21\b />}\par
+    {\cf21\b <value_set} {\cf2 offset_to_lower_limit=}{\cf2 "false"}{\cf21\b >}\par
+      {\cf21\b <value_range} {\cf2 lower_limit=}{\cf2 "0"} {\cf2 lower_limit_type=}{\cf2 "inclusive"} {\cf2 upper_limit=}{\cf2 "4095"} {\cf2 upper_limit_type=}{\cf2 "inclusive"}{\cf21\b />}\par
+    {\cf21\b </value_set>}\par
+  {\cf21\b </sub_field>}\par
+  {\cf21\b <sub_field} {\cf2 name=}{\cf2 "SubField16_31"}{\cf21\b >}\par
+    {\cf21\b <bit_range} {\cf2 from_index=}{\cf2 "16"} {\cf2 to_index=}{\cf2 "31"}{\cf21\b />}\par
+    {\cf21\b <value_set} {\cf2 offset_to_lower_limit=}{\cf2 "false"}{\cf21\b >}\par
+      {\cf21\b <value_range} {\cf2 lower_limit=}{\cf2 "0"} {\cf2 lower_limit_type=}{\cf2 "inclusive"} {\cf2 upper_limit=}{\cf2 "65535"} {\cf2 upper_limit_type=}{\cf2 "inclusive"}{\cf21\b />}\par
+    {\cf21\b </value_set>}\par
+  {\cf21\b </sub_field>}\par
+{\cf21\b </bit_field>}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageRecordVariableLengthField"} {\cf2 message_id=}{\cf2 "B006"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyRecordVariableLengthField"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordVariableLengthField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+{\cf21\b <variable_length_field} {\cf2 name=}{\cf2 "SimpleVariableLengthField"}\par
+                       {\cf2 optional=}{\cf2 "false"} {\cf2 field_format=}{\cf2 "RAW"}{\cf21\b >}\par
+  {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "1000"}\par
+               {\cf2 field_type_unsigned=}{\cf2 "unsigned short integer"}{\cf21\b />}\par
+{\cf21\b </variable_length_field>}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageRecordVariableFormatField"} {\cf2 message_id=}{\cf2 "B007"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyRecordVariableFormatField"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordVariableFormatField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+{\cf21\b <variable_format_field} {\cf2 name=}{\cf2 "SimpleVariableFormatField"}\par
+                       {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+  {\cf21\b <format_field}{\cf21\b >}\par
+    {\cf21\b <format_enum} {\cf2 index=}{\cf2 "2"} {\cf2 field_format=}{\cf2 "BMP"}{\cf21\b />}\par
+    {\cf21\b <format_enum} {\cf2 index=}{\cf2 "1"} {\cf2 field_format=}{\cf2 "JPEG"}{\cf21\b />}\par
+    {\cf21\b <format_enum} {\cf2 index=}{\cf2 "0"} {\cf2 field_format=}{\cf2 "RAW"}{\cf21\b />}\par
+  {\cf21\b </format_field>}\par
+  {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "100000"}\par
+               {\cf2 field_type_unsigned=}{\cf2 "unsigned integer"}{\cf21\b />}\par
+{\cf21\b </variable_format_field>}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageRecordArray"} {\cf2 message_id=}{\cf2 "B008"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyRecordArray"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordArray"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+{\cf21\b <array} {\cf2 name=}{\cf2 "SimpleArrayFixedField"}\par
+       {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+  {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "SimpleFixedField"}\par
+               {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "integer"}\par
+               {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+  {\cf21\b <dimension} {\cf2 name=}{\cf2 "SimpleArrayFixedFieldDimension1"} {\cf2 size=}{\cf2 "4"}{\cf21\b />}\par
+  {\cf21\b <dimension} {\cf2 name=}{\cf2 "SimpleArrayFixedFieldDimension1"} {\cf2 size=}{\cf2 "8"}{\cf21\b />}\par
+{\cf21\b </array>}\par
+                        {\cf21\b <array} {\cf2 name=}{\cf2 "SimpleArrayVariableField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <variable_field} {\cf2 name=}{\cf2 "SimpleVariableField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                                {\cf21\b <type_and_units_field}{\cf21\b >}\par
+                                    {\cf21\b <type_and_units_enum} {\cf2 name=}{\cf2 "celsius_type"} {\cf2 index=}{\cf2 "0"} {\cf2 field_units=}{\cf2 "degree Celsius"} {\cf2 field_type=}{\cf2 "short integer"}{\cf21\b />}\par
+                                    {\cf21\b <type_and_units_enum} {\cf2 name=}{\cf2 "kelvin_type"} {\cf2 index=}{\cf2 "1"} {\cf2 field_units=}{\cf2 "kelvin"} {\cf2 field_type=}{\cf2 "unsigned short integer"}{\cf21\b />}\par
+                                {\cf21\b </type_and_units_field>}\par
+                            {\cf21\b </variable_field>}\par
+                            {\cf21\b <dimension} {\cf2 name=}{\cf2 "SimpleArrayDimension2"} {\cf2 size=}{\cf2 "2"}{\cf21\b />}\par
+                        {\cf21\b </array>}\par
+                        {\cf21\b <array} {\cf2 name=}{\cf2 "SimpleArrayFixedLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <fixed_length_string} {\cf2 name=}{\cf2 "SimpleFixedLengthString"} {\cf2 string_length=}{\cf2 "20"} {\cf2 optional=}{\cf2 "false"}{\cf21\b />}\par
+                            {\cf21\b <dimension} {\cf2 name=}{\cf2 "SimpleArrayDimension8"} {\cf2 size=}{\cf2 "8"}{\cf21\b />}\par
+                        {\cf21\b </array>}\par
+                        {\cf21\b <array} {\cf2 name=}{\cf2 "SimpleArrayVariableLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <variable_length_string} {\cf2 name=}{\cf2 "SimpleVariableLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                                {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "100"} {\cf2 field_type_unsigned=}{\cf2 "unsigned byte"}{\cf21\b />}\par
+                            {\cf21\b </variable_length_string>}\par
+                            {\cf21\b <dimension} {\cf2 name=}{\cf2 "SimpleArrayDimension16"} {\cf2 size=}{\cf2 "16"}{\cf21\b />}\par
+                        {\cf21\b </array>}\par
+                        {\cf21\b <array} {\cf2 name=}{\cf2 "SimpleArrayBitField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <bit_field} {\cf2 name=}{\cf2 "SimpleBitField"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type_unsigned=}{\cf2 "unsigned integer"}{\cf21\b >}\par
+                                {\cf21\b <sub_field} {\cf2 name=}{\cf2 "SubField0_3"}{\cf21\b >}\par
+                                    {\cf21\b <bit_range} {\cf2 from_index=}{\cf2 "0"} {\cf2 to_index=}{\cf2 "3"}{\cf21\b />}\par
+                                    {\cf21\b <value_set} {\cf2 offset_to_lower_limit=}{\cf2 "false"}{\cf21\b >}\par
+                                        {\cf21\b <value_enum} {\cf2 enum_index=}{\cf2 "0"} {\cf2 enum_const=}{\cf2 "ESuccess"}{\cf21\b />}\par
+                                        {\cf21\b <value_enum} {\cf2 enum_index=}{\cf2 "1"} {\cf2 enum_const=}{\cf2 "EFileError"}{\cf21\b />}\par
+                                        {\cf21\b <value_enum} {\cf2 enum_index=}{\cf2 "2"} {\cf2 enum_const=}{\cf2 "EDeviceError"}{\cf21\b />}\par
+                                    {\cf21\b </value_set>}\par
+                                {\cf21\b </sub_field>}\par
+                                {\cf21\b <sub_field} {\cf2 name=}{\cf2 "SubField4_15"}{\cf21\b >}\par
+                                    {\cf21\b <bit_range} {\cf2 from_index=}{\cf2 "4"} {\cf2 to_index=}{\cf2 "15"}{\cf21\b />}\par
+                                    {\cf21\b <value_set} {\cf2 offset_to_lower_limit=}{\cf2 "false"}{\cf21\b >}\par
+                                        {\cf21\b <value_range} {\cf2 lower_limit=}{\cf2 "0"} {\cf2 lower_limit_type=}{\cf2 "inclusive"} {\cf2 upper_limit=}{\cf2 "4095"} {\cf2 upper_limit_type=}{\cf2 "inclusive"}{\cf21\b />}\par
+                                    {\cf21\b </value_set>}\par
+                                {\cf21\b </sub_field>}\par
+                                {\cf21\b <sub_field} {\cf2 name=}{\cf2 "SubField16_31"}{\cf21\b >}\par
+                                    {\cf21\b <bit_range} {\cf2 from_index=}{\cf2 "16"} {\cf2 to_index=}{\cf2 "31"}{\cf21\b />}\par
+                                    {\cf21\b <value_set} {\cf2 offset_to_lower_limit=}{\cf2 "false"}{\cf21\b >}\par
+                                        {\cf21\b <value_range} {\cf2 lower_limit=}{\cf2 "0"} {\cf2 lower_limit_type=}{\cf2 "inclusive"} {\cf2 upper_limit=}{\cf2 "65535"} {\cf2 upper_limit_type=}{\cf2 "inclusive"}{\cf21\b />}\par
+                                    {\cf21\b </value_set>}\par
+                                {\cf21\b </sub_field>}\par
+                            {\cf21\b </bit_field>}\par
+                            {\cf21\b <dimension} {\cf2 name=}{\cf2 "SimpleArrayDimension4"} {\cf2 size=}{\cf2 "4"}{\cf21\b />}\par
+                        {\cf21\b </array>}\par
+                        {\cf21\b <array} {\cf2 name=}{\cf2 "SimpleArrayVariableLengthField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <variable_length_field} {\cf2 name=}{\cf2 "SimpleVariableLengthField"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_format=}{\cf2 "RAW"}{\cf21\b >}\par
+                                {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "1000"} {\cf2 field_type_unsigned=}{\cf2 "unsigned short integer"}{\cf21\b />}\par
+                            {\cf21\b </variable_length_field>}\par
+                            {\cf21\b <dimension} {\cf2 name=}{\cf2 "SimpleArrayDimension4"} {\cf2 size=}{\cf2 "4"}{\cf21\b />}\par
+                        {\cf21\b </array>}\par
+                        {\cf21\b <array} {\cf2 name=}{\cf2 "SimpleArrayVariableFormatField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <variable_format_field} {\cf2 name=}{\cf2 "SimpleVariableFormatField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                                {\cf21\b <format_field}{\cf21\b >}\par
+                                    {\cf21\b <format_enum} {\cf2 index=}{\cf2 "2"} {\cf2 field_format=}{\cf2 "BMP"}{\cf21\b />}\par
+                                    {\cf21\b <format_enum} {\cf2 index=}{\cf2 "1"} {\cf2 field_format=}{\cf2 "JPEG"}{\cf21\b />}\par
+                                    {\cf21\b <format_enum} {\cf2 index=}{\cf2 "0"} {\cf2 field_format=}{\cf2 "RAW"}{\cf21\b />}\par
+                                {\cf21\b </format_field>}\par
+                                {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "100000"} {\cf2 field_type_unsigned=}{\cf2 "unsigned integer"}{\cf21\b />}\par
+                            {\cf21\b </variable_format_field>}\par
+                            {\cf21\b <dimension} {\cf2 name=}{\cf2 "SimpleArrayDimension8"} {\cf2 size=}{\cf2 "8"}{\cf21\b />}\par
+                        {\cf21\b </array>}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageRecordArrayFixedField"} {\cf2 message_id=}{\cf2 "B009"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyRecordArrayFixedField"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordArrayFixedField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <array} {\cf2 name=}{\cf2 "SimpleArrayFixedField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "SimpleFixedField"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                            {\cf21\b <dimension} {\cf2 name=}{\cf2 "SimpleArrayFixedFieldDimension1"} {\cf2 size=}{\cf2 "4"}{\cf21\b />}\par
+                        {\cf21\b </array>}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageRecordArrayFixedLengthString"} {\cf2 message_id=}{\cf2 "B00A"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyRecordArrayFixedLengthString"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordArrayFixedLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <array} {\cf2 name=}{\cf2 "SimpleArrayFixedLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <fixed_length_string} {\cf2 name=}{\cf2 "SimpleFixedLengthString"} {\cf2 string_length=}{\cf2 "20"} {\cf2 optional=}{\cf2 "false"}{\cf21\b />}\par
+                            {\cf21\b <dimension} {\cf2 name=}{\cf2 "SimpleArrayDimension8"} {\cf2 size=}{\cf2 "8"}{\cf21\b />}\par
+                        {\cf21\b </array>}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageRecordArrayVariableLengthString"} {\cf2 message_id=}{\cf2 "B00B"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyRecordArrayVariableLengthString"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordArrayVariableLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <array} {\cf2 name=}{\cf2 "SimpleArrayVariableLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <variable_length_string} {\cf2 name=}{\cf2 "SimpleVariableLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                                {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "100"} {\cf2 field_type_unsigned=}{\cf2 "unsigned byte"}{\cf21\b />}\par
+                            {\cf21\b </variable_length_string>}\par
+                            {\cf21\b <dimension} {\cf2 name=}{\cf2 "SimpleArrayDimension16"} {\cf2 size=}{\cf2 "16"}{\cf21\b />}\par
+                        {\cf21\b </array>}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+        {\cf21\b </input_set>}\par
+        {\cf21\b <output_set}{\cf21\b >}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageRecordFixedField"} {\cf2 message_id=}{\cf2 "B001"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyRecordFixedField"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordFixedField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "SimpleFixedField"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageRecord"} {\cf2 message_id=}{\cf2 "B00C"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyRecord"}{\cf21\b >}\par
+{\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecord"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+  {\cf21\b <presence_vector} {\cf2 field_type_unsigned=}{\cf2 "unsigned byte"}{\cf21\b />}\par
+  {\cf21\b <fixed_length_string} {\cf2 name=}{\cf2 "FixedLengthStringField"}\par
+                       {\cf2 string_length=}{\cf2 "2"} {\cf2 optional=}{\cf2 "true"}{\cf21\b />}\par
+  {\cf21\b <variable_length_string} {\cf2 name=}{\cf2 "VariableLengthStringField"} {\cf2 optional=}{\cf2 "true"}{\cf21\b >}\par
+    {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "100"}\par
+                 {\cf2 field_type_unsigned=}{\cf2 "unsigned byte"}{\cf21\b />}\par
+  {\cf21\b </variable_length_string>}\par
+  {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "FixedField1"} {\cf2 optional=}{\cf2 "true"}\par
+               {\cf2 field_type=}{\cf2 "byte"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+  {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "FixedField2"} {\cf2 optional=}{\cf2 "false"}\par
+               {\cf2 field_type=}{\cf2 "short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+  {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "FixedField4"} {\cf2 optional=}{\cf2 "false"}\par
+               {\cf2 field_type=}{\cf2 "integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+  {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "FixedField8"} {\cf2 optional=}{\cf2 "true"}\par
+               {\cf2 field_type=}{\cf2 "long integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+{\cf21\b </record>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageList"} {\cf2 message_id=}{\cf2 "B00E"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyList"}{\cf21\b >}\par
+                    {\cf21\b <list} {\cf2 name=}{\cf2 "SimpleList"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "10"} {\cf2 field_type_unsigned=}{\cf2 "unsigned byte"}{\cf21\b />}\par
+                        {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordFixedLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <fixed_length_string} {\cf2 name=}{\cf2 "SimpleFixedLengthString"} {\cf2 string_length=}{\cf2 "20"} {\cf2 optional=}{\cf2 "false"}{\cf21\b />}\par
+                        {\cf21\b </record>}\par
+                    {\cf21\b </list>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageListListRecordFixedLengthString"} {\cf2 message_id=}{\cf2 "B00F"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyListListRecordFixedLengthString"}{\cf21\b >}\par
+                    {\cf21\b <list} {\cf2 name=}{\cf2 "SimpleListListRecordFixedLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "50"} {\cf2 field_type_unsigned=}{\cf2 "unsigned byte"}{\cf21\b />}\par
+                        {\cf21\b <list} {\cf2 name=}{\cf2 "SimpleListRecordFixedLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "10"} {\cf2 field_type_unsigned=}{\cf2 "unsigned byte"}{\cf21\b />}\par
+                            {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordFixedLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                                {\cf21\b <fixed_length_string} {\cf2 name=}{\cf2 "SimpleFixedLengthString"} {\cf2 string_length=}{\cf2 "20"} {\cf2 optional=}{\cf2 "false"}{\cf21\b />}\par
+                            {\cf21\b </record>}\par
+                        {\cf21\b </list>}\par
+                    {\cf21\b </list>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageSequence"} {\cf2 message_id=}{\cf2 "B010"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodySequence"}{\cf21\b >}\par
+                    {\cf21\b <sequence} {\cf2 name=}{\cf2 "SimpleSequence"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <list} {\cf2 name=}{\cf2 "SimpleListRecordFixedLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "10"} {\cf2 field_type_unsigned=}{\cf2 "unsigned byte"}{\cf21\b />}\par
+                            {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordFixedLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                                {\cf21\b <fixed_length_string} {\cf2 name=}{\cf2 "SimpleFixedLengthString"} {\cf2 string_length=}{\cf2 "20"} {\cf2 optional=}{\cf2 "false"}{\cf21\b />}\par
+                            {\cf21\b </record>}\par
+                        {\cf21\b </list>}\par
+                        {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordArrayFixedLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <array} {\cf2 name=}{\cf2 "SimpleArrayFixedLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                                {\cf21\b <fixed_length_string} {\cf2 name=}{\cf2 "SimpleFixedLengthString"} {\cf2 string_length=}{\cf2 "20"} {\cf2 optional=}{\cf2 "false"}{\cf21\b />}\par
+                                {\cf21\b <dimension} {\cf2 name=}{\cf2 "SimpleArrayDimension8"} {\cf2 size=}{\cf2 "8"}{\cf21\b />}\par
+                            {\cf21\b </array>}\par
+                        {\cf21\b </record>}\par
+                        {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordVariableLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <variable_length_string} {\cf2 name=}{\cf2 "SimpleVariableLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                                {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "100"} {\cf2 field_type_unsigned=}{\cf2 "unsigned byte"}{\cf21\b />}\par
+                            {\cf21\b </variable_length_string>}\par
+                        {\cf21\b </record>}\par
+                        {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordFixedField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "SimpleFixedField"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                        {\cf21\b </record>}\par
+                    {\cf21\b </sequence>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageVariant"} {\cf2 message_id=}{\cf2 "B011"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyVariant"}{\cf21\b >}\par
+                    {\cf21\b <variant} {\cf2 name=}{\cf2 "SimpleVariant"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <vtag_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "3"} {\cf2 field_type_unsigned=}{\cf2 "unsigned byte"}{\cf21\b />}\par
+                        {\cf21\b <list} {\cf2 name=}{\cf2 "SimpleListRecordFixedLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "10"} {\cf2 field_type_unsigned=}{\cf2 "unsigned byte"}{\cf21\b />}\par
+                            {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordFixedLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                                {\cf21\b <fixed_length_string} {\cf2 name=}{\cf2 "SimpleFixedLengthString"} {\cf2 string_length=}{\cf2 "20"} {\cf2 optional=}{\cf2 "false"}{\cf21\b />}\par
+                            {\cf21\b </record>}\par
+                        {\cf21\b </list>}\par
+                        {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordArrayFixedLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <array} {\cf2 name=}{\cf2 "SimpleArrayFixedLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                                {\cf21\b <fixed_length_string} {\cf2 name=}{\cf2 "SimpleFixedLengthString"} {\cf2 string_length=}{\cf2 "20"} {\cf2 optional=}{\cf2 "false"}{\cf21\b />}\par
+                                {\cf21\b <dimension} {\cf2 name=}{\cf2 "SimpleArrayDimension8"} {\cf2 size=}{\cf2 "8"}{\cf21\b />}\par
+                            {\cf21\b </array>}\par
+                        {\cf21\b </record>}\par
+                        {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordVariableLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <variable_length_string} {\cf2 name=}{\cf2 "SimpleVariableLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                                {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "100"} {\cf2 field_type_unsigned=}{\cf2 "unsigned byte"}{\cf21\b />}\par
+                            {\cf21\b </variable_length_string>}\par
+                        {\cf21\b </record>}\par
+                        {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordFixedField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "SimpleFixedField"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                        {\cf21\b </record>}\par
+                    {\cf21\b </variant>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageRecordFixedLengthString"} {\cf2 message_id=}{\cf2 "B002"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyRecordFixedLengthString"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordFixedLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_length_string} {\cf2 name=}{\cf2 "SimpleFixedLengthString"} {\cf2 string_length=}{\cf2 "20"} {\cf2 optional=}{\cf2 "false"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageRecordVariableLengthString"} {\cf2 message_id=}{\cf2 "B003"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyRecordVariableLengthString"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordVariableLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <variable_length_string} {\cf2 name=}{\cf2 "SimpleVariableLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "100"} {\cf2 field_type_unsigned=}{\cf2 "unsigned byte"}{\cf21\b />}\par
+                        {\cf21\b </variable_length_string>}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageRecordVariableField"} {\cf2 message_id=}{\cf2 "B004"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyRecordVariableField"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordVariableField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <variable_field} {\cf2 name=}{\cf2 "SimpleVariableField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <type_and_units_field}{\cf21\b >}\par
+                                {\cf21\b <type_and_units_enum} {\cf2 name=}{\cf2 "celsius_type"} {\cf2 index=}{\cf2 "0"} {\cf2 field_units=}{\cf2 "degree Celsius"} {\cf2 field_type=}{\cf2 "short integer"}{\cf21\b />}\par
+                                {\cf21\b <type_and_units_enum} {\cf2 name=}{\cf2 "kelvin_type"} {\cf2 index=}{\cf2 "1"} {\cf2 field_units=}{\cf2 "kelvin"} {\cf2 field_type=}{\cf2 "unsigned short integer"}{\cf21\b />}\par
+                            {\cf21\b </type_and_units_field>}\par
+                        {\cf21\b </variable_field>}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageRecordBitField"} {\cf2 message_id=}{\cf2 "B005"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyRecordBitField"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordBitField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <bit_field} {\cf2 name=}{\cf2 "SimpleBitField"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type_unsigned=}{\cf2 "unsigned integer"}{\cf21\b >}\par
+                            {\cf21\b <sub_field} {\cf2 name=}{\cf2 "SubField0_3"}{\cf21\b >}\par
+                                {\cf21\b <bit_range} {\cf2 from_index=}{\cf2 "0"} {\cf2 to_index=}{\cf2 "3"}{\cf21\b />}\par
+                                {\cf21\b <value_set} {\cf2 offset_to_lower_limit=}{\cf2 "false"}{\cf21\b >}\par
+                                    {\cf21\b <value_enum} {\cf2 enum_index=}{\cf2 "0"} {\cf2 enum_const=}{\cf2 "ESuccess"}{\cf21\b />}\par
+                                    {\cf21\b <value_enum} {\cf2 enum_index=}{\cf2 "1"} {\cf2 enum_const=}{\cf2 "EFileError"}{\cf21\b />}\par
+                                    {\cf21\b <value_enum} {\cf2 enum_index=}{\cf2 "2"} {\cf2 enum_const=}{\cf2 "EDeviceError"}{\cf21\b />}\par
+                                {\cf21\b </value_set>}\par
+                            {\cf21\b </sub_field>}\par
+                            {\cf21\b <sub_field} {\cf2 name=}{\cf2 "SubField4_15"}{\cf21\b >}\par
+                                {\cf21\b <bit_range} {\cf2 from_index=}{\cf2 "4"} {\cf2 to_index=}{\cf2 "15"}{\cf21\b />}\par
+                                {\cf21\b <value_set} {\cf2 offset_to_lower_limit=}{\cf2 "false"}{\cf21\b >}\par
+                                    {\cf21\b <value_range} {\cf2 lower_limit=}{\cf2 "0"} {\cf2 lower_limit_type=}{\cf2 "inclusive"} {\cf2 upper_limit=}{\cf2 "4095"} {\cf2 upper_limit_type=}{\cf2 "inclusive"}{\cf21\b />}\par
+                                {\cf21\b </value_set>}\par
+                            {\cf21\b </sub_field>}\par
+                            {\cf21\b <sub_field} {\cf2 name=}{\cf2 "SubField16_31"}{\cf21\b >}\par
+                                {\cf21\b <bit_range} {\cf2 from_index=}{\cf2 "16"} {\cf2 to_index=}{\cf2 "31"}{\cf21\b />}\par
+                                {\cf21\b <value_set} {\cf2 offset_to_lower_limit=}{\cf2 "false"}{\cf21\b >}\par
+                                    {\cf21\b <value_range} {\cf2 lower_limit=}{\cf2 "0"} {\cf2 lower_limit_type=}{\cf2 "inclusive"} {\cf2 upper_limit=}{\cf2 "65535"} {\cf2 upper_limit_type=}{\cf2 "inclusive"}{\cf21\b />}\par
+                                {\cf21\b </value_set>}\par
+                            {\cf21\b </sub_field>}\par
+                        {\cf21\b </bit_field>}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageRecordVariableLengthField"} {\cf2 message_id=}{\cf2 "B006"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyRecordVariableLengthField"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordVariableLengthField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <variable_length_field} {\cf2 name=}{\cf2 "SimpleVariableLengthField"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_format=}{\cf2 "RAW"}{\cf21\b >}\par
+                            {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "1000"} {\cf2 field_type_unsigned=}{\cf2 "unsigned short integer"}{\cf21\b />}\par
+                        {\cf21\b </variable_length_field>}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageRecordVariableFormatField"} {\cf2 message_id=}{\cf2 "B007"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyRecordVariableFormatField"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordVariableFormatField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <variable_format_field} {\cf2 name=}{\cf2 "SimpleVariableFormatField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <format_field}{\cf21\b >}\par
+                                {\cf21\b <format_enum} {\cf2 index=}{\cf2 "2"} {\cf2 field_format=}{\cf2 "BMP"}{\cf21\b />}\par
+                                {\cf21\b <format_enum} {\cf2 index=}{\cf2 "1"} {\cf2 field_format=}{\cf2 "JPEG"}{\cf21\b />}\par
+                                {\cf21\b <format_enum} {\cf2 index=}{\cf2 "0"} {\cf2 field_format=}{\cf2 "RAW"}{\cf21\b />}\par
+                            {\cf21\b </format_field>}\par
+                            {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "100000"} {\cf2 field_type_unsigned=}{\cf2 "unsigned integer"}{\cf21\b />}\par
+                        {\cf21\b </variable_format_field>}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageRecordArray"} {\cf2 message_id=}{\cf2 "B008"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyRecordArray"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordArray"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+{\cf21\b <array} {\cf2 name=}{\cf2 "SimpleArrayFixedField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+  {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "SimpleFixedField"}\par
+               {\cf2 optional=}{\cf2 "false"}\par
+               {\cf2 field_type=}{\cf2 "integer"}\par
+               {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+  {\cf21\b <dimension} {\cf2 name=}{\cf2 "SimpleArrayFixedFieldDimension1"} {\cf2 size=}{\cf2 "4"}{\cf21\b />}\par
+  {\cf21\b <dimension} {\cf2 name=}{\cf2 "SimpleArrayFixedFieldDimension2"} {\cf2 size=}{\cf2 "8"}{\cf21\b />}\par
+{\cf21\b </array>}\par
+                        {\cf21\b <array} {\cf2 name=}{\cf2 "SimpleArrayVariableField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <variable_field} {\cf2 name=}{\cf2 "SimpleVariableField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                                {\cf21\b <type_and_units_field}{\cf21\b >}\par
+                                    {\cf21\b <type_and_units_enum} {\cf2 name=}{\cf2 "celsius_type"} {\cf2 index=}{\cf2 "0"} {\cf2 field_units=}{\cf2 "degree Celsius"} {\cf2 field_type=}{\cf2 "short integer"}{\cf21\b />}\par
+                                    {\cf21\b <type_and_units_enum} {\cf2 name=}{\cf2 "kelvin_type"} {\cf2 index=}{\cf2 "1"} {\cf2 field_units=}{\cf2 "kelvin"} {\cf2 field_type=}{\cf2 "unsigned short integer"}{\cf21\b />}\par
+                                {\cf21\b </type_and_units_field>}\par
+                            {\cf21\b </variable_field>}\par
+                            {\cf21\b <dimension} {\cf2 name=}{\cf2 "SimpleArrayDimension2"} {\cf2 size=}{\cf2 "2"}{\cf21\b />}\par
+                        {\cf21\b </array>}\par
+                        {\cf21\b <array} {\cf2 name=}{\cf2 "SimpleArrayFixedLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <fixed_length_string} {\cf2 name=}{\cf2 "SimpleFixedLengthString"} {\cf2 string_length=}{\cf2 "20"} {\cf2 optional=}{\cf2 "false"}{\cf21\b />}\par
+                            {\cf21\b <dimension} {\cf2 name=}{\cf2 "SimpleArrayDimension8"} {\cf2 size=}{\cf2 "8"}{\cf21\b />}\par
+                        {\cf21\b </array>}\par
+                        {\cf21\b <array} {\cf2 name=}{\cf2 "SimpleArrayVariableLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <variable_length_string} {\cf2 name=}{\cf2 "SimpleVariableLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                                {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "100"} {\cf2 field_type_unsigned=}{\cf2 "unsigned byte"}{\cf21\b />}\par
+                            {\cf21\b </variable_length_string>}\par
+                            {\cf21\b <dimension} {\cf2 name=}{\cf2 "SimpleArrayDimension16"} {\cf2 size=}{\cf2 "16"}{\cf21\b />}\par
+                        {\cf21\b </array>}\par
+                        {\cf21\b <array} {\cf2 name=}{\cf2 "SimpleArrayBitField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <bit_field} {\cf2 name=}{\cf2 "SimpleBitField"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type_unsigned=}{\cf2 "unsigned integer"}{\cf21\b >}\par
+                                {\cf21\b <sub_field} {\cf2 name=}{\cf2 "SubField0_3"}{\cf21\b >}\par
+                                    {\cf21\b <bit_range} {\cf2 from_index=}{\cf2 "0"} {\cf2 to_index=}{\cf2 "3"}{\cf21\b />}\par
+                                    {\cf21\b <value_set} {\cf2 offset_to_lower_limit=}{\cf2 "false"}{\cf21\b >}\par
+                                        {\cf21\b <value_enum} {\cf2 enum_index=}{\cf2 "0"} {\cf2 enum_const=}{\cf2 "ESuccess"}{\cf21\b />}\par
+                                        {\cf21\b <value_enum} {\cf2 enum_index=}{\cf2 "1"} {\cf2 enum_const=}{\cf2 "EFileError"}{\cf21\b />}\par
+                                        {\cf21\b <value_enum} {\cf2 enum_index=}{\cf2 "2"} {\cf2 enum_const=}{\cf2 "EDeviceError"}{\cf21\b />}\par
+                                    {\cf21\b </value_set>}\par
+                                {\cf21\b </sub_field>}\par
+                                {\cf21\b <sub_field} {\cf2 name=}{\cf2 "SubField4_15"}{\cf21\b >}\par
+                                    {\cf21\b <bit_range} {\cf2 from_index=}{\cf2 "4"} {\cf2 to_index=}{\cf2 "15"}{\cf21\b />}\par
+                                    {\cf21\b <value_set} {\cf2 offset_to_lower_limit=}{\cf2 "false"}{\cf21\b >}\par
+                                        {\cf21\b <value_range} {\cf2 lower_limit=}{\cf2 "0"} {\cf2 lower_limit_type=}{\cf2 "inclusive"} {\cf2 upper_limit=}{\cf2 "4095"} {\cf2 upper_limit_type=}{\cf2 "inclusive"}{\cf21\b />}\par
+                                    {\cf21\b </value_set>}\par
+                                {\cf21\b </sub_field>}\par
+                                {\cf21\b <sub_field} {\cf2 name=}{\cf2 "SubField16_31"}{\cf21\b >}\par
+                                    {\cf21\b <bit_range} {\cf2 from_index=}{\cf2 "16"} {\cf2 to_index=}{\cf2 "31"}{\cf21\b />}\par
+                                    {\cf21\b <value_set} {\cf2 offset_to_lower_limit=}{\cf2 "false"}{\cf21\b >}\par
+                                        {\cf21\b <value_range} {\cf2 lower_limit=}{\cf2 "0"} {\cf2 lower_limit_type=}{\cf2 "inclusive"} {\cf2 upper_limit=}{\cf2 "65535"} {\cf2 upper_limit_type=}{\cf2 "inclusive"}{\cf21\b />}\par
+                                    {\cf21\b </value_set>}\par
+                                {\cf21\b </sub_field>}\par
+                            {\cf21\b </bit_field>}\par
+                            {\cf21\b <dimension} {\cf2 name=}{\cf2 "SimpleArrayDimension4"} {\cf2 size=}{\cf2 "4"}{\cf21\b />}\par
+                        {\cf21\b </array>}\par
+                        {\cf21\b <array} {\cf2 name=}{\cf2 "SimpleArrayVariableLengthField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <variable_length_field} {\cf2 name=}{\cf2 "SimpleVariableLengthField"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_format=}{\cf2 "RAW"}{\cf21\b >}\par
+                                {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "1000"} {\cf2 field_type_unsigned=}{\cf2 "unsigned short integer"}{\cf21\b />}\par
+                            {\cf21\b </variable_length_field>}\par
+                            {\cf21\b <dimension} {\cf2 name=}{\cf2 "SimpleArrayDimension4"} {\cf2 size=}{\cf2 "4"}{\cf21\b />}\par
+                        {\cf21\b </array>}\par
+                        {\cf21\b <array} {\cf2 name=}{\cf2 "SimpleArrayVariableFormatField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <variable_format_field} {\cf2 name=}{\cf2 "SimpleVariableFormatField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                                {\cf21\b <format_field}{\cf21\b >}\par
+                                    {\cf21\b <format_enum} {\cf2 index=}{\cf2 "2"} {\cf2 field_format=}{\cf2 "BMP"}{\cf21\b />}\par
+                                    {\cf21\b <format_enum} {\cf2 index=}{\cf2 "1"} {\cf2 field_format=}{\cf2 "JPEG"}{\cf21\b />}\par
+                                    {\cf21\b <format_enum} {\cf2 index=}{\cf2 "0"} {\cf2 field_format=}{\cf2 "RAW"}{\cf21\b />}\par
+                                {\cf21\b </format_field>}\par
+                                {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "100000"} {\cf2 field_type_unsigned=}{\cf2 "unsigned integer"}{\cf21\b />}\par
+                            {\cf21\b </variable_format_field>}\par
+                            {\cf21\b <dimension} {\cf2 name=}{\cf2 "SimpleArrayDimension8"} {\cf2 size=}{\cf2 "8"}{\cf21\b />}\par
+                        {\cf21\b </array>}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageRecordArrayFixedField"} {\cf2 message_id=}{\cf2 "B009"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyRecordArrayFixedField"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordArrayFixedField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <array} {\cf2 name=}{\cf2 "SimpleArrayFixedField"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "SimpleFixedField"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                            {\cf21\b <dimension} {\cf2 name=}{\cf2 "SimpleArrayFixedFieldDimension1"} {\cf2 size=}{\cf2 "4"}{\cf21\b />}\par
+                        {\cf21\b </array>}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageRecordArrayFixedLengthString"} {\cf2 message_id=}{\cf2 "B00A"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyRecordArrayFixedLengthString"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordArrayFixedLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <array} {\cf2 name=}{\cf2 "SimpleArrayFixedLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <fixed_length_string} {\cf2 name=}{\cf2 "SimpleFixedLengthString"} {\cf2 string_length=}{\cf2 "20"} {\cf2 optional=}{\cf2 "false"}{\cf21\b />}\par
+                            {\cf21\b <dimension} {\cf2 name=}{\cf2 "SimpleArrayDimension8"} {\cf2 size=}{\cf2 "8"}{\cf21\b />}\par
+                        {\cf21\b </array>}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+            {\cf21\b <message_def} {\cf2 name=}{\cf2 "SimpleMessageRecordArrayVariableLengthString"} {\cf2 message_id=}{\cf2 "B00B"} {\cf2 is_command=}{\cf2 "false"}{\cf21\b >}\par
+                {\cf21\b <description} {\cf2 xml:space=}{\cf2 "preserve"}{\cf21\b >}message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing{\cf21\b </description>}\par
+                {\cf21\b <header} {\cf2 name=}{\cf2 "JTS_DefaultHeader"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "DefaultHeaderRec"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <fixed_field} {\cf2 name=}{\cf2 "MessageID"} {\cf2 optional=}{\cf2 "false"} {\cf2 field_type=}{\cf2 "unsigned short integer"} {\cf2 field_units=}{\cf2 "one"}{\cf21\b />}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </header>}\par
+                {\cf21\b <body} {\cf2 name=}{\cf2 "SimpleBodyRecordArrayVariableLengthString"}{\cf21\b >}\par
+                    {\cf21\b <record} {\cf2 name=}{\cf2 "SimpleRecordArrayVariableLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                        {\cf21\b <array} {\cf2 name=}{\cf2 "SimpleArrayVariableLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                            {\cf21\b <variable_length_string} {\cf2 name=}{\cf2 "SimpleVariableLengthString"} {\cf2 optional=}{\cf2 "false"}{\cf21\b >}\par
+                                {\cf21\b <count_field} {\cf2 min_count=}{\cf2 "0"} {\cf2 max_count=}{\cf2 "100"} {\cf2 field_type_unsigned=}{\cf2 "unsigned byte"}{\cf21\b />}\par
+                            {\cf21\b </variable_length_string>}\par
+                            {\cf21\b <dimension} {\cf2 name=}{\cf2 "SimpleArrayDimension16"} {\cf2 size=}{\cf2 "16"}{\cf21\b />}\par
+                        {\cf21\b </array>}\par
+                    {\cf21\b </record>}\par
+                {\cf21\b </body>}\par
+                {\cf21\b <footer} {\cf2 name=}{\cf2 "EmptyFooter"}{\cf21\b />}\par
+            {\cf21\b </message_def>}\par
+        {\cf21\b </output_set>}\par
+    {\cf21\b </message_set>}\par
+    {\cf21\b <internal_events_set}{\cf21\b />}\par
+    {\cf21\b <protocol_behavior} {\cf2 is_stateless=}{\cf2 "false"}{\cf21\b >}\par
+        {\cf21\b <start} {\cf2 state_machine_name=}{\cf2 "SimpleServerProtocol"} {\cf2 state_name=}{\cf2 "Running"}{\cf21\b />}\par
+        {\cf21\b <state_machine} {\cf2 name=}{\cf2 "SimpleServerProtocol"}{\cf21\b >}\par
+            {\cf21\b <state} {\cf2 name=}{\cf2 "Running"}{\cf21\b >}\par
+                {\cf21\b <transition} {\cf2 name=}{\cf2 "SimpleMessageRecordFixedField"}{\cf21\b >}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "SimpleMessageRecordFixedField"} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "unsigned int"} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b <ns2:internal}{\cf21\b />}\par
+                    {\cf21\b <action} {\cf2 name=}{\cf2 "SendSimpleMessageRecordFixedField"}{\cf21\b >}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b </action>}\par
+                {\cf21\b </transition>}\par
+                {\cf21\b <transition} {\cf2 name=}{\cf2 "SimpleMessageRecordFixedLengthString"}{\cf21\b >}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "SimpleMessageRecordFixedLengthString"} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "unsigned int"} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b <ns2:internal}{\cf21\b />}\par
+                    {\cf21\b <action} {\cf2 name=}{\cf2 "SendSimpleMessageRecordFixedLengthString"}{\cf21\b >}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b </action>}\par
+                {\cf21\b </transition>}\par
+                {\cf21\b <transition} {\cf2 name=}{\cf2 "SimpleMessageRecordVariableLengthString"}{\cf21\b >}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "SimpleMessageRecordVariableLengthString"} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "unsigned int"} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b <ns2:internal}{\cf21\b />}\par
+                    {\cf21\b <action} {\cf2 name=}{\cf2 "SendSimpleMessageRecordVariableLengthString"}{\cf21\b >}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b </action>}\par
+                {\cf21\b </transition>}\par
+                {\cf21\b <transition} {\cf2 name=}{\cf2 "SimpleMessageRecordVariableField"}{\cf21\b >}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "SimpleMessageRecordVariableField"} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "unsigned int"} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b <ns2:internal}{\cf21\b />}\par
+                    {\cf21\b <action} {\cf2 name=}{\cf2 "SendSimpleMessageRecordVariableField"}{\cf21\b >}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b </action>}\par
+                {\cf21\b </transition>}\par
+                {\cf21\b <transition} {\cf2 name=}{\cf2 "SimpleMessageRecordBitField"}{\cf21\b >}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "SimpleMessageRecordBitField"} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "unsigned int"} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b <ns2:internal}{\cf21\b />}\par
+                    {\cf21\b <action} {\cf2 name=}{\cf2 "SendSimpleMessageRecordBitField"}{\cf21\b >}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b </action>}\par
+                {\cf21\b </transition>}\par
+                {\cf21\b <transition} {\cf2 name=}{\cf2 "SimpleMessageRecordVariableLengthField"}{\cf21\b >}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "SimpleMessageRecordVariableLengthField"} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "unsigned int"} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b <ns2:internal}{\cf21\b />}\par
+                    {\cf21\b <action} {\cf2 name=}{\cf2 "SendSimpleMessageRecordVariableLengthField"}{\cf21\b >}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b </action>}\par
+                {\cf21\b </transition>}\par
+                {\cf21\b <transition} {\cf2 name=}{\cf2 "SimpleMessageRecordVariableFormatField"}{\cf21\b >}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "SimpleMessageRecordVariableFormatField"} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "unsigned int"} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b <ns2:internal}{\cf21\b />}\par
+                    {\cf21\b <action} {\cf2 name=}{\cf2 "SendSimpleMessageRecordVariableFormatField"}{\cf21\b >}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b </action>}\par
+                {\cf21\b </transition>}\par
+                {\cf21\b <transition} {\cf2 name=}{\cf2 "SimpleMessageRecordArray"}{\cf21\b >}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "SimpleMessageRecordArray"} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "unsigned int"} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b <ns2:internal}{\cf21\b />}\par
+                    {\cf21\b <action} {\cf2 name=}{\cf2 "SendSimpleMessageRecordArray"}{\cf21\b >}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b </action>}\par
+                {\cf21\b </transition>}\par
+                {\cf21\b <transition} {\cf2 name=}{\cf2 "SimpleMessageRecordArrayFixedField"}{\cf21\b >}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "SimpleMessageRecordArrayFixedField"} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "unsigned int"} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b <ns2:internal}{\cf21\b />}\par
+                    {\cf21\b <action} {\cf2 name=}{\cf2 "SendSimpleMessageRecordArrayFixedField"}{\cf21\b >}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b </action>}\par
+                {\cf21\b </transition>}\par
+                {\cf21\b <transition} {\cf2 name=}{\cf2 "SimpleMessageRecordArrayFixedLengthString"}{\cf21\b >}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "SimpleMessageRecordArrayFixedLengthString"} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "unsigned int"} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b <ns2:internal}{\cf21\b />}\par
+                    {\cf21\b <action} {\cf2 name=}{\cf2 "SendSimpleMessageRecordArrayFixedLengthString"}{\cf21\b >}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b </action>}\par
+                {\cf21\b </transition>}\par
+                {\cf21\b <transition} {\cf2 name=}{\cf2 "SimpleMessageRecordArrayVariableLengthString"}{\cf21\b >}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "SimpleMessageRecordArrayVariableLengthString"} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "unsigned int"} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b <ns2:internal}{\cf21\b />}\par
+                    {\cf21\b <action} {\cf2 name=}{\cf2 "SendSimpleMessageRecordArrayVariableLengthString"}{\cf21\b >}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b </action>}\par
+                {\cf21\b </transition>}\par
+                {\cf21\b <transition} {\cf2 name=}{\cf2 "SimpleMessageRecord"}{\cf21\b >}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "SimpleMessageRecord"} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "unsigned int"} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b <ns2:internal}{\cf21\b />}\par
+                    {\cf21\b <action} {\cf2 name=}{\cf2 "SendSimpleMessageRecord"}{\cf21\b >}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b </action>}\par
+                {\cf21\b </transition>}\par
+                {\cf21\b <transition} {\cf2 name=}{\cf2 "SimpleMessageList"}{\cf21\b >}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "SimpleMessageList"} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "unsigned int"} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b <ns2:internal}{\cf21\b />}\par
+                    {\cf21\b <action} {\cf2 name=}{\cf2 "SendSimpleMessageList"}{\cf21\b >}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b </action>}\par
+                {\cf21\b </transition>}\par
+                {\cf21\b <transition} {\cf2 name=}{\cf2 "SimpleMessageListListRecordFixedLengthString"}{\cf21\b >}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "SimpleMessageListListRecordFixedLengthString"} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "unsigned int"} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b <ns2:internal}{\cf21\b />}\par
+                    {\cf21\b <action} {\cf2 name=}{\cf2 "SendSimpleMessageListListRecordFixedLengthString"}{\cf21\b >}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b </action>}\par
+                {\cf21\b </transition>}\par
+                {\cf21\b <transition} {\cf2 name=}{\cf2 "SimpleMessageSequence"}{\cf21\b >}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "SimpleMessageSequence"} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "unsigned int"} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b <ns2:internal}{\cf21\b />}\par
+                    {\cf21\b <action} {\cf2 name=}{\cf2 "SendSimpleMessageSequence"}{\cf21\b >}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b </action>}\par
+                {\cf21\b </transition>}\par
+                {\cf21\b <transition} {\cf2 name=}{\cf2 "SimpleMessageVariant"}{\cf21\b >}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "SimpleMessageVariant"} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                    {\cf21\b <parameter} {\cf2 type=}{\cf2 "unsigned int"} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b <ns2:internal}{\cf21\b />}\par
+                    {\cf21\b <action} {\cf2 name=}{\cf2 "SendSimpleMessageVariant"}{\cf21\b >}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "msg"}{\cf21\b />}\par
+                        {\cf21\b <argument} {\cf2 value=}{\cf2 "sender"}{\cf21\b />}\par
+                    {\cf21\b </action>}\par
+                {\cf21\b </transition>}\par
+            {\cf21\b </state>}\par
+        {\cf21\b </state_machine>}\par
+    {\cf21\b </protocol_behavior>}\par
+{\cf21\b </service_def>}\par
+}

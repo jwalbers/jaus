@@ -1,0 +1,1010 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service_def name="SimpleServer" id="urn:jaus:exp:dds:SimpleServer" version="1.0" xmlns:ns2="urn:jaus:jsidl:1.1" xmlns="urn:jaus:jsidl:1.0" xmlns:ns3="urn:jaus:jsidl:plus">
+    <description xml:space="preserve">Simple Server used for unit testing during JDDS development and testing</description>
+    <assumptions xml:space="preserve"></assumptions>
+    <references/>
+    <message_set>
+        <input_set>
+            <message_def name="SimpleMessageRecordFixedField" message_id="B001" is_command="false">
+                <description xml:space="preserve">message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyRecordFixedField">
+                    <record name="SimpleRecordFixedField" optional="false">
+                        <fixed_field name="SimpleFixedField" optional="false" field_type="integer" field_units="one"/>
+                    </record>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageRecord" message_id="B00C" is_command="false">
+                <description xml:space="preserve">message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyRecord">
+<record name="SimpleRecord" optional="false">
+  <presence_vector field_type_unsigned="unsigned byte"/>
+  <fixed_length_string name="FixedLengthStringField"
+                       string_length="2"
+                       optional="true"/>
+  <variable_length_string name="VariableLengthStringField"
+                          optional="true">
+    <count_field min_count="0" max_count="100"
+                 field_type_unsigned="unsigned byte"/>
+  </variable_length_string>
+  <fixed_field name="FixedField1"
+               optional="true" field_type="byte" field_units="one"/>
+  <fixed_field name="FixedField2"
+               optional="false" field_type="short integer" field_units="one"/>
+  <fixed_field name="FixedField4"
+               optional="false" field_type="integer" field_units="one"/>
+  <fixed_field name="FixedField8"
+               optional="true" field_type="long integer" field_units="one"/>
+</record>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageList" message_id="B00E" is_command="false">
+                <description xml:space="preserve">message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyList">
+<list name="SimpleList" optional="false">
+  <count_field min_count="0" max_count="10"
+               field_type_unsigned="unsigned byte"/>
+  <record name="SimpleRecordFixedLengthString"
+          optional="false">
+    <fixed_length_string name="SimpleFixedLengthString"
+                         string_length="20" optional="false"/>
+  </record>
+</list>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageListListRecordFixedLengthString" message_id="B00F" is_command="false">
+                <description xml:space="preserve">message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyListListRecordFixedLengthString">
+                    <list name="SimpleListListRecordFixedLengthString" optional="false">
+                        <count_field min_count="0" max_count="50" field_type_unsigned="unsigned byte"/>
+                        <list name="SimpleListRecordFixedLengthString" optional="false">
+                            <count_field min_count="0" max_count="10" field_type_unsigned="unsigned byte"/>
+                            <record name="SimpleRecordFixedLengthString" optional="false">
+                                <fixed_length_string name="SimpleFixedLengthString" string_length="20" optional="false"/>
+                            </record>
+                        </list>
+                    </list>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageSequence" message_id="B010" is_command="false">
+                <description xml:space="preserve"></description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodySequence">
+<sequence name="SimpleSequence" optional="false">
+  <list name="SimpleListRecordFixedLengthString"
+        optional="false">
+    <count_field min_count="0" max_count="10"
+                 field_type_unsigned="unsigned byte"/>
+    <record name="SimpleRecordFixedLengthString"
+            optional="false">
+      <fixed_length_string name="SimpleFixedLengthString"
+                           string_length="20" optional="false"/>
+    </record>
+  </list>
+  <record name="SimpleRecordArrayFixedLengthString"
+          optional="false">
+    <array name="SimpleArrayFixedLengthString"
+           optional="false">
+      <fixed_length_string name="SimpleFixedLengthString" string_length="20"
+                           optional="false"/>
+      <dimension name="SimpleArrayDimension8" size="8"/>
+    </array>
+  </record>
+  <record name="SimpleRecordVariableLengthString"
+          optional="false">
+    <variable_length_string name="SimpleVariableLengthString"
+                            optional="false">
+      <count_field min_count="0" max_count="100" field_type_unsigned="unsigned byte"/>
+    </variable_length_string>
+  </record>
+  <record name="SimpleRecordFixedField"
+          optional="false">
+    <fixed_field name="SimpleFixedField"
+                 optional="false" field_type="integer" field_units="one"/>
+  </record>
+</sequence>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageVariant" message_id="B011" is_command="false">
+                <description xml:space="preserve"></description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyVariant">
+<variant name="SimpleVariant"
+         optional="false">
+  <vtag_field min_count="0" max_count="3"
+              field_type_unsigned="unsigned byte"/>
+  <list name="SimpleListRecordFixedLengthString"
+        optional="false">
+    <count_field min_count="0" max_count="10"
+                 field_type_unsigned="unsigned byte"/>
+    <record name="SimpleRecordFixedLengthString"
+            optional="false">
+      <fixed_length_string name="SimpleFixedLengthString" string_length="20"
+                           optional="false"/>
+    </record>
+  </list>
+  <record name="SimpleRecordArrayFixedLengthString"
+          optional="false">
+    <array name="SimpleArrayFixedLengthString"
+           optional="false">
+      <fixed_length_string name="SimpleFixedLengthString" string_length="20"
+                           optional="false"/>
+      <dimension name="SimpleArrayDimension8" size="8"/>
+    </array>
+  </record>
+  <record name="SimpleRecordVariableLengthString"
+          optional="false">
+    <variable_length_string name="SimpleVariableLengthString"
+                            optional="false">
+      <count_field min_count="0" max_count="100"
+                   field_type_unsigned="unsigned byte"/>
+    </variable_length_string>
+  </record>
+  <record name="SimpleRecordFixedField"
+          optional="false">
+    <fixed_field name="SimpleFixedField"
+                 optional="false"
+                 field_type="integer" field_units="one"/>
+  </record>
+</variant>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageRecordFixedLengthString" message_id="B002" is_command="false">
+                <description xml:space="preserve">message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyRecordFixedLengthString">
+                    <record name="SimpleRecordFixedLengthString" optional="false">
+                        <fixed_length_string name="SimpleFixedLengthString" string_length="20" optional="false"/>
+                    </record>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageRecordVariableLengthString" message_id="B003" is_command="false">
+                <description xml:space="preserve">message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyRecordVariableLengthString">
+                    <record name="SimpleRecordVariableLengthString" optional="false">
+                        <variable_length_string name="SimpleVariableLengthString" optional="false">
+                            <count_field min_count="0" max_count="100" field_type_unsigned="unsigned byte"/>
+                        </variable_length_string>
+                    </record>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageRecordVariableField" message_id="B004" is_command="false">
+                <description xml:space="preserve">message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyRecordVariableField">
+                    <record name="SimpleRecordVariableField" optional="false">
+<variable_field name="SimpleVariableField"
+                optional="false">
+  <type_and_units_field>
+    <type_and_units_enum name="celsius_type"
+                         index="0"
+                         field_units="degree Celsius"
+                         field_type="short integer"/>
+    <type_and_units_enum name="kelvin_type"
+                         index="1"
+                         field_units="kelvin"
+                         field_type="unsigned short integer"/>
+  </type_and_units_field>
+</variable_field>
+                    </record>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageRecordBitField" message_id="B005" is_command="false">
+                <description xml:space="preserve">message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyRecordBitField">
+                    <record name="SimpleRecordBitField" optional="false">
+<bit_field name="SimpleBitField" optional="false" field_type_unsigned="unsigned integer">
+  <sub_field name="SubField0_3">
+    <bit_range from_index="0" to_index="3"/>
+    <value_set offset_to_lower_limit="false">
+      <value_enum enum_index="0" enum_const="ESuccess"/>
+      <value_enum enum_index="1" enum_const="EFileError"/>
+      <value_enum enum_index="2" enum_const="EDeviceError"/>
+    </value_set>
+  </sub_field>
+  <sub_field name="SubField4_15">
+    <bit_range from_index="4" to_index="15"/>
+    <value_set offset_to_lower_limit="false">
+      <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="4095" upper_limit_type="inclusive"/>
+    </value_set>
+  </sub_field>
+  <sub_field name="SubField16_31">
+    <bit_range from_index="16" to_index="31"/>
+    <value_set offset_to_lower_limit="false">
+      <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="65535" upper_limit_type="inclusive"/>
+    </value_set>
+  </sub_field>
+</bit_field>
+                    </record>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageRecordVariableLengthField" message_id="B006" is_command="false">
+                <description xml:space="preserve">message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyRecordVariableLengthField">
+                    <record name="SimpleRecordVariableLengthField" optional="false">
+<variable_length_field name="SimpleVariableLengthField"
+                       optional="false" field_format="RAW">
+  <count_field min_count="0" max_count="1000"
+               field_type_unsigned="unsigned short integer"/>
+</variable_length_field>
+                    </record>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageRecordVariableFormatField" message_id="B007" is_command="false">
+                <description xml:space="preserve">message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyRecordVariableFormatField">
+                    <record name="SimpleRecordVariableFormatField" optional="false">
+<variable_format_field name="SimpleVariableFormatField"
+                       optional="false">
+  <format_field>
+    <format_enum index="2" field_format="BMP"/>
+    <format_enum index="1" field_format="JPEG"/>
+    <format_enum index="0" field_format="RAW"/>
+  </format_field>
+  <count_field min_count="0" max_count="100000"
+               field_type_unsigned="unsigned integer"/>
+</variable_format_field>
+                    </record>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageRecordArray" message_id="B008" is_command="false">
+                <description xml:space="preserve">message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyRecordArray">
+                    <record name="SimpleRecordArray" optional="false">
+<array name="SimpleArrayFixedField"
+       optional="false">
+  <fixed_field name="SimpleFixedField"
+               optional="false" field_type="integer"
+               field_units="one"/>
+  <dimension name="SimpleArrayFixedFieldDimension1" size="4"/>
+  <dimension name="SimpleArrayFixedFieldDimension1" size="8"/>
+</array>
+                        <array name="SimpleArrayVariableField" optional="false">
+                            <variable_field name="SimpleVariableField" optional="false">
+                                <type_and_units_field>
+                                    <type_and_units_enum name="celsius_type" index="0" field_units="degree Celsius" field_type="short integer"/>
+                                    <type_and_units_enum name="kelvin_type" index="1" field_units="kelvin" field_type="unsigned short integer"/>
+                                </type_and_units_field>
+                            </variable_field>
+                            <dimension name="SimpleArrayDimension2" size="2"/>
+                        </array>
+                        <array name="SimpleArrayFixedLengthString" optional="false">
+                            <fixed_length_string name="SimpleFixedLengthString" string_length="20" optional="false"/>
+                            <dimension name="SimpleArrayDimension8" size="8"/>
+                        </array>
+                        <array name="SimpleArrayVariableLengthString" optional="false">
+                            <variable_length_string name="SimpleVariableLengthString" optional="false">
+                                <count_field min_count="0" max_count="100" field_type_unsigned="unsigned byte"/>
+                            </variable_length_string>
+                            <dimension name="SimpleArrayDimension16" size="16"/>
+                        </array>
+                        <array name="SimpleArrayBitField" optional="false">
+                            <bit_field name="SimpleBitField" optional="false" field_type_unsigned="unsigned integer">
+                                <sub_field name="SubField0_3">
+                                    <bit_range from_index="0" to_index="3"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_enum enum_index="0" enum_const="ESuccess"/>
+                                        <value_enum enum_index="1" enum_const="EFileError"/>
+                                        <value_enum enum_index="2" enum_const="EDeviceError"/>
+                                    </value_set>
+                                </sub_field>
+                                <sub_field name="SubField4_15">
+                                    <bit_range from_index="4" to_index="15"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="4095" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                                <sub_field name="SubField16_31">
+                                    <bit_range from_index="16" to_index="31"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="65535" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                            </bit_field>
+                            <dimension name="SimpleArrayDimension4" size="4"/>
+                        </array>
+                        <array name="SimpleArrayVariableLengthField" optional="false">
+                            <variable_length_field name="SimpleVariableLengthField" optional="false" field_format="RAW">
+                                <count_field min_count="0" max_count="1000" field_type_unsigned="unsigned short integer"/>
+                            </variable_length_field>
+                            <dimension name="SimpleArrayDimension4" size="4"/>
+                        </array>
+                        <array name="SimpleArrayVariableFormatField" optional="false">
+                            <variable_format_field name="SimpleVariableFormatField" optional="false">
+                                <format_field>
+                                    <format_enum index="2" field_format="BMP"/>
+                                    <format_enum index="1" field_format="JPEG"/>
+                                    <format_enum index="0" field_format="RAW"/>
+                                </format_field>
+                                <count_field min_count="0" max_count="100000" field_type_unsigned="unsigned integer"/>
+                            </variable_format_field>
+                            <dimension name="SimpleArrayDimension8" size="8"/>
+                        </array>
+                    </record>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageRecordArrayFixedField" message_id="B009" is_command="false">
+                <description xml:space="preserve">message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyRecordArrayFixedField">
+                    <record name="SimpleRecordArrayFixedField" optional="false">
+                        <array name="SimpleArrayFixedField" optional="false">
+                            <fixed_field name="SimpleFixedField" optional="false" field_type="integer" field_units="one"/>
+                            <dimension name="SimpleArrayFixedFieldDimension1" size="4"/>
+                        </array>
+                    </record>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageRecordArrayFixedLengthString" message_id="B00A" is_command="false">
+                <description xml:space="preserve">message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyRecordArrayFixedLengthString">
+                    <record name="SimpleRecordArrayFixedLengthString" optional="false">
+                        <array name="SimpleArrayFixedLengthString" optional="false">
+                            <fixed_length_string name="SimpleFixedLengthString" string_length="20" optional="false"/>
+                            <dimension name="SimpleArrayDimension8" size="8"/>
+                        </array>
+                    </record>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageRecordArrayVariableLengthString" message_id="B00B" is_command="false">
+                <description xml:space="preserve">message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyRecordArrayVariableLengthString">
+                    <record name="SimpleRecordArrayVariableLengthString" optional="false">
+                        <array name="SimpleArrayVariableLengthString" optional="false">
+                            <variable_length_string name="SimpleVariableLengthString" optional="false">
+                                <count_field min_count="0" max_count="100" field_type_unsigned="unsigned byte"/>
+                            </variable_length_string>
+                            <dimension name="SimpleArrayDimension16" size="16"/>
+                        </array>
+                    </record>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+        </input_set>
+        <output_set>
+            <message_def name="SimpleMessageRecordFixedField" message_id="B001" is_command="false">
+                <description xml:space="preserve">message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyRecordFixedField">
+                    <record name="SimpleRecordFixedField" optional="false">
+                        <fixed_field name="SimpleFixedField" optional="false" field_type="integer" field_units="one"/>
+                    </record>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageRecord" message_id="B00C" is_command="false">
+                <description xml:space="preserve">message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyRecord">
+<record name="SimpleRecord" optional="false">
+  <presence_vector field_type_unsigned="unsigned byte"/>
+  <fixed_length_string name="FixedLengthStringField"
+                       string_length="2" optional="true"/>
+  <variable_length_string name="VariableLengthStringField" optional="true">
+    <count_field min_count="0" max_count="100"
+                 field_type_unsigned="unsigned byte"/>
+  </variable_length_string>
+  <fixed_field name="FixedField1" optional="true"
+               field_type="byte" field_units="one"/>
+  <fixed_field name="FixedField2" optional="false"
+               field_type="short integer" field_units="one"/>
+  <fixed_field name="FixedField4" optional="false"
+               field_type="integer" field_units="one"/>
+  <fixed_field name="FixedField8" optional="true"
+               field_type="long integer" field_units="one"/>
+</record>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageList" message_id="B00E" is_command="false">
+                <description xml:space="preserve">message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyList">
+                    <list name="SimpleList" optional="false">
+                        <count_field min_count="0" max_count="10" field_type_unsigned="unsigned byte"/>
+                        <record name="SimpleRecordFixedLengthString" optional="false">
+                            <fixed_length_string name="SimpleFixedLengthString" string_length="20" optional="false"/>
+                        </record>
+                    </list>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageListListRecordFixedLengthString" message_id="B00F" is_command="false">
+                <description xml:space="preserve">message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyListListRecordFixedLengthString">
+                    <list name="SimpleListListRecordFixedLengthString" optional="false">
+                        <count_field min_count="0" max_count="50" field_type_unsigned="unsigned byte"/>
+                        <list name="SimpleListRecordFixedLengthString" optional="false">
+                            <count_field min_count="0" max_count="10" field_type_unsigned="unsigned byte"/>
+                            <record name="SimpleRecordFixedLengthString" optional="false">
+                                <fixed_length_string name="SimpleFixedLengthString" string_length="20" optional="false"/>
+                            </record>
+                        </list>
+                    </list>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageSequence" message_id="B010" is_command="false">
+                <description xml:space="preserve"></description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodySequence">
+                    <sequence name="SimpleSequence" optional="false">
+                        <list name="SimpleListRecordFixedLengthString" optional="false">
+                            <count_field min_count="0" max_count="10" field_type_unsigned="unsigned byte"/>
+                            <record name="SimpleRecordFixedLengthString" optional="false">
+                                <fixed_length_string name="SimpleFixedLengthString" string_length="20" optional="false"/>
+                            </record>
+                        </list>
+                        <record name="SimpleRecordArrayFixedLengthString" optional="false">
+                            <array name="SimpleArrayFixedLengthString" optional="false">
+                                <fixed_length_string name="SimpleFixedLengthString" string_length="20" optional="false"/>
+                                <dimension name="SimpleArrayDimension8" size="8"/>
+                            </array>
+                        </record>
+                        <record name="SimpleRecordVariableLengthString" optional="false">
+                            <variable_length_string name="SimpleVariableLengthString" optional="false">
+                                <count_field min_count="0" max_count="100" field_type_unsigned="unsigned byte"/>
+                            </variable_length_string>
+                        </record>
+                        <record name="SimpleRecordFixedField" optional="false">
+                            <fixed_field name="SimpleFixedField" optional="false" field_type="integer" field_units="one"/>
+                        </record>
+                    </sequence>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageVariant" message_id="B011" is_command="false">
+                <description xml:space="preserve"></description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyVariant">
+                    <variant name="SimpleVariant" optional="false">
+                        <vtag_field min_count="0" max_count="3" field_type_unsigned="unsigned byte"/>
+                        <list name="SimpleListRecordFixedLengthString" optional="false">
+                            <count_field min_count="0" max_count="10" field_type_unsigned="unsigned byte"/>
+                            <record name="SimpleRecordFixedLengthString" optional="false">
+                                <fixed_length_string name="SimpleFixedLengthString" string_length="20" optional="false"/>
+                            </record>
+                        </list>
+                        <record name="SimpleRecordArrayFixedLengthString" optional="false">
+                            <array name="SimpleArrayFixedLengthString" optional="false">
+                                <fixed_length_string name="SimpleFixedLengthString" string_length="20" optional="false"/>
+                                <dimension name="SimpleArrayDimension8" size="8"/>
+                            </array>
+                        </record>
+                        <record name="SimpleRecordVariableLengthString" optional="false">
+                            <variable_length_string name="SimpleVariableLengthString" optional="false">
+                                <count_field min_count="0" max_count="100" field_type_unsigned="unsigned byte"/>
+                            </variable_length_string>
+                        </record>
+                        <record name="SimpleRecordFixedField" optional="false">
+                            <fixed_field name="SimpleFixedField" optional="false" field_type="integer" field_units="one"/>
+                        </record>
+                    </variant>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageRecordFixedLengthString" message_id="B002" is_command="false">
+                <description xml:space="preserve">message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyRecordFixedLengthString">
+                    <record name="SimpleRecordFixedLengthString" optional="false">
+                        <fixed_length_string name="SimpleFixedLengthString" string_length="20" optional="false"/>
+                    </record>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageRecordVariableLengthString" message_id="B003" is_command="false">
+                <description xml:space="preserve">message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyRecordVariableLengthString">
+                    <record name="SimpleRecordVariableLengthString" optional="false">
+                        <variable_length_string name="SimpleVariableLengthString" optional="false">
+                            <count_field min_count="0" max_count="100" field_type_unsigned="unsigned byte"/>
+                        </variable_length_string>
+                    </record>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageRecordVariableField" message_id="B004" is_command="false">
+                <description xml:space="preserve">message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyRecordVariableField">
+                    <record name="SimpleRecordVariableField" optional="false">
+                        <variable_field name="SimpleVariableField" optional="false">
+                            <type_and_units_field>
+                                <type_and_units_enum name="celsius_type" index="0" field_units="degree Celsius" field_type="short integer"/>
+                                <type_and_units_enum name="kelvin_type" index="1" field_units="kelvin" field_type="unsigned short integer"/>
+                            </type_and_units_field>
+                        </variable_field>
+                    </record>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageRecordBitField" message_id="B005" is_command="false">
+                <description xml:space="preserve">message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyRecordBitField">
+                    <record name="SimpleRecordBitField" optional="false">
+                        <bit_field name="SimpleBitField" optional="false" field_type_unsigned="unsigned integer">
+                            <sub_field name="SubField0_3">
+                                <bit_range from_index="0" to_index="3"/>
+                                <value_set offset_to_lower_limit="false">
+                                    <value_enum enum_index="0" enum_const="ESuccess"/>
+                                    <value_enum enum_index="1" enum_const="EFileError"/>
+                                    <value_enum enum_index="2" enum_const="EDeviceError"/>
+                                </value_set>
+                            </sub_field>
+                            <sub_field name="SubField4_15">
+                                <bit_range from_index="4" to_index="15"/>
+                                <value_set offset_to_lower_limit="false">
+                                    <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="4095" upper_limit_type="inclusive"/>
+                                </value_set>
+                            </sub_field>
+                            <sub_field name="SubField16_31">
+                                <bit_range from_index="16" to_index="31"/>
+                                <value_set offset_to_lower_limit="false">
+                                    <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="65535" upper_limit_type="inclusive"/>
+                                </value_set>
+                            </sub_field>
+                        </bit_field>
+                    </record>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageRecordVariableLengthField" message_id="B006" is_command="false">
+                <description xml:space="preserve">message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyRecordVariableLengthField">
+                    <record name="SimpleRecordVariableLengthField" optional="false">
+                        <variable_length_field name="SimpleVariableLengthField" optional="false" field_format="RAW">
+                            <count_field min_count="0" max_count="1000" field_type_unsigned="unsigned short integer"/>
+                        </variable_length_field>
+                    </record>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageRecordVariableFormatField" message_id="B007" is_command="false">
+                <description xml:space="preserve">message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyRecordVariableFormatField">
+                    <record name="SimpleRecordVariableFormatField" optional="false">
+                        <variable_format_field name="SimpleVariableFormatField" optional="false">
+                            <format_field>
+                                <format_enum index="2" field_format="BMP"/>
+                                <format_enum index="1" field_format="JPEG"/>
+                                <format_enum index="0" field_format="RAW"/>
+                            </format_field>
+                            <count_field min_count="0" max_count="100000" field_type_unsigned="unsigned integer"/>
+                        </variable_format_field>
+                    </record>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageRecordArray" message_id="B008" is_command="false">
+                <description xml:space="preserve">message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyRecordArray">
+                    <record name="SimpleRecordArray" optional="false">
+<array name="SimpleArrayFixedField" optional="false">
+  <fixed_field name="SimpleFixedField"
+               optional="false"
+               field_type="integer"
+               field_units="one"/>
+  <dimension name="SimpleArrayFixedFieldDimension1" size="4"/>
+  <dimension name="SimpleArrayFixedFieldDimension2" size="8"/>
+</array>
+                        <array name="SimpleArrayVariableField" optional="false">
+                            <variable_field name="SimpleVariableField" optional="false">
+                                <type_and_units_field>
+                                    <type_and_units_enum name="celsius_type" index="0" field_units="degree Celsius" field_type="short integer"/>
+                                    <type_and_units_enum name="kelvin_type" index="1" field_units="kelvin" field_type="unsigned short integer"/>
+                                </type_and_units_field>
+                            </variable_field>
+                            <dimension name="SimpleArrayDimension2" size="2"/>
+                        </array>
+                        <array name="SimpleArrayFixedLengthString" optional="false">
+                            <fixed_length_string name="SimpleFixedLengthString" string_length="20" optional="false"/>
+                            <dimension name="SimpleArrayDimension8" size="8"/>
+                        </array>
+                        <array name="SimpleArrayVariableLengthString" optional="false">
+                            <variable_length_string name="SimpleVariableLengthString" optional="false">
+                                <count_field min_count="0" max_count="100" field_type_unsigned="unsigned byte"/>
+                            </variable_length_string>
+                            <dimension name="SimpleArrayDimension16" size="16"/>
+                        </array>
+                        <array name="SimpleArrayBitField" optional="false">
+                            <bit_field name="SimpleBitField" optional="false" field_type_unsigned="unsigned integer">
+                                <sub_field name="SubField0_3">
+                                    <bit_range from_index="0" to_index="3"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_enum enum_index="0" enum_const="ESuccess"/>
+                                        <value_enum enum_index="1" enum_const="EFileError"/>
+                                        <value_enum enum_index="2" enum_const="EDeviceError"/>
+                                    </value_set>
+                                </sub_field>
+                                <sub_field name="SubField4_15">
+                                    <bit_range from_index="4" to_index="15"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="4095" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                                <sub_field name="SubField16_31">
+                                    <bit_range from_index="16" to_index="31"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="65535" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                            </bit_field>
+                            <dimension name="SimpleArrayDimension4" size="4"/>
+                        </array>
+                        <array name="SimpleArrayVariableLengthField" optional="false">
+                            <variable_length_field name="SimpleVariableLengthField" optional="false" field_format="RAW">
+                                <count_field min_count="0" max_count="1000" field_type_unsigned="unsigned short integer"/>
+                            </variable_length_field>
+                            <dimension name="SimpleArrayDimension4" size="4"/>
+                        </array>
+                        <array name="SimpleArrayVariableFormatField" optional="false">
+                            <variable_format_field name="SimpleVariableFormatField" optional="false">
+                                <format_field>
+                                    <format_enum index="2" field_format="BMP"/>
+                                    <format_enum index="1" field_format="JPEG"/>
+                                    <format_enum index="0" field_format="RAW"/>
+                                </format_field>
+                                <count_field min_count="0" max_count="100000" field_type_unsigned="unsigned integer"/>
+                            </variable_format_field>
+                            <dimension name="SimpleArrayDimension8" size="8"/>
+                        </array>
+                    </record>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageRecordArrayFixedField" message_id="B009" is_command="false">
+                <description xml:space="preserve">message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyRecordArrayFixedField">
+                    <record name="SimpleRecordArrayFixedField" optional="false">
+                        <array name="SimpleArrayFixedField" optional="false">
+                            <fixed_field name="SimpleFixedField" optional="false" field_type="integer" field_units="one"/>
+                            <dimension name="SimpleArrayFixedFieldDimension1" size="4"/>
+                        </array>
+                    </record>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageRecordArrayFixedLengthString" message_id="B00A" is_command="false">
+                <description xml:space="preserve">message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyRecordArrayFixedLengthString">
+                    <record name="SimpleRecordArrayFixedLengthString" optional="false">
+                        <array name="SimpleArrayFixedLengthString" optional="false">
+                            <fixed_length_string name="SimpleFixedLengthString" string_length="20" optional="false"/>
+                            <dimension name="SimpleArrayDimension8" size="8"/>
+                        </array>
+                    </record>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+            <message_def name="SimpleMessageRecordArrayVariableLengthString" message_id="B00B" is_command="false">
+                <description xml:space="preserve">message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_type="unsigned short integer" field_units="one"/>
+                    </record>
+                </header>
+                <body name="SimpleBodyRecordArrayVariableLengthString">
+                    <record name="SimpleRecordArrayVariableLengthString" optional="false">
+                        <array name="SimpleArrayVariableLengthString" optional="false">
+                            <variable_length_string name="SimpleVariableLengthString" optional="false">
+                                <count_field min_count="0" max_count="100" field_type_unsigned="unsigned byte"/>
+                            </variable_length_string>
+                            <dimension name="SimpleArrayDimension16" size="16"/>
+                        </array>
+                    </record>
+                </body>
+                <footer name="EmptyFooter"/>
+            </message_def>
+        </output_set>
+    </message_set>
+    <internal_events_set/>
+    <protocol_behavior is_stateless="false">
+        <start state_machine_name="SimpleServerProtocol" state_name="Running"/>
+        <state_machine name="SimpleServerProtocol">
+            <state name="Running">
+                <transition name="SimpleMessageRecordFixedField">
+                    <parameter type="SimpleMessageRecordFixedField" value="msg"/>
+                    <parameter type="unsigned int" value="sender"/>
+                    <ns2:internal/>
+                    <action name="SendSimpleMessageRecordFixedField">
+                        <argument value="msg"/>
+                        <argument value="sender"/>
+                    </action>
+                </transition>
+                <transition name="SimpleMessageRecordFixedLengthString">
+                    <parameter type="SimpleMessageRecordFixedLengthString" value="msg"/>
+                    <parameter type="unsigned int" value="sender"/>
+                    <ns2:internal/>
+                    <action name="SendSimpleMessageRecordFixedLengthString">
+                        <argument value="msg"/>
+                        <argument value="sender"/>
+                    </action>
+                </transition>
+                <transition name="SimpleMessageRecordVariableLengthString">
+                    <parameter type="SimpleMessageRecordVariableLengthString" value="msg"/>
+                    <parameter type="unsigned int" value="sender"/>
+                    <ns2:internal/>
+                    <action name="SendSimpleMessageRecordVariableLengthString">
+                        <argument value="msg"/>
+                        <argument value="sender"/>
+                    </action>
+                </transition>
+                <transition name="SimpleMessageRecordVariableField">
+                    <parameter type="SimpleMessageRecordVariableField" value="msg"/>
+                    <parameter type="unsigned int" value="sender"/>
+                    <ns2:internal/>
+                    <action name="SendSimpleMessageRecordVariableField">
+                        <argument value="msg"/>
+                        <argument value="sender"/>
+                    </action>
+                </transition>
+                <transition name="SimpleMessageRecordBitField">
+                    <parameter type="SimpleMessageRecordBitField" value="msg"/>
+                    <parameter type="unsigned int" value="sender"/>
+                    <ns2:internal/>
+                    <action name="SendSimpleMessageRecordBitField">
+                        <argument value="msg"/>
+                        <argument value="sender"/>
+                    </action>
+                </transition>
+                <transition name="SimpleMessageRecordVariableLengthField">
+                    <parameter type="SimpleMessageRecordVariableLengthField" value="msg"/>
+                    <parameter type="unsigned int" value="sender"/>
+                    <ns2:internal/>
+                    <action name="SendSimpleMessageRecordVariableLengthField">
+                        <argument value="msg"/>
+                        <argument value="sender"/>
+                    </action>
+                </transition>
+                <transition name="SimpleMessageRecordVariableFormatField">
+                    <parameter type="SimpleMessageRecordVariableFormatField" value="msg"/>
+                    <parameter type="unsigned int" value="sender"/>
+                    <ns2:internal/>
+                    <action name="SendSimpleMessageRecordVariableFormatField">
+                        <argument value="msg"/>
+                        <argument value="sender"/>
+                    </action>
+                </transition>
+                <transition name="SimpleMessageRecordArray">
+                    <parameter type="SimpleMessageRecordArray" value="msg"/>
+                    <parameter type="unsigned int" value="sender"/>
+                    <ns2:internal/>
+                    <action name="SendSimpleMessageRecordArray">
+                        <argument value="msg"/>
+                        <argument value="sender"/>
+                    </action>
+                </transition>
+                <transition name="SimpleMessageRecordArrayFixedField">
+                    <parameter type="SimpleMessageRecordArrayFixedField" value="msg"/>
+                    <parameter type="unsigned int" value="sender"/>
+                    <ns2:internal/>
+                    <action name="SendSimpleMessageRecordArrayFixedField">
+                        <argument value="msg"/>
+                        <argument value="sender"/>
+                    </action>
+                </transition>
+                <transition name="SimpleMessageRecordArrayFixedLengthString">
+                    <parameter type="SimpleMessageRecordArrayFixedLengthString" value="msg"/>
+                    <parameter type="unsigned int" value="sender"/>
+                    <ns2:internal/>
+                    <action name="SendSimpleMessageRecordArrayFixedLengthString">
+                        <argument value="msg"/>
+                        <argument value="sender"/>
+                    </action>
+                </transition>
+                <transition name="SimpleMessageRecordArrayVariableLengthString">
+                    <parameter type="SimpleMessageRecordArrayVariableLengthString" value="msg"/>
+                    <parameter type="unsigned int" value="sender"/>
+                    <ns2:internal/>
+                    <action name="SendSimpleMessageRecordArrayVariableLengthString">
+                        <argument value="msg"/>
+                        <argument value="sender"/>
+                    </action>
+                </transition>
+                <transition name="SimpleMessageRecord">
+                    <parameter type="SimpleMessageRecord" value="msg"/>
+                    <parameter type="unsigned int" value="sender"/>
+                    <ns2:internal/>
+                    <action name="SendSimpleMessageRecord">
+                        <argument value="msg"/>
+                        <argument value="sender"/>
+                    </action>
+                </transition>
+                <transition name="SimpleMessageList">
+                    <parameter type="SimpleMessageList" value="msg"/>
+                    <parameter type="unsigned int" value="sender"/>
+                    <ns2:internal/>
+                    <action name="SendSimpleMessageList">
+                        <argument value="msg"/>
+                        <argument value="sender"/>
+                    </action>
+                </transition>
+                <transition name="SimpleMessageListListRecordFixedLengthString">
+                    <parameter type="SimpleMessageListListRecordFixedLengthString" value="msg"/>
+                    <parameter type="unsigned int" value="sender"/>
+                    <ns2:internal/>
+                    <action name="SendSimpleMessageListListRecordFixedLengthString">
+                        <argument value="msg"/>
+                        <argument value="sender"/>
+                    </action>
+                </transition>
+                <transition name="SimpleMessageSequence">
+                    <parameter type="SimpleMessageSequence" value="msg"/>
+                    <parameter type="unsigned int" value="sender"/>
+                    <ns2:internal/>
+                    <action name="SendSimpleMessageSequence">
+                        <argument value="msg"/>
+                        <argument value="sender"/>
+                    </action>
+                </transition>
+                <transition name="SimpleMessageVariant">
+                    <parameter type="SimpleMessageVariant" value="msg"/>
+                    <parameter type="unsigned int" value="sender"/>
+                    <ns2:internal/>
+                    <action name="SendSimpleMessageVariant">
+                        <argument value="msg"/>
+                        <argument value="sender"/>
+                    </action>
+                </transition>
+            </state>
+        </state_machine>
+    </protocol_behavior>
+</service_def>

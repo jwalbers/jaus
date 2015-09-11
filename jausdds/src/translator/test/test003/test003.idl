@@ -1,0 +1,260 @@
+import urn::jaus::jss::mobility::MessageSet; // @JAUS(name="mobility", id="urn:jaus:jss:mobility:MessageSet", version="1.0")
+module GlobalPoseSensor {
+  // @JAUS(id="urn:jaus:jss:mobility:GlobalPoseSensor", version="1.0")
+  // The function of the Global Pose Sensor is to determine the global position and orientation of the platform.
+  // The Report Global Pose message provides the position and orientation of the platform.  The position of the platform
+  // is given in latitude, longitude, and elevation, in accordance with the WGS 84 standard.  Platform orientation is as
+  // defined in Section 4 of the JAUS Mobility Service Set Specification.
+  // @JAUS(assumptions="Messages may be delayed, lost or reordered.")
+  // @JAUS(inherits_from="accessControl",id="urn:jaus:jss:core:AccessControl",version="1.0")
+  module JAUSDDS {
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SetGlobalPose {
+      // @JAUS(command,id=0402)
+      // 
+      // This message is used to set the global pose values.
+      // 
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module GlobalPoseRec {
+          typedef struct GlobalPoseRec {
+            unsigned short presence_vector;
+            unsigned long Latitude; // @JAUS(units=degree,optional,scale=<-90,90>)
+            unsigned long Longitude; // @JAUS(units=degree,optional,scale=<-180,180>)
+            unsigned long Altitude; // @JAUS(units=meter,optional,scale=<-10000,35000>)
+                 // An RMS value indicating the validity of the position data.
+            unsigned long Position_RMS; // @JAUS(units=meter,optional,scale=<0,100>)
+                 // An RMS value indicating the validity of the position data.
+            unsigned short Roll; // @JAUS(units=radian,optional,scale=<-PI,PI>)
+            unsigned short Pitch; // @JAUS(units=radian,optional,scale=<-PI,PI>)
+            unsigned short Yaw; // @JAUS(units=radian,optional,scale=<-PI,PI>)
+                 // An RMS value indicating the validity of the orientation data.
+            unsigned short Attitude_RMS; // @JAUS(units=radian,optional,scale=<0,PI>)
+                 // An RMS value indicating the validity of the orientation data.
+          basicTypes::TimeStamp TimeStamp; // @JAUS(optional)
+          // 
+          } GlobalPoseRec_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::GlobalPoseRec::GlobalPoseRec_ Body;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SetGlobalPose
+
+    // //// message ////////////////////////////////////////////////////////////
+    module SetGeomagneticProperty {
+      // @JAUS(command,id=0412)
+      // 
+      // This message is used to set the location specific magnetic variation for adjusting the GPS heading.
+      // 
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module GeomagneticPropertyRec {
+          typedef struct GeomagneticPropertyRec {
+            unsigned short MagneticVariation; // @JAUS(units=radian,scale=<-PI,PI>)
+          } GeomagneticPropertyRec_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::GeomagneticPropertyRec::GeomagneticPropertyRec_ Body;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: SetGeomagneticProperty
+
+    // //// message ////////////////////////////////////////////////////////////
+    module QueryGlobalPose {
+      // @JAUS(query,id=2402)
+      // 
+      // This message shall cause the receiving component to reply to the requestor with a
+      // ID 4402h: ReportGlobalPose message.  A logical AND shall be performed on the requested
+      // presence vector and that representing the available fields from the responder.  The
+      // resulting message shall contain the fields indicated by the result of this logical AND operation.
+      // 
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module QueryGlobalPoseRec {
+          typedef struct QueryGlobalPoseRec {
+                 // See Report Global Pose Message
+            unsigned short PresenceVector; // @JAUS(units=one)
+                 // See Report Global Pose Message
+          } QueryGlobalPoseRec_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::QueryGlobalPoseRec::QueryGlobalPoseRec_ Body;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: QueryGlobalPose
+
+    // //// message ////////////////////////////////////////////////////////////
+    module QueryGeomagneticProperty {
+      // @JAUS(query,id=2412)
+      // 
+      // This message shall cause the receiving component to reply to the requestor with a
+      // ID 4412h: ReportGeomagneticProperty message.
+      // 
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module GeomagneticPropertyRec {
+          typedef struct GeomagneticPropertyRec {
+            unsigned short MagneticVariation; // @JAUS(units=radian,scale=<-PI,PI>)
+          } GeomagneticPropertyRec_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::GeomagneticPropertyRec::GeomagneticPropertyRec_ Body;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: QueryGeomagneticProperty
+
+    // //// message ////////////////////////////////////////////////////////////
+    module ReportGlobalPose {
+      // @JAUS(inform,id=4402)
+      // 
+      // This message is used to provide the receiver the position and attitude of the platform.  The position of
+      // the platform is given in latitude, longitude, and altitude, in accordance with the WGS 84 standard.
+      // All times are in Coordinated Universal Time (UTC).  The message data and mapping of the
+      // presence vector for this message are identical to ID 0402h: SetGlobalPose.
+      // 
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module GlobalPoseRec {
+          typedef struct GlobalPoseRec {
+            unsigned short presence_vector;
+            unsigned long Latitude; // @JAUS(units=degree,optional,scale=<-90,90>)
+            unsigned long Longitude; // @JAUS(units=degree,optional,scale=<-180,180>)
+            unsigned long Altitude; // @JAUS(units=meter,optional,scale=<-10000,35000>)
+                 // An RMS value indicating the validity of the position data.
+            unsigned long Position_RMS; // @JAUS(units=meter,optional,scale=<0,100>)
+                 // An RMS value indicating the validity of the position data.
+            unsigned short Roll; // @JAUS(units=radian,optional,scale=<-PI,PI>)
+            unsigned short Pitch; // @JAUS(units=radian,optional,scale=<-PI,PI>)
+            unsigned short Yaw; // @JAUS(units=radian,optional,scale=<-PI,PI>)
+                 // An RMS value indicating the validity of the orientation data.
+            unsigned short Attitude_RMS; // @JAUS(units=radian,optional,scale=<0,PI>)
+                 // An RMS value indicating the validity of the orientation data.
+          basicTypes::TimeStamp TimeStamp; // @JAUS(optional)
+          // 
+          } GlobalPoseRec_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::GlobalPoseRec::GlobalPoseRec_ Body;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: ReportGlobalPose
+
+    // //// message ////////////////////////////////////////////////////////////
+    module ReportGeomagneticProperty {
+      // @JAUS(inform,id=4412)
+      // 
+      // This message is used to provide the receiver the current geomagnetic property value.  The message data and mapping of the
+      // presence vector of this message are identical to ID 0412h: SetGeomagneticProperty.
+      // 
+      typedef struct JausAddress {
+        unsigned short SubsystemID;
+        octet NodeID;
+        octet ComponentID;
+      } JausAddress_;
+      module header {
+        typedef struct HeaderRec {
+          unsigned short MessageID;
+        } HeaderRec_;
+      };
+      module body {
+        module GeomagneticPropertyRec {
+          typedef struct GeomagneticPropertyRec {
+            unsigned short MagneticVariation; // @JAUS(units=radian,scale=<-PI,PI>)
+          } GeomagneticPropertyRec_;
+        };
+      };
+      struct Message {
+        JausAddress_ source;
+        JausAddress_ destination;
+        header::HeaderRec_ JTS_Header;
+        body::GeomagneticPropertyRec::GeomagneticPropertyRec_ Body;
+      };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+    }; // message: ReportGeomagneticProperty
+  };
+};

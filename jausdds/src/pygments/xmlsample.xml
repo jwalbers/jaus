@@ -1,0 +1,22 @@
+<message_def name="SimpleMessage"
+             message_id="B001"
+             is_command="false">
+  <header name="JTS_Header">
+    <record name="HeaderRec" optional="false">
+      <fixed_field name="MessageID"
+                   optional="false"
+                   field_units="one"
+                   field_type="unsigned short integer"/>
+    </record>
+  </header>
+  <body name="SimpleBody">
+    <record name="SimpleRecord"
+            optional="false">
+      <fixed_field name="SimpleFixedField"
+                   optional="false"
+                   field_units="one"
+                   field_type="integer"/>
+    </record>
+  </body>
+  <footer name="EmptyFooter"/>
+</message_def>

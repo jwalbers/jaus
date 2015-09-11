@@ -1,0 +1,1307 @@
+{\rtf1\ansi\deff0{\fonttbl{\f0\fmodern\fprq1\fcharset0 Consolas;}}{\colortbl;\red128\green128\blue128;\red187\green68\blue68;\red0\green64\blue208;\red102\green102\blue102;\red0\green136\blue0;\red160\green160\blue0;\red184\green134\blue11;\red170\green34\blue255;\red187\green102\blue136;\red187\green102\blue34;\red136\green0\blue0;\red153\green153\blue153;\red0\green160\blue0;\red160\green0\blue0;\red255\green0\blue0;\red128\green0\blue128;\red0\green187\blue0;\red187\green187\blue187;\red0\green0\blue255;\red0\green0\blue128;\red0\green128\blue0;\red210\green65\blue58;}\f0\fs18{\cf8\b module} SimpleServer \{\par
+  {\cf5\i // @JAUS(id="urn:jaus:exp:dds:SimpleServer", version="1.0")\par
+}  {\cf5\i // Simple Server used for unit testing during JDDS development and testing\par
+}  {\cf8\b module} JAUSDDS \{\par
+\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageRecordFixedField \{\par
+      {\cf5\i // @JAUS(query,id=B001)\par
+}      {\cf5\i // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleRecordFixedField \{\par
+          {\cf8\b typedef} {\cf8\b struct} SimpleRecordFixedField \{\par
+            {\cf8\b long} SimpleFixedField; {\cf5\i // @JAUS(units=one,index=1)\par
+}          \} SimpleRecordFixedField_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleRecordFixedField{\cf4 :}{\cf4 :}SimpleRecordFixedField_ SimpleBodyRecordFixedField;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageRecordFixedField\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageRecord \{\par
+      {\cf5\i // @JAUS(query,id=B00C)\par
+}      {\cf5\i // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleRecord \{\par
+          {\cf8\b typedef} {\cf8\b struct} SimpleRecord \{\par
+            {\cf8\b octet} presence_vector;\par
+            {\cf8\b string}{\cf4 <}{\cf4 2}{\cf4 >} FixedLengthStringField; {\cf5\i // @JAUS(optional,index=1)\par
+}            {\cf8\b string} VariableLengthStringField; {\cf5\i // @JAUS(optional,index=2,length=<0,100>)\par
+}            {\cf8\b octet} FixedField1; {\cf5\i // @JAUS(units=one,optional,index=3)\par
+}            {\cf8\b short} FixedField2; {\cf5\i // @JAUS(units=one,index=4)\par
+}            {\cf8\b long} FixedField4; {\cf5\i // @JAUS(units=one,index=5)\par
+}            {\cf8\b long} {\cf8\b long} FixedField8; {\cf5\i // @JAUS(units=one,optional,index=6)\par
+}          \} SimpleRecord_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleRecord{\cf4 :}{\cf4 :}SimpleRecord_ SimpleBodyRecord;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageRecord\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageList \{\par
+      {\cf5\i // @JAUS(query,id=B00E)\par
+}      {\cf5\i // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleList  \{\par
+          {\cf8\b module} SimpleRecordFixedLengthString \{\par
+            {\cf8\b typedef} {\cf8\b struct} SimpleRecordFixedLengthString \{\par
+              {\cf8\b string}{\cf4 <}{\cf4 20}{\cf4 >} SimpleFixedLengthString; {\cf5\i // @JAUS(index=1)\par
+}            \} SimpleRecordFixedLengthString_;\par
+          \};\par
+          {\cf8\b typedef} {\cf8\b sequence}{\cf4 <}SimpleRecordFixedLengthString{\cf4 :}{\cf4 :}SimpleRecordFixedLengthString_,{\cf4 10}{\cf4 >} SimpleList_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleList{\cf4 :}{\cf4 :}SimpleList_ SimpleBodyList;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageList\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageListListRecordFixedLengthString \{\par
+      {\cf5\i // @JAUS(query,id=B00F)\par
+}      {\cf5\i // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleListListRecordFixedLengthString  \{\par
+          {\cf8\b module} SimpleListRecordFixedLengthString  \{\par
+            {\cf8\b module} SimpleRecordFixedLengthString \{\par
+              {\cf8\b typedef} {\cf8\b struct} SimpleRecordFixedLengthString \{\par
+                {\cf8\b string}{\cf4 <}{\cf4 20}{\cf4 >} SimpleFixedLengthString; {\cf5\i // @JAUS(index=1)\par
+}              \} SimpleRecordFixedLengthString_;\par
+            \};\par
+            {\cf8\b typedef} {\cf8\b sequence}{\cf4 <}SimpleRecordFixedLengthString{\cf4 :}{\cf4 :}SimpleRecordFixedLengthString_,{\cf4 10}{\cf4 >} SimpleListRecordFixedLengthString_;\par
+          \};\par
+          {\cf8\b typedef} {\cf8\b sequence}{\cf4 <}SimpleListRecordFixedLengthString{\cf4 :}{\cf4 :}SimpleListRecordFixedLengthString_,{\cf4 50}{\cf4 >} SimpleListListRecordFixedLengthString_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleListListRecordFixedLengthString{\cf4 :}{\cf4 :}SimpleListListRecordFixedLengthString_ SimpleBodyListListRecordFixedLengthString;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageListListRecordFixedLengthString\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageSequence \{\par
+      {\cf5\i // @JAUS(query,id=B010)\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleSequence \{\par
+          {\cf8\b module} SimpleListRecordFixedLengthString  \{\par
+            {\cf8\b module} SimpleRecordFixedLengthString \{\par
+              {\cf8\b typedef} {\cf8\b struct} SimpleRecordFixedLengthString \{\par
+                {\cf8\b string}{\cf4 <}{\cf4 20}{\cf4 >} SimpleFixedLengthString; {\cf5\i // @JAUS(index=1)\par
+}              \} SimpleRecordFixedLengthString_;\par
+            \};\par
+            {\cf8\b typedef} {\cf8\b sequence}{\cf4 <}SimpleRecordFixedLengthString{\cf4 :}{\cf4 :}SimpleRecordFixedLengthString_,{\cf4 10}{\cf4 >} SimpleListRecordFixedLengthString_;\par
+          \};\par
+          {\cf8\b module} SimpleRecordArrayFixedLengthString \{\par
+            {\cf8\b typedef} {\cf8\b struct} SimpleRecordArrayFixedLengthString \{\par
+                {\cf8\b string}{\cf4 <}{\cf4 20}{\cf4 >} SimpleFixedLengthString[{\cf4 8}];\par
+            {\cf5\i // @JAUS(index=1)\par
+}            \} SimpleRecordArrayFixedLengthString_;\par
+          \};\par
+          {\cf8\b module} SimpleRecordVariableLengthString \{\par
+            {\cf8\b typedef} {\cf8\b struct} SimpleRecordVariableLengthString \{\par
+              {\cf8\b string} SimpleVariableLengthString; {\cf5\i // @JAUS(index=1,length=<0,100>)\par
+}            \} SimpleRecordVariableLengthString_;\par
+          \};\par
+          {\cf8\b module} SimpleRecordFixedField \{\par
+            {\cf8\b typedef} {\cf8\b struct} SimpleRecordFixedField \{\par
+              {\cf8\b long} SimpleFixedField; {\cf5\i // @JAUS(units=one,index=1)\par
+}            \} SimpleRecordFixedField_;\par
+          \};\par
+          {\cf8\b typedef} {\cf8\b struct} SimpleSequence \{\par
+            SimpleListRecordFixedLengthString{\cf4 :}{\cf4 :}SimpleListRecordFixedLengthString_ SimpleListRecordFixedLengthString_; {\cf5\i // @JAUS(index=1)\par
+}            SimpleRecordArrayFixedLengthString{\cf4 :}{\cf4 :}SimpleRecordArrayFixedLengthString_ SimpleRecordArrayFixedLengthString_; {\cf5\i // @JAUS(index=2)\par
+}            SimpleRecordVariableLengthString{\cf4 :}{\cf4 :}SimpleRecordVariableLengthString_ SimpleRecordVariableLengthString_; {\cf5\i // @JAUS(index=3)\par
+}            SimpleRecordFixedField{\cf4 :}{\cf4 :}SimpleRecordFixedField_ SimpleRecordFixedField_; {\cf5\i // @JAUS(index=4)\par
+}          \} SimpleSequence_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleSequence{\cf4 :}{\cf4 :}SimpleSequence_ SimpleBodySequence;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageSequence\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageVariant \{\par
+      {\cf5\i // @JAUS(query,id=B011)\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleVariant \{\par
+          {\cf8\b module} SimpleListRecordFixedLengthString  \{\par
+            {\cf8\b module} SimpleRecordFixedLengthString \{\par
+              {\cf8\b typedef} {\cf8\b struct} SimpleRecordFixedLengthString \{\par
+                {\cf8\b string}{\cf4 <}{\cf4 20}{\cf4 >} SimpleFixedLengthString; {\cf5\i // @JAUS(index=1)\par
+}              \} SimpleRecordFixedLengthString_;\par
+            \};\par
+            {\cf8\b typedef} {\cf8\b sequence}{\cf4 <}SimpleRecordFixedLengthString{\cf4 :}{\cf4 :}SimpleRecordFixedLengthString_,{\cf4 10}{\cf4 >} SimpleListRecordFixedLengthString_;\par
+          \};\par
+          {\cf8\b module} SimpleRecordArrayFixedLengthString \{\par
+            {\cf8\b typedef} {\cf8\b struct} SimpleRecordArrayFixedLengthString \{\par
+                {\cf8\b string}{\cf4 <}{\cf4 20}{\cf4 >} SimpleFixedLengthString[{\cf4 8}];\par
+            {\cf5\i // @JAUS(index=1)\par
+}            \} SimpleRecordArrayFixedLengthString_;\par
+          \};\par
+          {\cf8\b module} SimpleRecordVariableLengthString \{\par
+            {\cf8\b typedef} {\cf8\b struct} SimpleRecordVariableLengthString \{\par
+              {\cf8\b string} SimpleVariableLengthString; {\cf5\i // @JAUS(index=1,length=<0,100>)\par
+}            \} SimpleRecordVariableLengthString_;\par
+          \};\par
+          {\cf8\b module} SimpleRecordFixedField \{\par
+            {\cf8\b typedef} {\cf8\b struct} SimpleRecordFixedField \{\par
+              {\cf8\b long} SimpleFixedField; {\cf5\i // @JAUS(units=one,index=1)\par
+}            \} SimpleRecordFixedField_;\par
+          \};\par
+          {\cf8\b typedef} union SimpleVariant {\cf8\b switch} ({\cf8\b octet}) \{\par
+            {\cf5\i // @JAUS(min_tag=0,max_tag=3\par
+}            {\cf8\b case} {\cf4 0}{\cf4 :}\par
+              SimpleListRecordFixedLengthString{\cf4 :}{\cf4 :}SimpleListRecordFixedLengthString_ SimpleListRecordFixedLengthString_;\par
+            {\cf8\b case} {\cf4 1}{\cf4 :}\par
+              SimpleRecordArrayFixedLengthString{\cf4 :}{\cf4 :}SimpleRecordArrayFixedLengthString_ SimpleRecordArrayFixedLengthString_;\par
+            {\cf8\b case} {\cf4 2}{\cf4 :}\par
+              SimpleRecordVariableLengthString{\cf4 :}{\cf4 :}SimpleRecordVariableLengthString_ SimpleRecordVariableLengthString_;\par
+            {\cf8\b case} {\cf4 3}{\cf4 :}\par
+              SimpleRecordFixedField{\cf4 :}{\cf4 :}SimpleRecordFixedField_ SimpleRecordFixedField_;\par
+          \} SimpleVariant_;\par
+        \};\par
+\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleVariant{\cf4 :}{\cf4 :}SimpleVariant_ SimpleBodyVariant;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageVariant\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageRecordFixedLengthString \{\par
+      {\cf5\i // @JAUS(query,id=B002)\par
+}      {\cf5\i // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleRecordFixedLengthString \{\par
+          {\cf8\b typedef} {\cf8\b struct} SimpleRecordFixedLengthString \{\par
+            {\cf8\b string}{\cf4 <}{\cf4 20}{\cf4 >} SimpleFixedLengthString; {\cf5\i // @JAUS(index=1)\par
+}          \} SimpleRecordFixedLengthString_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleRecordFixedLengthString{\cf4 :}{\cf4 :}SimpleRecordFixedLengthString_ SimpleBodyRecordFixedLengthString;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageRecordFixedLengthString\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageRecordVariableLengthString \{\par
+      {\cf5\i // @JAUS(query,id=B003)\par
+}      {\cf5\i // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleRecordVariableLengthString \{\par
+          {\cf8\b typedef} {\cf8\b struct} SimpleRecordVariableLengthString \{\par
+            {\cf8\b string} SimpleVariableLengthString; {\cf5\i // @JAUS(index=1,length=<0,100>)\par
+}          \} SimpleRecordVariableLengthString_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleRecordVariableLengthString{\cf4 :}{\cf4 :}SimpleRecordVariableLengthString_ SimpleBodyRecordVariableLengthString;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageRecordVariableLengthString\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageRecordVariableField \{\par
+      {\cf5\i // @JAUS(query,id=B004)\par
+}      {\cf5\i // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleRecordVariableField \{\par
+          {\cf8\b typedef} {\cf8\b struct} SimpleRecordVariableField \{\par
+            union SimpleVariableField {\cf8\b switch}({\cf8\b unsigned} {\cf8\b short}) \{\par
+              {\cf8\b case} {\cf4 0}{\cf4 :}\par
+                {\cf8\b short} degree_Celsius;\par
+              {\cf8\b case} {\cf4 1}{\cf4 :}\par
+                {\cf8\b unsigned} {\cf8\b short} kelvin;\par
+            \} SimpleVariableField;\par
+          \} SimpleRecordVariableField_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleRecordVariableField{\cf4 :}{\cf4 :}SimpleRecordVariableField_ SimpleBodyRecordVariableField;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageRecordVariableField\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageRecordBitField \{\par
+      {\cf5\i // @JAUS(query,id=B005)\par
+}      {\cf5\i // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleRecordBitField \{\par
+          {\cf8\b typedef} {\cf8\b struct} SimpleRecordBitField \{\par
+            {\cf8\b unsigned} {\cf8\b long} SimpleBitField; {\cf5\i // @JAUS(bitfield,index=1)\par
+}              {\cf5\i // SubField0_3[0:3], EDeviceError = 2, one\par
+}              {\cf5\i // SubField4_15[4:15], [0,4095], one\par
+}              {\cf5\i // SubField16_31[16:31], [0,65535], one\par
+}          \} SimpleRecordBitField_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleRecordBitField{\cf4 :}{\cf4 :}SimpleRecordBitField_ SimpleBodyRecordBitField;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageRecordBitField\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageRecordVariableLengthField \{\par
+      {\cf5\i // @JAUS(query,id=B006)\par
+}      {\cf5\i // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleRecordVariableLengthField \{\par
+          {\cf8\b typedef} {\cf8\b struct} SimpleRecordVariableLengthField \{\par
+            {\cf8\b sequence}{\cf4 <}{\cf8\b octet},{\cf4 1000}{\cf4 >} SimpleVariableLengthField; {\cf5\i // @JAUS(format=RAW,index=1,length=<0,1000>)\par
+}          \} SimpleRecordVariableLengthField_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleRecordVariableLengthField{\cf4 :}{\cf4 :}SimpleRecordVariableLengthField_ SimpleBodyRecordVariableLengthField;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageRecordVariableLengthField\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageRecordVariableFormatField \{\par
+      {\cf5\i // @JAUS(query,id=B007)\par
+}      {\cf5\i // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleRecordVariableFormatField \{\par
+          {\cf8\b typedef} {\cf8\b struct} SimpleRecordVariableFormatField \{\par
+            {\cf8\b enum} SimpleVariableFormatField_format \{\par
+              BMP {\cf4 =} {\cf4 2},\par
+              JPEG {\cf4 =} {\cf4 1},\par
+              RAW {\cf4 =} {\cf4 0},\par
+            \};\par
+            {\cf8\b struct} SimpleVariableFormatField \{\par
+              SimpleVariableFormatField_format format;\par
+              {\cf8\b sequence}{\cf4 <}{\cf8\b octet},{\cf4 100000}{\cf4 >} SimpleVariableFormatField_data;\par
+            \} SimpleVariableFormatField_; {\cf5\i // @JAUS(index=1)\par
+}              {\cf5\i // \par
+}          \} SimpleRecordVariableFormatField_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleRecordVariableFormatField{\cf4 :}{\cf4 :}SimpleRecordVariableFormatField_ SimpleBodyRecordVariableFormatField;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageRecordVariableFormatField\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageRecordArray \{\par
+      {\cf5\i // @JAUS(query,id=B008)\par
+}      {\cf5\i // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleRecordArray \{\par
+          {\cf8\b typedef} {\cf8\b struct} SimpleRecordArray \{\par
+              {\cf8\b long} SimpleFixedField[{\cf4 4}][{\cf4 8}]; {\cf5\i // @JAUS(units=one)\par
+}          {\cf5\i // @JAUS(index=1)\par
+}              union SimpleVariableField {\cf8\b switch}({\cf8\b unsigned} {\cf8\b short}) \{\par
+                {\cf8\b case} {\cf4 0}{\cf4 :}\par
+                  {\cf8\b short} degree_Celsius;\par
+                {\cf8\b case} {\cf4 1}{\cf4 :}\par
+                  {\cf8\b unsigned} {\cf8\b short} kelvin;\par
+              \} SimpleVariableField;\par
+          {\cf5\i // @JAUS(index=2)\par
+}              {\cf8\b string}{\cf4 <}{\cf4 20}{\cf4 >} SimpleFixedLengthString[{\cf4 8}];\par
+          {\cf5\i // @JAUS(index=3)\par
+}              {\cf8\b string} SimpleVariableLengthString[{\cf4 16}]; {\cf5\i // @JAUS(length=<0,100>)\par
+}          {\cf5\i // @JAUS(index=4)\par
+}              {\cf8\b unsigned} {\cf8\b long} SimpleBitField; {\cf5\i // @JAUS(bitfield)\par
+}                {\cf5\i // SubField0_3[0:3], EDeviceError = 2, one\par
+}                {\cf5\i // SubField4_15[4:15], [0,4095], one\par
+}                {\cf5\i // SubField16_31[16:31], [0,65535], one\par
+}          {\cf5\i // @JAUS(index=5)\par
+}              {\cf8\b sequence}{\cf4 <}{\cf8\b octet},{\cf4 1000}{\cf4 >} SimpleVariableLengthField[{\cf4 4}]; {\cf5\i // @JAUS(format=RAW,length=<0,1000>)\par
+}          {\cf5\i // @JAUS(index=6)\par
+}              {\cf8\b enum} SimpleVariableFormatField_format \{\par
+                BMP {\cf4 =} {\cf4 2},\par
+                JPEG {\cf4 =} {\cf4 1},\par
+                RAW {\cf4 =} {\cf4 0},\par
+              \};\par
+              {\cf8\b struct} SimpleVariableFormatField \{\par
+                SimpleVariableFormatField_format format;\par
+                {\cf8\b sequence}{\cf4 <}{\cf8\b octet},{\cf4 100000}{\cf4 >} SimpleVariableFormatField_data;\par
+              \} SimpleVariableFormatField_[{\cf4 8}];\par
+          {\cf5\i // @JAUS(index=7)\par
+}          \} SimpleRecordArray_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleRecordArray{\cf4 :}{\cf4 :}SimpleRecordArray_ SimpleBodyRecordArray;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageRecordArray\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageRecordArrayFixedField \{\par
+      {\cf5\i // @JAUS(query,id=B009)\par
+}      {\cf5\i // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleRecordArrayFixedField \{\par
+          {\cf8\b typedef} {\cf8\b struct} SimpleRecordArrayFixedField \{\par
+              {\cf8\b long} SimpleFixedField[{\cf4 4}]; {\cf5\i // @JAUS(units=one)\par
+}          {\cf5\i // @JAUS(index=1)\par
+}          \} SimpleRecordArrayFixedField_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleRecordArrayFixedField{\cf4 :}{\cf4 :}SimpleRecordArrayFixedField_ SimpleBodyRecordArrayFixedField;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageRecordArrayFixedField\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageRecordArrayFixedLengthString \{\par
+      {\cf5\i // @JAUS(query,id=B00A)\par
+}      {\cf5\i // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleRecordArrayFixedLengthString \{\par
+          {\cf8\b typedef} {\cf8\b struct} SimpleRecordArrayFixedLengthString \{\par
+              {\cf8\b string}{\cf4 <}{\cf4 20}{\cf4 >} SimpleFixedLengthString[{\cf4 8}];\par
+          {\cf5\i // @JAUS(index=1)\par
+}          \} SimpleRecordArrayFixedLengthString_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleRecordArrayFixedLengthString{\cf4 :}{\cf4 :}SimpleRecordArrayFixedLengthString_ SimpleBodyRecordArrayFixedLengthString;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageRecordArrayFixedLengthString\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageRecordArrayVariableLengthString \{\par
+      {\cf5\i // @JAUS(query,id=B00B)\par
+}      {\cf5\i // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleRecordArrayVariableLengthString \{\par
+          {\cf8\b typedef} {\cf8\b struct} SimpleRecordArrayVariableLengthString \{\par
+              {\cf8\b string} SimpleVariableLengthString[{\cf4 16}]; {\cf5\i // @JAUS(length=<0,100>)\par
+}          {\cf5\i // @JAUS(index=1)\par
+}          \} SimpleRecordArrayVariableLengthString_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleRecordArrayVariableLengthString{\cf4 :}{\cf4 :}SimpleRecordArrayVariableLengthString_ SimpleBodyRecordArrayVariableLengthString;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageRecordArrayVariableLengthString\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageRecordFixedField \{\par
+      {\cf5\i // @JAUS(inform,id=B001)\par
+}      {\cf5\i // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleRecordFixedField \{\par
+          {\cf8\b typedef} {\cf8\b struct} SimpleRecordFixedField \{\par
+            {\cf8\b long} SimpleFixedField; {\cf5\i // @JAUS(units=one,index=1)\par
+}          \} SimpleRecordFixedField_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleRecordFixedField{\cf4 :}{\cf4 :}SimpleRecordFixedField_ SimpleBodyRecordFixedField;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageRecordFixedField\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageRecord \{\par
+      {\cf5\i // @JAUS(inform,id=B00C)\par
+}      {\cf5\i // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleRecord \{\par
+          {\cf8\b typedef} {\cf8\b struct} SimpleRecord \{\par
+            {\cf8\b octet} presence_vector;\par
+            {\cf8\b string}{\cf4 <}{\cf4 2}{\cf4 >} FixedLengthStringField; {\cf5\i // @JAUS(optional,index=1)\par
+}            {\cf8\b string} VariableLengthStringField; {\cf5\i // @JAUS(optional,index=2,length=<0,100>)\par
+}            {\cf8\b octet} FixedField1; {\cf5\i // @JAUS(units=one,optional,index=3)\par
+}            {\cf8\b short} FixedField2; {\cf5\i // @JAUS(units=one,index=4)\par
+}            {\cf8\b long} FixedField4; {\cf5\i // @JAUS(units=one,index=5)\par
+}            {\cf8\b long} {\cf8\b long} FixedField8; {\cf5\i // @JAUS(units=one,optional,index=6)\par
+}          \} SimpleRecord_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleRecord{\cf4 :}{\cf4 :}SimpleRecord_ SimpleBodyRecord;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageRecord\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageList \{\par
+      {\cf5\i // @JAUS(inform,id=B00E)\par
+}      {\cf5\i // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleList  \{\par
+          {\cf8\b module} SimpleRecordFixedLengthString \{\par
+            {\cf8\b typedef} {\cf8\b struct} SimpleRecordFixedLengthString \{\par
+              {\cf8\b string}{\cf4 <}{\cf4 20}{\cf4 >} SimpleFixedLengthString; {\cf5\i // @JAUS(index=1)\par
+}            \} SimpleRecordFixedLengthString_;\par
+          \};\par
+          {\cf8\b typedef} {\cf8\b sequence}{\cf4 <}SimpleRecordFixedLengthString{\cf4 :}{\cf4 :}SimpleRecordFixedLengthString_,{\cf4 10}{\cf4 >} SimpleList_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleList{\cf4 :}{\cf4 :}SimpleList_ SimpleBodyList;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageList\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageListListRecordFixedLengthString \{\par
+      {\cf5\i // @JAUS(inform,id=B00F)\par
+}      {\cf5\i // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleListListRecordFixedLengthString  \{\par
+          {\cf8\b module} SimpleListRecordFixedLengthString  \{\par
+            {\cf8\b module} SimpleRecordFixedLengthString \{\par
+              {\cf8\b typedef} {\cf8\b struct} SimpleRecordFixedLengthString \{\par
+                {\cf8\b string}{\cf4 <}{\cf4 20}{\cf4 >} SimpleFixedLengthString; {\cf5\i // @JAUS(index=1)\par
+}              \} SimpleRecordFixedLengthString_;\par
+            \};\par
+            {\cf8\b typedef} {\cf8\b sequence}{\cf4 <}SimpleRecordFixedLengthString{\cf4 :}{\cf4 :}SimpleRecordFixedLengthString_,{\cf4 10}{\cf4 >} SimpleListRecordFixedLengthString_;\par
+          \};\par
+          {\cf8\b typedef} {\cf8\b sequence}{\cf4 <}SimpleListRecordFixedLengthString{\cf4 :}{\cf4 :}SimpleListRecordFixedLengthString_,{\cf4 50}{\cf4 >} SimpleListListRecordFixedLengthString_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleListListRecordFixedLengthString{\cf4 :}{\cf4 :}SimpleListListRecordFixedLengthString_ SimpleBodyListListRecordFixedLengthString;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageListListRecordFixedLengthString\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageSequence \{\par
+      {\cf5\i // @JAUS(inform,id=B010)\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleSequence \{\par
+          {\cf8\b module} SimpleListRecordFixedLengthString  \{\par
+            {\cf8\b module} SimpleRecordFixedLengthString \{\par
+              {\cf8\b typedef} {\cf8\b struct} SimpleRecordFixedLengthString \{\par
+                {\cf8\b string}{\cf4 <}{\cf4 20}{\cf4 >} SimpleFixedLengthString; {\cf5\i // @JAUS(index=1)\par
+}              \} SimpleRecordFixedLengthString_;\par
+            \};\par
+            {\cf8\b typedef} {\cf8\b sequence}{\cf4 <}SimpleRecordFixedLengthString{\cf4 :}{\cf4 :}SimpleRecordFixedLengthString_,{\cf4 10}{\cf4 >} SimpleListRecordFixedLengthString_;\par
+          \};\par
+          {\cf8\b module} SimpleRecordArrayFixedLengthString \{\par
+            {\cf8\b typedef} {\cf8\b struct} SimpleRecordArrayFixedLengthString \{\par
+                {\cf8\b string}{\cf4 <}{\cf4 20}{\cf4 >} SimpleFixedLengthString[{\cf4 8}];\par
+            {\cf5\i // @JAUS(index=1)\par
+}            \} SimpleRecordArrayFixedLengthString_;\par
+          \};\par
+          {\cf8\b module} SimpleRecordVariableLengthString \{\par
+            {\cf8\b typedef} {\cf8\b struct} SimpleRecordVariableLengthString \{\par
+              {\cf8\b string} SimpleVariableLengthString; {\cf5\i // @JAUS(index=1,length=<0,100>)\par
+}            \} SimpleRecordVariableLengthString_;\par
+          \};\par
+          {\cf8\b module} SimpleRecordFixedField \{\par
+            {\cf8\b typedef} {\cf8\b struct} SimpleRecordFixedField \{\par
+              {\cf8\b long} SimpleFixedField; {\cf5\i // @JAUS(units=one,index=1)\par
+}            \} SimpleRecordFixedField_;\par
+          \};\par
+          {\cf8\b typedef} {\cf8\b struct} SimpleSequence \{\par
+            SimpleListRecordFixedLengthString{\cf4 :}{\cf4 :}SimpleListRecordFixedLengthString_ SimpleListRecordFixedLengthString_; {\cf5\i // @JAUS(index=1)\par
+}            SimpleRecordArrayFixedLengthString{\cf4 :}{\cf4 :}SimpleRecordArrayFixedLengthString_ SimpleRecordArrayFixedLengthString_; {\cf5\i // @JAUS(index=2)\par
+}            SimpleRecordVariableLengthString{\cf4 :}{\cf4 :}SimpleRecordVariableLengthString_ SimpleRecordVariableLengthString_; {\cf5\i // @JAUS(index=3)\par
+}            SimpleRecordFixedField{\cf4 :}{\cf4 :}SimpleRecordFixedField_ SimpleRecordFixedField_; {\cf5\i // @JAUS(index=4)\par
+}          \} SimpleSequence_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleSequence{\cf4 :}{\cf4 :}SimpleSequence_ SimpleBodySequence;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageSequence\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageVariant \{\par
+      {\cf5\i // @JAUS(inform,id=B011)\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleVariant \{\par
+          {\cf8\b module} SimpleListRecordFixedLengthString  \{\par
+            {\cf8\b module} SimpleRecordFixedLengthString \{\par
+              {\cf8\b typedef} {\cf8\b struct} SimpleRecordFixedLengthString \{\par
+                {\cf8\b string}{\cf4 <}{\cf4 20}{\cf4 >} SimpleFixedLengthString; {\cf5\i // @JAUS(index=1)\par
+}              \} SimpleRecordFixedLengthString_;\par
+            \};\par
+            {\cf8\b typedef} {\cf8\b sequence}{\cf4 <}SimpleRecordFixedLengthString{\cf4 :}{\cf4 :}SimpleRecordFixedLengthString_,{\cf4 10}{\cf4 >} SimpleListRecordFixedLengthString_;\par
+          \};\par
+          {\cf8\b module} SimpleRecordArrayFixedLengthString \{\par
+            {\cf8\b typedef} {\cf8\b struct} SimpleRecordArrayFixedLengthString \{\par
+                {\cf8\b string}{\cf4 <}{\cf4 20}{\cf4 >} SimpleFixedLengthString[{\cf4 8}];\par
+            {\cf5\i // @JAUS(index=1)\par
+}            \} SimpleRecordArrayFixedLengthString_;\par
+          \};\par
+          {\cf8\b module} SimpleRecordVariableLengthString \{\par
+            {\cf8\b typedef} {\cf8\b struct} SimpleRecordVariableLengthString \{\par
+              {\cf8\b string} SimpleVariableLengthString; {\cf5\i // @JAUS(index=1,length=<0,100>)\par
+}            \} SimpleRecordVariableLengthString_;\par
+          \};\par
+          {\cf8\b module} SimpleRecordFixedField \{\par
+            {\cf8\b typedef} {\cf8\b struct} SimpleRecordFixedField \{\par
+              {\cf8\b long} SimpleFixedField; {\cf5\i // @JAUS(units=one,index=1)\par
+}            \} SimpleRecordFixedField_;\par
+          \};\par
+          {\cf8\b typedef} union SimpleVariant {\cf8\b switch} ({\cf8\b octet}) \{\par
+            {\cf5\i // @JAUS(min_tag=0,max_tag=3\par
+}            {\cf8\b case} {\cf4 0}{\cf4 :}\par
+              SimpleListRecordFixedLengthString{\cf4 :}{\cf4 :}SimpleListRecordFixedLengthString_ SimpleListRecordFixedLengthString_;\par
+            {\cf8\b case} {\cf4 1}{\cf4 :}\par
+              SimpleRecordArrayFixedLengthString{\cf4 :}{\cf4 :}SimpleRecordArrayFixedLengthString_ SimpleRecordArrayFixedLengthString_;\par
+            {\cf8\b case} {\cf4 2}{\cf4 :}\par
+              SimpleRecordVariableLengthString{\cf4 :}{\cf4 :}SimpleRecordVariableLengthString_ SimpleRecordVariableLengthString_;\par
+            {\cf8\b case} {\cf4 3}{\cf4 :}\par
+              SimpleRecordFixedField{\cf4 :}{\cf4 :}SimpleRecordFixedField_ SimpleRecordFixedField_;\par
+          \} SimpleVariant_;\par
+        \};\par
+\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleVariant{\cf4 :}{\cf4 :}SimpleVariant_ SimpleBodyVariant;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageVariant\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageRecordFixedLengthString \{\par
+      {\cf5\i // @JAUS(inform,id=B002)\par
+}      {\cf5\i // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleRecordFixedLengthString \{\par
+          {\cf8\b typedef} {\cf8\b struct} SimpleRecordFixedLengthString \{\par
+            {\cf8\b string}{\cf4 <}{\cf4 20}{\cf4 >} SimpleFixedLengthString; {\cf5\i // @JAUS(index=1)\par
+}          \} SimpleRecordFixedLengthString_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleRecordFixedLengthString{\cf4 :}{\cf4 :}SimpleRecordFixedLengthString_ SimpleBodyRecordFixedLengthString;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageRecordFixedLengthString\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageRecordVariableLengthString \{\par
+      {\cf5\i // @JAUS(inform,id=B003)\par
+}      {\cf5\i // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleRecordVariableLengthString \{\par
+          {\cf8\b typedef} {\cf8\b struct} SimpleRecordVariableLengthString \{\par
+            {\cf8\b string} SimpleVariableLengthString; {\cf5\i // @JAUS(index=1,length=<0,100>)\par
+}          \} SimpleRecordVariableLengthString_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleRecordVariableLengthString{\cf4 :}{\cf4 :}SimpleRecordVariableLengthString_ SimpleBodyRecordVariableLengthString;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageRecordVariableLengthString\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageRecordVariableField \{\par
+      {\cf5\i // @JAUS(inform,id=B004)\par
+}      {\cf5\i // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleRecordVariableField \{\par
+          {\cf8\b typedef} {\cf8\b struct} SimpleRecordVariableField \{\par
+            union SimpleVariableField {\cf8\b switch}({\cf8\b unsigned} {\cf8\b short}) \{\par
+              {\cf8\b case} {\cf4 0}{\cf4 :}\par
+                {\cf8\b short} degree_Celsius;\par
+              {\cf8\b case} {\cf4 1}{\cf4 :}\par
+                {\cf8\b unsigned} {\cf8\b short} kelvin;\par
+            \} SimpleVariableField;\par
+          \} SimpleRecordVariableField_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleRecordVariableField{\cf4 :}{\cf4 :}SimpleRecordVariableField_ SimpleBodyRecordVariableField;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageRecordVariableField\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageRecordBitField \{\par
+      {\cf5\i // @JAUS(inform,id=B005)\par
+}      {\cf5\i // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleRecordBitField \{\par
+          {\cf8\b typedef} {\cf8\b struct} SimpleRecordBitField \{\par
+            {\cf8\b unsigned} {\cf8\b long} SimpleBitField; {\cf5\i // @JAUS(bitfield,index=1)\par
+}              {\cf5\i // SubField0_3[0:3], EDeviceError = 2, one\par
+}              {\cf5\i // SubField4_15[4:15], [0,4095], one\par
+}              {\cf5\i // SubField16_31[16:31], [0,65535], one\par
+}          \} SimpleRecordBitField_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleRecordBitField{\cf4 :}{\cf4 :}SimpleRecordBitField_ SimpleBodyRecordBitField;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageRecordBitField\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageRecordVariableLengthField \{\par
+      {\cf5\i // @JAUS(inform,id=B006)\par
+}      {\cf5\i // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleRecordVariableLengthField \{\par
+          {\cf8\b typedef} {\cf8\b struct} SimpleRecordVariableLengthField \{\par
+            {\cf8\b sequence}{\cf4 <}{\cf8\b octet},{\cf4 1000}{\cf4 >} SimpleVariableLengthField; {\cf5\i // @JAUS(format=RAW,index=1,length=<0,1000>)\par
+}          \} SimpleRecordVariableLengthField_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleRecordVariableLengthField{\cf4 :}{\cf4 :}SimpleRecordVariableLengthField_ SimpleBodyRecordVariableLengthField;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageRecordVariableLengthField\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageRecordVariableFormatField \{\par
+      {\cf5\i // @JAUS(inform,id=B007)\par
+}      {\cf5\i // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleRecordVariableFormatField \{\par
+          {\cf8\b typedef} {\cf8\b struct} SimpleRecordVariableFormatField \{\par
+            {\cf8\b enum} SimpleVariableFormatField_format \{\par
+              BMP {\cf4 =} {\cf4 2},\par
+              JPEG {\cf4 =} {\cf4 1},\par
+              RAW {\cf4 =} {\cf4 0},\par
+            \};\par
+            {\cf8\b struct} SimpleVariableFormatField \{\par
+              SimpleVariableFormatField_format format;\par
+              {\cf8\b sequence}{\cf4 <}{\cf8\b octet},{\cf4 100000}{\cf4 >} SimpleVariableFormatField_data;\par
+            \} SimpleVariableFormatField_; {\cf5\i // @JAUS(index=1)\par
+}              {\cf5\i // \par
+}          \} SimpleRecordVariableFormatField_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleRecordVariableFormatField{\cf4 :}{\cf4 :}SimpleRecordVariableFormatField_ SimpleBodyRecordVariableFormatField;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageRecordVariableFormatField\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageRecordArray \{\par
+      {\cf5\i // @JAUS(inform,id=B008)\par
+}      {\cf5\i // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleRecordArray \{\par
+          {\cf8\b typedef} {\cf8\b struct} SimpleRecordArray \{\par
+              {\cf8\b long} SimpleFixedField[{\cf4 4}][{\cf4 8}]; {\cf5\i // @JAUS(units=one)\par
+}          {\cf5\i // @JAUS(index=1)\par
+}              union SimpleVariableField {\cf8\b switch}({\cf8\b unsigned} {\cf8\b short}) \{\par
+                {\cf8\b case} {\cf4 0}{\cf4 :}\par
+                  {\cf8\b short} degree_Celsius;\par
+                {\cf8\b case} {\cf4 1}{\cf4 :}\par
+                  {\cf8\b unsigned} {\cf8\b short} kelvin;\par
+              \} SimpleVariableField;\par
+          {\cf5\i // @JAUS(index=2)\par
+}              {\cf8\b string}{\cf4 <}{\cf4 20}{\cf4 >} SimpleFixedLengthString[{\cf4 8}];\par
+          {\cf5\i // @JAUS(index=3)\par
+}              {\cf8\b string} SimpleVariableLengthString[{\cf4 16}]; {\cf5\i // @JAUS(length=<0,100>)\par
+}          {\cf5\i // @JAUS(index=4)\par
+}              {\cf8\b unsigned} {\cf8\b long} SimpleBitField; {\cf5\i // @JAUS(bitfield)\par
+}                {\cf5\i // SubField0_3[0:3], EDeviceError = 2, one\par
+}                {\cf5\i // SubField4_15[4:15], [0,4095], one\par
+}                {\cf5\i // SubField16_31[16:31], [0,65535], one\par
+}          {\cf5\i // @JAUS(index=5)\par
+}              {\cf8\b sequence}{\cf4 <}{\cf8\b octet},{\cf4 1000}{\cf4 >} SimpleVariableLengthField[{\cf4 4}]; {\cf5\i // @JAUS(format=RAW,length=<0,1000>)\par
+}          {\cf5\i // @JAUS(index=6)\par
+}              {\cf8\b enum} SimpleVariableFormatField_format \{\par
+                BMP {\cf4 =} {\cf4 2},\par
+                JPEG {\cf4 =} {\cf4 1},\par
+                RAW {\cf4 =} {\cf4 0},\par
+              \};\par
+              {\cf8\b struct} SimpleVariableFormatField \{\par
+                SimpleVariableFormatField_format format;\par
+                {\cf8\b sequence}{\cf4 <}{\cf8\b octet},{\cf4 100000}{\cf4 >} SimpleVariableFormatField_data;\par
+              \} SimpleVariableFormatField_[{\cf4 8}];\par
+          {\cf5\i // @JAUS(index=7)\par
+}          \} SimpleRecordArray_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleRecordArray{\cf4 :}{\cf4 :}SimpleRecordArray_ SimpleBodyRecordArray;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageRecordArray\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageRecordArrayFixedField \{\par
+      {\cf5\i // @JAUS(inform,id=B009)\par
+}      {\cf5\i // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleRecordArrayFixedField \{\par
+          {\cf8\b typedef} {\cf8\b struct} SimpleRecordArrayFixedField \{\par
+              {\cf8\b long} SimpleFixedField[{\cf4 4}]; {\cf5\i // @JAUS(units=one)\par
+}          {\cf5\i // @JAUS(index=1)\par
+}          \} SimpleRecordArrayFixedField_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleRecordArrayFixedField{\cf4 :}{\cf4 :}SimpleRecordArrayFixedField_ SimpleBodyRecordArrayFixedField;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageRecordArrayFixedField\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageRecordArrayFixedLengthString \{\par
+      {\cf5\i // @JAUS(inform,id=B00A)\par
+}      {\cf5\i // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleRecordArrayFixedLengthString \{\par
+          {\cf8\b typedef} {\cf8\b struct} SimpleRecordArrayFixedLengthString \{\par
+              {\cf8\b string}{\cf4 <}{\cf4 20}{\cf4 >} SimpleFixedLengthString[{\cf4 8}];\par
+          {\cf5\i // @JAUS(index=1)\par
+}          \} SimpleRecordArrayFixedLengthString_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleRecordArrayFixedLengthString{\cf4 :}{\cf4 :}SimpleRecordArrayFixedLengthString_ SimpleBodyRecordArrayFixedLengthString;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageRecordArrayFixedLengthString\par
+}\par
+    {\cf5\i // //// message ////////////////////////////////////////////////////////////\par
+}    {\cf8\b module} SimpleMessageRecordArrayVariableLengthString \{\par
+      {\cf5\i // @JAUS(inform,id=B00B)\par
+}      {\cf5\i // message type used by SimpleClient and SimpleServer unit test apps as part of JSB testing\par
+}      {\cf8\b typedef} {\cf8\b struct} JausAddress \{\par
+        {\cf8\b unsigned} {\cf8\b short} SubsystemID;\par
+        {\cf8\b octet} NodeID;\par
+        {\cf8\b octet} ComponentID;\par
+      \} JausAddress_;\par
+      {\cf8\b module} header \{\par
+        {\cf8\b typedef} {\cf8\b struct} HeaderRec \{\par
+          {\cf8\b unsigned} {\cf8\b short} MessageID;\par
+        \} HeaderRec_;\par
+      \};\par
+      {\cf8\b module} body \{\par
+        {\cf8\b module} SimpleRecordArrayVariableLengthString \{\par
+          {\cf8\b typedef} {\cf8\b struct} SimpleRecordArrayVariableLengthString \{\par
+              {\cf8\b string} SimpleVariableLengthString[{\cf4 16}]; {\cf5\i // @JAUS(length=<0,100>)\par
+}          {\cf5\i // @JAUS(index=1)\par
+}          \} SimpleRecordArrayVariableLengthString_;\par
+        \};\par
+      \};\par
+      {\cf8\b struct} Message \{\par
+        JausAddress_ source;\par
+        JausAddress_ destination;\par
+        header{\cf4 :}{\cf4 :}HeaderRec_ JTS_Header;\par
+        body{\cf4 :}{\cf4 :}SimpleRecordArrayVariableLengthString{\cf4 :}{\cf4 :}SimpleRecordArrayVariableLengthString_ SimpleBodyRecordArrayVariableLengthString;\par
+      \};\par
+{\chbrdr\chcfpat15 #}pragma keylist Message\par
+        source.SubsystemID\par
+        source.NodeID\par
+        source.ComponentID\par
+    \}; {\cf5\i // message: SimpleMessageRecordArrayVariableLengthString\par
+}  \};\par
+\};\par
+}

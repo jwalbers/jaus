@@ -1,0 +1,41 @@
+module JDDS {
+
+  module SimpleMessage {
+
+    typedef struct JausAddress {
+      unsigned short SubsystemID;
+      octet NodeID;
+      octet ComponentID;
+    } JausAddress_;
+
+    module header {
+      module HeaderRec {
+        typedef unsigned short MessageID_;
+        typedef struct HeaderRec {
+          MessageID_ MessageID;
+        } HeaderRec_;
+      };
+    };
+
+    module body {
+      module SimpleRecord {
+        typedef long SimpleFixedField_;
+        typedef struct SimpleRecord {
+          SimpleFixedField_ SimpleFixedField;
+        } SimpleRecord_;
+      };
+    };
+
+    struct Message {
+      JausAddress_ source;
+      JausAddress_ destination;
+      header::HeaderRec::HeaderRec_ JTS_Header;
+      body::SimpleRecord::SimpleRecord_ SimpleBody;
+    };
+
+    #pragma keylist Message
+                    source.SubsystemID
+                    source.NodeID
+                    source.ComponentID
+  };
+};

@@ -1,0 +1,22 @@
+          module SimpleRecordArrayFixedLengthString {
+            typedef struct SimpleRecordArrayFixedLengthString;
+              module SimpleArrayFixedLengthString {
+                string<20> SimpleFixedLengthString; // @JAUS()
+                module SimpleArrayDimension8 {
+                };
+              };
+ // index=1
+            } SimpleRecordArrayFixedLengthString_;
+          };
+
+
+// What we want
+
+          module SimpleRecordArrayFixedLengthString {
+              module SimpleArrayFixedLengthString {
+                typedef string<20> SimpleFixedLengthString_;
+              };
+              SimpleArrayFixedLengthString::SimpleFixedLengthString_ SimpleRecordArrayFixedLengthString_[8];
+          };
+
+

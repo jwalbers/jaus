@@ -1,0 +1,36 @@
+module CommandClass {
+  // @JAUS(id="urn:jaus:test001:MessageSet:CommandClass", version="1.0")
+
+  // //// message ////////////////////////////////////////////////////////////
+  module SimpleMessage {
+    // @JAUS(message,id=B001)
+    // A SimpleMessage sends a single 32-bit signed integer.
+    typedef struct JausAddress {
+      unsigned short SubsystemID;
+      octet NodeID;
+      octet ComponentID;
+    } JausAddress_;
+    module header {
+      typedef struct HeaderRec {
+        unsigned short MessageID;
+      } HeaderRec_;
+    };
+    module body {
+      module SimpleRecord {
+        typedef struct SimpleRecord {
+          long SimpleFixedField; // @JAUS(units=one)
+        } SimpleRecord_;
+      };
+    };
+    struct Message {
+      JausAddress_ source;
+      JausAddress_ destination;
+      header::HeaderRec_ JTS_Header;
+      body::SimpleRecord::SimpleRecord_ SimpleBody;
+    };
+#pragma keylist Message
+        source.SubsystemID
+        source.NodeID
+        source.ComponentID
+  }; // message: SimpleMessage
+};

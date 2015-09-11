@@ -1,0 +1,225 @@
+<service_def xmlns="urn:jaus:jsidl:1.0" name="GlobalPoseSensor" id="urn:jaus:jss:mobility:GlobalPoseSensor" version="1.0">
+  <description>The function of the Global Pose Sensor is to determine the global position and orientation of the platform.  
+  The Report Global Pose message provides the position and orientation of the platform.  The position of the platform 
+  is given in latitude, longitude, and elevation, in accordance with the WGS 84 standard.  Platform orientation is as 
+  defined in Section 4 of the JAUS Mobility Service Set Specification.</description>
+  <assumptions>Messages may be delayed, lost or reordered.</assumptions>
+  <references>
+    <inherits_from name="accessControl" id="urn:jaus:jss:core:AccessControl" version="1.0"/>
+  </references>
+  <declared_type_set name="Types">
+    <declared_type_set_ref name="mobility" id="urn:jaus:jss:mobility:MessageSet" version="1.0"/>
+  </declared_type_set>
+  <message_set>
+    <input_set>
+      <message_def name="SetGlobalPose" message_id="0402" is_command="true">
+        <description xml:space="preserve">
+          This message is used to set the global pose values.
+        </description>
+        <declared_header name="AppHeader" declared_type_ref="basicTypes.JAUSApplicationLayerHeader"/>
+        <body name="Body">
+          <record name="GlobalPoseRec" optional="false">
+            <presence_vector field_type_unsigned="unsigned short integer"/>
+            <fixed_field name="Latitude" field_type="unsigned integer" field_units="degree" optional="true">
+              <scale_range real_lower_limit="-90" real_upper_limit="90" integer_function="round"/>
+            </fixed_field>
+            <fixed_field name="Longitude" field_type="unsigned integer" field_units="degree" optional="true">
+              <scale_range real_lower_limit="-180" real_upper_limit="180" integer_function="round"/>
+            </fixed_field>
+            <fixed_field name="Altitude" field_type="unsigned integer" field_units="meter" optional="true">
+              <scale_range real_lower_limit="-10000" real_upper_limit="35000" integer_function="round"/>
+            </fixed_field>
+            <fixed_field name="Position_RMS" field_type="unsigned integer" field_units="meter" optional="true" 
+                         interpretation="An RMS value indicating the validity of the position data.">
+              <scale_range real_lower_limit="0" real_upper_limit="100" integer_function="round"/>
+            </fixed_field> 
+            <fixed_field name="Roll" field_type="unsigned short integer" field_units="radian" optional="true">
+              <scale_range real_lower_limit="-PI" real_upper_limit="PI" integer_function="round"/>
+            </fixed_field>
+            <fixed_field name="Pitch" field_type="unsigned short integer" field_units="radian" optional="true">
+              <scale_range real_lower_limit="-PI" real_upper_limit="PI" integer_function="round"/>
+            </fixed_field>  
+            <fixed_field name="Yaw" field_type="unsigned short integer" field_units="radian" optional="true">
+              <scale_range real_lower_limit="-PI" real_upper_limit="PI" integer_function="round"/>
+            </fixed_field>  
+            <fixed_field name="Attitude_RMS" field_type="unsigned short integer" field_units="radian" optional="true" 
+                         interpretation="An RMS value indicating the validity of the orientation data.">
+              <scale_range real_lower_limit="0" real_upper_limit="PI" integer_function="round"/>
+            </fixed_field>
+            <declared_bit_field name="TimeStamp" declared_type_ref="basicTypes.TimeStamp" optional="true" />
+          </record>
+        </body>
+        <footer name="Footer"/>
+      </message_def>
+      <message_def name="SetGeomagneticProperty" message_id="0412" is_command="true">
+        <description xml:space="preserve">
+          This message is used to set the location specific magnetic variation for adjusting the GPS heading.
+        </description>
+        <declared_header name="AppHeader" declared_type_ref="basicTypes.JAUSApplicationLayerHeader"/>
+        <body name="Body">
+          <record name="GeomagneticPropertyRec" optional="false">
+            <fixed_field name="MagneticVariation" field_type="unsigned short integer" field_units="radian" optional="false">
+              <scale_range real_lower_limit="-PI" real_upper_limit="PI" integer_function="round"/>
+            </fixed_field>
+          </record>
+        </body>
+        <footer name="Footer"/>
+      </message_def>
+      <message_def name="QueryGlobalPose" message_id="2402" is_command="false">
+        <description xml:space="preserve">
+          This message shall cause the receiving component to reply to the requestor with a 
+          ID 4402h: ReportGlobalPose message.  A logical AND shall be performed on the requested
+          presence vector and that representing the available fields from the responder.  The 
+          resulting message shall contain the fields indicated by the result of this logical AND operation.
+        </description>
+        <declared_header name="AppHeader" declared_type_ref="basicTypes.JAUSApplicationLayerHeader"/>
+        <body name="Body">
+          <record name="QueryGlobalPoseRec" optional="false">
+            <fixed_field name="PresenceVector" field_type="unsigned short integer" field_units="one" optional="false" interpretation="See Report Global Pose Message"/>
+          </record>
+        </body>
+        <footer name="Footer"/>
+      </message_def>
+      <message_def name="QueryGeomagneticProperty" message_id="2412" is_command="false">
+        <description xml:space="preserve">
+          This message shall cause the receiving component to reply to the requestor with a 
+          ID 4412h: ReportGeomagneticProperty message.  
+        </description>
+        <declared_header name="AppHeader" declared_type_ref="basicTypes.JAUSApplicationLayerHeader"/>
+        <body name="Body">
+          <record name="GeomagneticPropertyRec" optional="false">
+            <fixed_field name="MagneticVariation" field_type="unsigned short integer" field_units="radian" optional="false">
+              <scale_range real_lower_limit="-PI" real_upper_limit="PI" integer_function="round"/>
+            </fixed_field>
+          </record>
+        </body>
+        <footer name="Footer"/>
+      </message_def>
+    </input_set>
+    <output_set>
+      <message_def name="ReportGlobalPose" message_id="4402" is_command="false">
+        <description xml:space="preserve">
+          This message is used to provide the receiver the position and attitude of the platform.  The position of 
+          the platform is given in latitude, longitude, and altitude, in accordance with the WGS 84 standard.  
+          All times are in Coordinated Universal Time (UTC).  The message data and mapping of the 
+          presence vector for this message are identical to ID 0402h: SetGlobalPose.
+        </description>
+        <declared_header name="AppHeader" declared_type_ref="basicTypes.JAUSApplicationLayerHeader"/>
+        <body name="Body">
+          <record name="GlobalPoseRec" optional="false">
+            <presence_vector field_type_unsigned="unsigned short integer"/>
+            <fixed_field name="Latitude" field_type="unsigned integer" field_units="degree" optional="true">
+              <scale_range real_lower_limit="-90" real_upper_limit="90" integer_function="round"/>
+            </fixed_field>
+            <fixed_field name="Longitude" field_type="unsigned integer" field_units="degree" optional="true">
+              <scale_range real_lower_limit="-180" real_upper_limit="180" integer_function="round"/>
+            </fixed_field>
+            <fixed_field name="Altitude" field_type="unsigned integer" field_units="meter" optional="true">
+              <scale_range real_lower_limit="-10000" real_upper_limit="35000" integer_function="round"/>
+            </fixed_field>
+            <fixed_field name="Position_RMS" field_type="unsigned integer" field_units="meter" optional="true" interpretation="An RMS value indicating the validity of the position data.">
+              <scale_range real_lower_limit="0" real_upper_limit="100" integer_function="round"/>
+            </fixed_field> 
+            <fixed_field name="Roll" field_type="unsigned short integer" field_units="radian" optional="true">
+              <scale_range real_lower_limit="-PI" real_upper_limit="PI" integer_function="round"/>
+            </fixed_field>
+            <fixed_field name="Pitch" field_type="unsigned short integer" field_units="radian" optional="true">
+              <scale_range real_lower_limit="-PI" real_upper_limit="PI" integer_function="round"/>
+            </fixed_field>  
+            <fixed_field name="Yaw" field_type="unsigned short integer" field_units="radian" optional="true">
+              <scale_range real_lower_limit="-PI" real_upper_limit="PI" integer_function="round"/>
+            </fixed_field>  
+            <fixed_field name="Attitude_RMS" field_type="unsigned short integer" field_units="radian" optional="true" interpretation="An RMS value indicating the validity of the orientation data.">
+              <scale_range real_lower_limit="0" real_upper_limit="PI" integer_function="round"/>
+            </fixed_field>
+            <declared_bit_field name="TimeStamp" declared_type_ref="basicTypes.TimeStamp" optional="true"/>
+          </record>
+        </body>
+        <footer name="Footer"/>
+      </message_def>
+      <message_def name="ReportGeomagneticProperty" message_id="4412" is_command="false">
+        <description xml:space="preserve">
+          This message is used to provide the receiver the current geomagnetic property value.  The message data and mapping of the 
+          presence vector of this message are identical to ID 0412h: SetGeomagneticProperty.
+        </description>
+        <declared_header name="AppHeader" declared_type_ref="basicTypes.JAUSApplicationLayerHeader"/>
+        <body name="Body">
+          <record name="GeomagneticPropertyRec" optional="false">
+            <fixed_field name="MagneticVariation" field_type="unsigned short integer" field_units="radian" optional="false">
+              <scale_range real_lower_limit="-PI" real_upper_limit="PI" integer_function="round"/>
+            </fixed_field>
+          </record>
+        </body>
+        <footer name="Footer"/>
+      </message_def>  
+    </output_set>
+  </message_set>
+  <internal_events_set/>
+  <protocol_behavior>
+    <start state_machine_name="accessControl.events.transport.ReceiveFSM" state_name="Receiving.Ready.NotControlled"/>
+    <state_machine name="accessControl.events.transport.ReceiveFSM" interpretation="extending ReceiveFSM of base service (transport)">
+      <state name="Receiving" initial_state="Ready" interpretation="redefine state in order to extend">
+        <state name="Ready" initial_state="NotControlled" interpretation="redefine state in order to extend">
+          <state name="NotControlled" interpretation="redefine state in order to extend">
+            <default_state>
+              <transition name="accessControl.events.transport.Receive">
+                <parameter type="QueryGlobalPose" value="msg" interpretation="enveloped query global pose                     message"/>
+                <parameter type="TransportRec" value="transportData" interpretation="transport data"/>
+                <simple/>
+                <action name="accessControl.events.transport.Send" interpretation="Send a Report                     Global Pose message with the current global position">
+                  <argument value=" 'ReportGlobalPose' "/>
+                  <argument value="transportData"/>
+                </action>
+              </transition>
+              <transition name="accessControl.events.transport.Receive">
+                <parameter type="QueryGeomagneticProperty" value="msg" interpretation="enveloped query                      magnetic propery message"/>
+                <parameter type="TransportRec" value="transportData" interpretation="transport data"/>
+                <simple/>
+                <action name="accessControl.events.transport.Send" interpretation="Send a Report                     Geomagnetic Property message">
+                  <argument value=" 'ReportGeomagneticProperty' "/>
+                  <argument value="transportData"/>
+                </action>
+              </transition>
+            </default_state>
+          </state>
+          <state name="Controlled" interpretation="redefine state in order to extend">
+            <default_state>
+              <transition name="accessControl.events.transport.Receive">
+                <parameter type="QueryGlobalPose" value="msg" interpretation="enveloped query global pose                     message"/>
+                <parameter type="TransportRec" value="transportData" interpretation="transport data"/>
+                <simple/>
+                <action name="accessControl.events.transport.Send" interpretation="Send a Report                     Global Pose message with the current global position">
+                  <argument value=" 'ReportGlobalPose' "/>
+                  <argument value="transportData"/>
+                </action>
+              </transition>
+              <transition name="accessControl.events.transport.Receive">
+                <parameter type="QueryGeomagneticProperty" value="msg" interpretation="enveloped query                      magnetic propery message"/>
+                <parameter type="TransportRec" value="transportData" interpretation="transport data"/>
+                <simple/>
+                <action name="accessControl.events.transport.Send" interpretation="Send a Report                     Geomagnetic Property message">
+                  <argument value=" 'ReportGeomagneticProperty' "/>
+                  <argument value="transportData"/>
+                </action>
+              </transition>
+              <transition name="management.accessControl.events.transport.Receive">
+                <parameter type="SetGlobalPose" value="msg" interpretation="enveloped set global pose                     message"/>
+                <parameter type="TransportRec" value="transportData" interpretation="transport data"/>
+                <guard condition="isControllingClient( transportRec )" interpretation="True if the message that triggered                      the transition is received from the client that is in control of this service."/>
+                <simple/>
+                <action name="updateGlobalPose" interpretation="Update the global pose for the component."/>
+              </transition>
+              <transition name="management.accessControl.events.transport.Receive">
+                <parameter type="SetGeomagneticProperty" value="msg" interpretation="enveloped set                      geomagnetic property message"/>
+                <parameter type="TransportRec" value="transportData" interpretation="transport data"/>
+                <guard condition="isControllingClient( transportRec )" interpretation="True if the message that triggered                      the transition is received from the client that is in control of this service."/>
+                <simple/>
+                <action name="updateGeomagneticProperty" interpretation="Update the location                      specific magnetic variation for adjusting GPS heading."/>
+              </transition>
+            </default_state>
+          </state>
+        </state>
+      </state>
+    </state_machine>
+  </protocol_behavior>
+</service_def>

@@ -1,0 +1,984 @@
+module JDDS
+{
+    module SimpleMessageRecordFixedField
+    {
+        typedef struct JausAddress
+        {
+            unsigned short SubsystemID;
+            octet NodeID;
+            octet ComponentID;
+        } JausAddress_;
+
+        module header
+        {
+            module DefaultHeaderRec
+            {
+                typedef unsigned short MessageID_;
+                typedef struct DefaultHeaderRec
+                {
+                    MessageID_ MessageID;
+                } DefaultHeaderRec_;
+
+            };
+
+
+        };
+
+        module body
+        {
+            module SimpleRecordFixedField
+            {
+                typedef long SimpleFixedField_;
+                typedef struct SimpleRecordFixedField
+                {
+                    SimpleFixedField_ SimpleFixedField;
+                } SimpleRecordFixedField_;
+
+            };
+
+
+        };
+
+        struct Message
+        {
+            JausAddress_ source;
+            JausAddress_ destination;
+            header::DefaultHeaderRec::DefaultHeaderRec_ JTS_DefaultHeader;
+            body::SimpleRecordFixedField::SimpleRecordFixedField_ SimpleBodyRecordFixedField;
+        };
+
+        #pragma keylist Message source.SubsystemID source.NodeID source.ComponentID
+    };
+
+    module SimpleMessageRecord
+    {
+        typedef struct JausAddress
+        {
+            unsigned short SubsystemID;
+            octet NodeID;
+            octet ComponentID;
+        } JausAddress_;
+
+        module header
+        {
+            module DefaultHeaderRec
+            {
+                typedef unsigned short MessageID_;
+                typedef struct DefaultHeaderRec
+                {
+                    MessageID_ MessageID;
+                } DefaultHeaderRec_;
+
+            };
+
+
+        };
+
+        module body
+        {
+            module SimpleRecord
+            {
+                typedef string<2> FixedLengthStringField_;
+                typedef string VariableLengthStringField_;
+                typedef octet FixedField1_;
+                typedef short FixedField2_;
+                typedef long FixedField4_;
+                typedef long long FixedField8_;
+                typedef struct SimpleRecord
+                {
+                    octet presence_vector;
+                    FixedLengthStringField_ FixedLengthStringField;
+                    VariableLengthStringField_ VariableLengthStringField;
+                    FixedField1_ FixedField1;
+                    FixedField2_ FixedField2;
+                    FixedField4_ FixedField4;
+                    FixedField8_ FixedField8;
+                } SimpleRecord_;
+
+            };
+
+
+        };
+
+        struct Message
+        {
+            JausAddress_ source;
+            JausAddress_ destination;
+            header::DefaultHeaderRec::DefaultHeaderRec_ JTS_DefaultHeader;
+            body::SimpleRecord::SimpleRecord_ SimpleBodyRecord;
+        };
+
+        #pragma keylist Message source.SubsystemID source.NodeID source.ComponentID
+    };
+
+    module SimpleMessageList
+    {
+        typedef struct JausAddress
+        {
+            unsigned short SubsystemID;
+            octet NodeID;
+            octet ComponentID;
+        } JausAddress_;
+
+        module header
+        {
+            module DefaultHeaderRec
+            {
+                typedef unsigned short MessageID_;
+                typedef struct DefaultHeaderRec
+                {
+                    MessageID_ MessageID;
+                } DefaultHeaderRec_;
+
+            };
+
+
+        };
+
+        module body
+        {
+            module SimpleList
+            {
+                module SimpleRecordFixedLengthString
+                {
+                    typedef string<20> SimpleFixedLengthString_;
+                    typedef struct SimpleRecordFixedLengthString
+                    {
+                        SimpleFixedLengthString_ SimpleFixedLengthString;
+                    } SimpleRecordFixedLengthString_;
+
+                };
+
+                typedef sequence<SimpleRecordFixedLengthString::SimpleRecordFixedLengthString_, 10> SimpleList_;
+            };
+
+
+        };
+
+        struct Message
+        {
+            JausAddress_ source;
+            JausAddress_ destination;
+            header::DefaultHeaderRec::DefaultHeaderRec_ JTS_DefaultHeader;
+            body::SimpleList::SimpleList_ SimpleBodyList;
+        };
+
+        #pragma keylist Message source.SubsystemID source.NodeID source.ComponentID
+    };
+
+    module SimpleMessageListListRecordFixedLengthString
+    {
+        typedef struct JausAddress
+        {
+            unsigned short SubsystemID;
+            octet NodeID;
+            octet ComponentID;
+        } JausAddress_;
+
+        module header
+        {
+            module DefaultHeaderRec
+            {
+                typedef unsigned short MessageID_;
+                typedef struct DefaultHeaderRec
+                {
+                    MessageID_ MessageID;
+                } DefaultHeaderRec_;
+
+            };
+
+
+        };
+
+        module body
+        {
+            module SimpleListListRecordFixedLengthString
+            {
+                module SimpleListRecordFixedLengthString
+                {
+                    module SimpleRecordFixedLengthString
+                    {
+                        typedef string<20> SimpleFixedLengthString_;
+                        typedef struct SimpleRecordFixedLengthString
+                        {
+                            SimpleFixedLengthString_ SimpleFixedLengthString;
+                        } SimpleRecordFixedLengthString_;
+
+                    };
+
+                    typedef sequence<SimpleRecordFixedLengthString::SimpleRecordFixedLengthString_, 10> SimpleListRecordFixedLengthString_;
+                };
+
+                typedef sequence<SimpleListRecordFixedLengthString::SimpleListRecordFixedLengthString_, 50> SimpleListListRecordFixedLengthString_;
+            };
+
+
+        };
+
+        struct Message
+        {
+            JausAddress_ source;
+            JausAddress_ destination;
+            header::DefaultHeaderRec::DefaultHeaderRec_ JTS_DefaultHeader;
+            body::SimpleListListRecordFixedLengthString::SimpleListListRecordFixedLengthString_ SimpleBodyListListRecordFixedLengthString;
+        };
+
+        #pragma keylist Message source.SubsystemID source.NodeID source.ComponentID
+    };
+
+    module SimpleMessageSequence
+    {
+        typedef struct JausAddress
+        {
+            unsigned short SubsystemID;
+            octet NodeID;
+            octet ComponentID;
+        } JausAddress_;
+
+        module header
+        {
+            module DefaultHeaderRec
+            {
+                typedef unsigned short MessageID_;
+                typedef struct DefaultHeaderRec
+                {
+                    MessageID_ MessageID;
+                } DefaultHeaderRec_;
+
+            };
+
+
+        };
+
+        module body
+        {
+            module SimpleSequence
+            {
+                module SimpleListRecordFixedLengthString
+                {
+                    module SimpleRecordFixedLengthString
+                    {
+                        typedef string<20> SimpleFixedLengthString_;
+                        typedef struct SimpleRecordFixedLengthString
+                        {
+                            SimpleFixedLengthString_ SimpleFixedLengthString;
+                        } SimpleRecordFixedLengthString_;
+
+                    };
+
+                    typedef sequence<SimpleRecordFixedLengthString::SimpleRecordFixedLengthString_, 10> SimpleListRecordFixedLengthString_;
+                };
+
+                module SimpleRecordArrayFixedLengthString
+                {
+                    typedef string<20> SimpleFixedLengthString_;
+                    typedef SimpleFixedLengthString_ SimpleArrayFixedLengthString_[8];
+
+                    typedef struct SimpleRecordArrayFixedLengthString
+                    {
+                        SimpleArrayFixedLengthString_ SimpleArrayFixedLengthString;
+                    } SimpleRecordArrayFixedLengthString_;
+
+                };
+
+                module SimpleRecordVariableLengthString
+                {
+                    typedef string SimpleVariableLengthString_;
+                    typedef struct SimpleRecordVariableLengthString
+                    {
+                        SimpleVariableLengthString_ SimpleVariableLengthString;
+                    } SimpleRecordVariableLengthString_;
+
+                };
+
+                module SimpleRecordFixedField
+                {
+                    typedef long SimpleFixedField_;
+                    typedef struct SimpleRecordFixedField
+                    {
+                        SimpleFixedField_ SimpleFixedField;
+                    } SimpleRecordFixedField_;
+
+                };
+
+                typedef struct SimpleSequence
+                {
+                    SimpleListRecordFixedLengthString::SimpleListRecordFixedLengthString_ SimpleListRecordFixedLengthString;
+                    SimpleRecordArrayFixedLengthString::SimpleRecordArrayFixedLengthString_ SimpleRecordArrayFixedLengthString;
+                    SimpleRecordVariableLengthString::SimpleRecordVariableLengthString_ SimpleRecordVariableLengthString;
+                    SimpleRecordFixedField::SimpleRecordFixedField_ SimpleRecordFixedField;
+                } SimpleSequence_;
+
+            };
+
+
+        };
+
+        struct Message
+        {
+            JausAddress_ source;
+            JausAddress_ destination;
+            header::DefaultHeaderRec::DefaultHeaderRec_ JTS_DefaultHeader;
+            body::SimpleSequence::SimpleSequence_ SimpleBodySequence;
+        };
+
+        #pragma keylist Message source.SubsystemID source.NodeID source.ComponentID
+    };
+
+    module SimpleMessageVariant
+    {
+        typedef struct JausAddress
+        {
+            unsigned short SubsystemID;
+            octet NodeID;
+            octet ComponentID;
+        } JausAddress_;
+
+        module header
+        {
+            module DefaultHeaderRec
+            {
+                typedef unsigned short MessageID_;
+                typedef struct DefaultHeaderRec
+                {
+                    MessageID_ MessageID;
+                } DefaultHeaderRec_;
+
+            };
+
+
+        };
+
+        module body
+        {
+            module SimpleVariant
+            {
+                module SimpleListRecordFixedLengthString
+                {
+                    module SimpleRecordFixedLengthString
+                    {
+                        typedef string<20> SimpleFixedLengthString_;
+                        typedef struct SimpleRecordFixedLengthString
+                        {
+                            SimpleFixedLengthString_ SimpleFixedLengthString;
+                        } SimpleRecordFixedLengthString_;
+
+                    };
+
+                    typedef sequence<SimpleRecordFixedLengthString::SimpleRecordFixedLengthString_, 10> SimpleListRecordFixedLengthString_;
+                };
+
+                module SimpleRecordArrayFixedLengthString
+                {
+                    typedef string<20> SimpleFixedLengthString_;
+                    typedef SimpleFixedLengthString_ SimpleArrayFixedLengthString_[8];
+
+                    typedef struct SimpleRecordArrayFixedLengthString
+                    {
+                        SimpleArrayFixedLengthString_ SimpleArrayFixedLengthString;
+                    } SimpleRecordArrayFixedLengthString_;
+
+                };
+
+                module SimpleRecordVariableLengthString
+                {
+                    typedef string SimpleVariableLengthString_;
+                    typedef struct SimpleRecordVariableLengthString
+                    {
+                        SimpleVariableLengthString_ SimpleVariableLengthString;
+                    } SimpleRecordVariableLengthString_;
+
+                };
+
+                module SimpleRecordFixedField
+                {
+                    typedef long SimpleFixedField_;
+                    typedef struct SimpleRecordFixedField
+                    {
+                        SimpleFixedField_ SimpleFixedField;
+                    } SimpleRecordFixedField_;
+
+                };
+
+                typedef union SimpleVariant switch (unsigned short)
+                {
+                case 0:
+                    SimpleListRecordFixedLengthString::SimpleListRecordFixedLengthString_ SimpleListRecordFixedLengthString;
+                case 1:
+                    SimpleRecordArrayFixedLengthString::SimpleRecordArrayFixedLengthString_ SimpleRecordArrayFixedLengthString;
+                case 2:
+                    SimpleRecordVariableLengthString::SimpleRecordVariableLengthString_ SimpleRecordVariableLengthString;
+                case 3:
+                    SimpleRecordFixedField::SimpleRecordFixedField_ SimpleRecordFixedField;
+                } SimpleVariant_;
+            };
+
+
+        };
+
+        struct Message
+        {
+            JausAddress_ source;
+            JausAddress_ destination;
+            header::DefaultHeaderRec::DefaultHeaderRec_ JTS_DefaultHeader;
+            body::SimpleVariant::SimpleVariant_ SimpleBodyVariant;
+        };
+
+        #pragma keylist Message source.SubsystemID source.NodeID source.ComponentID
+    };
+
+    module SimpleMessageRecordFixedLengthString
+    {
+        typedef struct JausAddress
+        {
+            unsigned short SubsystemID;
+            octet NodeID;
+            octet ComponentID;
+        } JausAddress_;
+
+        module header
+        {
+            module DefaultHeaderRec
+            {
+                typedef unsigned short MessageID_;
+                typedef struct DefaultHeaderRec
+                {
+                    MessageID_ MessageID;
+                } DefaultHeaderRec_;
+
+            };
+
+
+        };
+
+        module body
+        {
+            module SimpleRecordFixedLengthString
+            {
+                typedef string<20> SimpleFixedLengthString_;
+                typedef struct SimpleRecordFixedLengthString
+                {
+                    SimpleFixedLengthString_ SimpleFixedLengthString;
+                } SimpleRecordFixedLengthString_;
+
+            };
+
+
+        };
+
+        struct Message
+        {
+            JausAddress_ source;
+            JausAddress_ destination;
+            header::DefaultHeaderRec::DefaultHeaderRec_ JTS_DefaultHeader;
+            body::SimpleRecordFixedLengthString::SimpleRecordFixedLengthString_ SimpleBodyRecordFixedLengthString;
+        };
+
+        #pragma keylist Message source.SubsystemID source.NodeID source.ComponentID
+    };
+
+    module SimpleMessageRecordVariableLengthString
+    {
+        typedef struct JausAddress
+        {
+            unsigned short SubsystemID;
+            octet NodeID;
+            octet ComponentID;
+        } JausAddress_;
+
+        module header
+        {
+            module DefaultHeaderRec
+            {
+                typedef unsigned short MessageID_;
+                typedef struct DefaultHeaderRec
+                {
+                    MessageID_ MessageID;
+                } DefaultHeaderRec_;
+
+            };
+
+
+        };
+
+        module body
+        {
+            module SimpleRecordVariableLengthString
+            {
+                typedef string SimpleVariableLengthString_;
+                typedef struct SimpleRecordVariableLengthString
+                {
+                    SimpleVariableLengthString_ SimpleVariableLengthString;
+                } SimpleRecordVariableLengthString_;
+
+            };
+
+
+        };
+
+        struct Message
+        {
+            JausAddress_ source;
+            JausAddress_ destination;
+            header::DefaultHeaderRec::DefaultHeaderRec_ JTS_DefaultHeader;
+            body::SimpleRecordVariableLengthString::SimpleRecordVariableLengthString_ SimpleBodyRecordVariableLengthString;
+        };
+
+        #pragma keylist Message source.SubsystemID source.NodeID source.ComponentID
+    };
+
+    module SimpleMessageRecordVariableField
+    {
+        typedef struct JausAddress
+        {
+            unsigned short SubsystemID;
+            octet NodeID;
+            octet ComponentID;
+        } JausAddress_;
+
+        module header
+        {
+            module DefaultHeaderRec
+            {
+                typedef unsigned short MessageID_;
+                typedef struct DefaultHeaderRec
+                {
+                    MessageID_ MessageID;
+                } DefaultHeaderRec_;
+
+            };
+
+
+        };
+
+        module body
+        {
+            module SimpleRecordVariableField
+            {
+                union SimpleVariableField_ switch (unsigned short)
+                {
+                case 0:
+                    short celsius_type;
+                case 1:
+                    unsigned short kelvin_type;
+                };
+                typedef struct SimpleRecordVariableField
+                {
+                    SimpleVariableField_ SimpleVariableField;
+                } SimpleRecordVariableField_;
+
+            };
+
+
+        };
+
+        struct Message
+        {
+            JausAddress_ source;
+            JausAddress_ destination;
+            header::DefaultHeaderRec::DefaultHeaderRec_ JTS_DefaultHeader;
+            body::SimpleRecordVariableField::SimpleRecordVariableField_ SimpleBodyRecordVariableField;
+        };
+
+        #pragma keylist Message source.SubsystemID source.NodeID source.ComponentID
+    };
+
+    module SimpleMessageRecordBitField
+    {
+        typedef struct JausAddress
+        {
+            unsigned short SubsystemID;
+            octet NodeID;
+            octet ComponentID;
+        } JausAddress_;
+
+        module header
+        {
+            module DefaultHeaderRec
+            {
+                typedef unsigned short MessageID_;
+                typedef struct DefaultHeaderRec
+                {
+                    MessageID_ MessageID;
+                } DefaultHeaderRec_;
+
+            };
+
+
+        };
+
+        module body
+        {
+            module SimpleRecordBitField
+            {
+                typedef unsigned long SimpleBitField_;
+                typedef struct SimpleRecordBitField
+                {
+                    SimpleBitField_ SimpleBitField;
+                } SimpleRecordBitField_;
+
+            };
+
+
+        };
+
+        struct Message
+        {
+            JausAddress_ source;
+            JausAddress_ destination;
+            header::DefaultHeaderRec::DefaultHeaderRec_ JTS_DefaultHeader;
+            body::SimpleRecordBitField::SimpleRecordBitField_ SimpleBodyRecordBitField;
+        };
+
+        #pragma keylist Message source.SubsystemID source.NodeID source.ComponentID
+    };
+
+    module SimpleMessageRecordVariableLengthField
+    {
+        typedef struct JausAddress
+        {
+            unsigned short SubsystemID;
+            octet NodeID;
+            octet ComponentID;
+        } JausAddress_;
+
+        module header
+        {
+            module DefaultHeaderRec
+            {
+                typedef unsigned short MessageID_;
+                typedef struct DefaultHeaderRec
+                {
+                    MessageID_ MessageID;
+                } DefaultHeaderRec_;
+
+            };
+
+
+        };
+
+        module body
+        {
+            module SimpleRecordVariableLengthField
+            {
+                typedef sequence<octet, 1000> SimpleVariableLengthField_;
+                typedef struct SimpleRecordVariableLengthField
+                {
+                    SimpleVariableLengthField_ SimpleVariableLengthField;
+                } SimpleRecordVariableLengthField_;
+
+            };
+
+
+        };
+
+        struct Message
+        {
+            JausAddress_ source;
+            JausAddress_ destination;
+            header::DefaultHeaderRec::DefaultHeaderRec_ JTS_DefaultHeader;
+            body::SimpleRecordVariableLengthField::SimpleRecordVariableLengthField_ SimpleBodyRecordVariableLengthField;
+        };
+
+        #pragma keylist Message source.SubsystemID source.NodeID source.ComponentID
+    };
+
+    module SimpleMessageRecordVariableFormatField
+    {
+        typedef struct JausAddress
+        {
+            unsigned short SubsystemID;
+            octet NodeID;
+            octet ComponentID;
+        } JausAddress_;
+
+        module header
+        {
+            module DefaultHeaderRec
+            {
+                typedef unsigned short MessageID_;
+                typedef struct DefaultHeaderRec
+                {
+                    MessageID_ MessageID;
+                } DefaultHeaderRec_;
+
+            };
+
+
+        };
+
+        module body
+        {
+            module SimpleRecordVariableFormatField
+            {
+                typedef sequence<octet, 100000> SimpleVariableFormatField_data;
+                struct SimpleVariableFormatField_
+                {
+                    char format;
+                    SimpleVariableFormatField_data data;
+                };
+                typedef struct SimpleRecordVariableFormatField
+                {
+                    SimpleVariableFormatField_ SimpleVariableFormatField;
+                } SimpleRecordVariableFormatField_;
+
+            };
+
+
+        };
+
+        struct Message
+        {
+            JausAddress_ source;
+            JausAddress_ destination;
+            header::DefaultHeaderRec::DefaultHeaderRec_ JTS_DefaultHeader;
+            body::SimpleRecordVariableFormatField::SimpleRecordVariableFormatField_ SimpleBodyRecordVariableFormatField;
+        };
+
+        #pragma keylist Message source.SubsystemID source.NodeID source.ComponentID
+    };
+
+    module SimpleMessageRecordArray
+    {
+        typedef struct JausAddress
+        {
+            unsigned short SubsystemID;
+            octet NodeID;
+            octet ComponentID;
+        } JausAddress_;
+
+        module header
+        {
+            module DefaultHeaderRec
+            {
+                typedef unsigned short MessageID_;
+                typedef struct DefaultHeaderRec
+                {
+                    MessageID_ MessageID;
+                } DefaultHeaderRec_;
+
+            };
+
+
+        };
+
+        module body
+        {
+            module SimpleRecordArray
+            {
+                typedef long SimpleFixedField_;
+                typedef SimpleFixedField_ SimpleArrayFixedField_[4];
+
+                union SimpleVariableField_ switch (unsigned short)
+                {
+                case 0:
+                    short celsius_type;
+                case 1:
+                    unsigned short kelvin_type;
+                };
+                typedef SimpleVariableField_ SimpleArrayVariableField_[2];
+
+                typedef string<20> SimpleFixedLengthString_;
+                typedef SimpleFixedLengthString_ SimpleArrayFixedLengthString_[8];
+
+                typedef string SimpleVariableLengthString_;
+                typedef SimpleVariableLengthString_ SimpleArrayVariableLengthString_[16];
+
+                typedef unsigned long SimpleBitField_;
+                typedef SimpleBitField_ SimpleArrayBitField_[4];
+
+                typedef sequence<octet, 1000> SimpleVariableLengthField_;
+                typedef SimpleVariableLengthField_ SimpleArrayVariableLengthField_[4];
+
+                typedef sequence<octet, 100000> SimpleVariableFormatField_data;
+                struct SimpleVariableFormatField_
+                {
+                    char format;
+                    SimpleVariableFormatField_data data;
+                };
+                typedef SimpleVariableFormatField_ SimpleArrayVariableFormatField_[8];
+
+                typedef struct SimpleRecordArray
+                {
+                    SimpleArrayFixedField_ SimpleArrayFixedField;
+                    SimpleArrayVariableField_ SimpleArrayVariableField;
+                    SimpleArrayFixedLengthString_ SimpleArrayFixedLengthString;
+                    SimpleArrayVariableLengthString_ SimpleArrayVariableLengthString;
+                    SimpleArrayBitField_ SimpleArrayBitField;
+                    SimpleArrayVariableLengthField_ SimpleArrayVariableLengthField;
+                    SimpleArrayVariableFormatField_ SimpleArrayVariableFormatField;
+                } SimpleRecordArray_;
+
+            };
+
+
+        };
+
+        struct Message
+        {
+            JausAddress_ source;
+            JausAddress_ destination;
+            header::DefaultHeaderRec::DefaultHeaderRec_ JTS_DefaultHeader;
+            body::SimpleRecordArray::SimpleRecordArray_ SimpleBodyRecordArray;
+        };
+
+        #pragma keylist Message source.SubsystemID source.NodeID source.ComponentID
+    };
+
+    module SimpleMessageRecordArrayFixedField
+    {
+        typedef struct JausAddress
+        {
+            unsigned short SubsystemID;
+            octet NodeID;
+            octet ComponentID;
+        } JausAddress_;
+
+        module header
+        {
+            module DefaultHeaderRec
+            {
+                typedef unsigned short MessageID_;
+                typedef struct DefaultHeaderRec
+                {
+                    MessageID_ MessageID;
+                } DefaultHeaderRec_;
+
+            };
+
+
+        };
+
+        module body
+        {
+            module SimpleRecordArrayFixedField
+            {
+                typedef long SimpleFixedField_;
+                typedef SimpleFixedField_ SimpleArrayFixedField_[4];
+
+                typedef struct SimpleRecordArrayFixedField
+                {
+                    SimpleArrayFixedField_ SimpleArrayFixedField;
+                } SimpleRecordArrayFixedField_;
+
+            };
+
+
+        };
+
+        struct Message
+        {
+            JausAddress_ source;
+            JausAddress_ destination;
+            header::DefaultHeaderRec::DefaultHeaderRec_ JTS_DefaultHeader;
+            body::SimpleRecordArrayFixedField::SimpleRecordArrayFixedField_ SimpleBodyRecordArrayFixedField;
+        };
+
+        #pragma keylist Message source.SubsystemID source.NodeID source.ComponentID
+    };
+
+    module SimpleMessageRecordArrayFixedLengthString
+    {
+        typedef struct JausAddress
+        {
+            unsigned short SubsystemID;
+            octet NodeID;
+            octet ComponentID;
+        } JausAddress_;
+
+        module header
+        {
+            module DefaultHeaderRec
+            {
+                typedef unsigned short MessageID_;
+                typedef struct DefaultHeaderRec
+                {
+                    MessageID_ MessageID;
+                } DefaultHeaderRec_;
+
+            };
+
+
+        };
+
+        module body
+        {
+            module SimpleRecordArrayFixedLengthString
+            {
+                typedef string<20> SimpleFixedLengthString_;
+                typedef SimpleFixedLengthString_ SimpleArrayFixedLengthString_[8];
+
+                typedef struct SimpleRecordArrayFixedLengthString
+                {
+                    SimpleArrayFixedLengthString_ SimpleArrayFixedLengthString;
+                } SimpleRecordArrayFixedLengthString_;
+
+            };
+
+
+        };
+
+        struct Message
+        {
+            JausAddress_ source;
+            JausAddress_ destination;
+            header::DefaultHeaderRec::DefaultHeaderRec_ JTS_DefaultHeader;
+            body::SimpleRecordArrayFixedLengthString::SimpleRecordArrayFixedLengthString_ SimpleBodyRecordArrayFixedLengthString;
+        };
+
+        #pragma keylist Message source.SubsystemID source.NodeID source.ComponentID
+    };
+
+    module SimpleMessageRecordArrayVariableLengthString
+    {
+        typedef struct JausAddress
+        {
+            unsigned short SubsystemID;
+            octet NodeID;
+            octet ComponentID;
+        } JausAddress_;
+
+        module header
+        {
+            module DefaultHeaderRec
+            {
+                typedef unsigned short MessageID_;
+                typedef struct DefaultHeaderRec
+                {
+                    MessageID_ MessageID;
+                } DefaultHeaderRec_;
+
+            };
+
+
+        };
+
+        module body
+        {
+            module SimpleRecordArrayVariableLengthString
+            {
+                typedef string SimpleVariableLengthString_;
+                typedef SimpleVariableLengthString_ SimpleArrayVariableLengthString_[16];
+
+                typedef struct SimpleRecordArrayVariableLengthString
+                {
+                    SimpleArrayVariableLengthString_ SimpleArrayVariableLengthString;
+                } SimpleRecordArrayVariableLengthString_;
+
+            };
+
+
+        };
+
+        struct Message
+        {
+            JausAddress_ source;
+            JausAddress_ destination;
+            header::DefaultHeaderRec::DefaultHeaderRec_ JTS_DefaultHeader;
+            body::SimpleRecordArrayVariableLengthString::SimpleRecordArrayVariableLengthString_ SimpleBodyRecordArrayVariableLengthString;
+        };
+
+        #pragma keylist Message source.SubsystemID source.NodeID source.ComponentID
+    };
+
+};

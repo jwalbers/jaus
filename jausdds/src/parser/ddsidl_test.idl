@@ -1,0 +1,48 @@
+// ddsidl_test.idl
+// Test file for the validating parser.
+// $Id: ddsidl_test.idl 95 2013-08-26 16:27:28Z jalbers $
+module test001 {
+  module MessageSet {
+    module CommandClass {
+      module SimpleMessage {
+        // @JAUS(id="urn:jaus:test001:simple:MessageSet:CommandClass",
+        //       version="1.0")
+        typedef struct JausAddress {
+          unsigned short SubsystemID;
+          octet NodeID;
+          octet ComponentID;
+        } JausAddress_;
+
+        module header {
+          module HeaderRec {
+            typedef unsigned short MessageID_;
+            typedef struct HeaderRec {
+              MessageID_ MessageID;
+            } HeaderRec_;
+          };
+        };
+
+        module body {
+          module SimpleRecord {
+            typedef long SimpleFixedField_;
+            typedef struct SimpleRecord {
+              SimpleFixedField_ SimpleFixedField;
+            } SimpleRecord_;
+          };
+        };
+
+        struct Message {
+          JausAddress_ source;
+          JausAddress_ destination;
+          header::HeaderRec::HeaderRec_ JTS_Header;
+          body::SimpleRecord::SimpleRecord_ SimpleBody;
+        };
+
+#pragma keylist Message
+        source.SubsystemID
+          source.NodeID
+          source.ComponentID
+          };
+    };
+  };
+};
