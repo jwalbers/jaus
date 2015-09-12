@@ -46,7 +46,8 @@ type_declarations_g = {}
 fsm_start_map = {}
 field_format_map = {
     'JAUS Message':'AppMessage',
-    'JAUS MESSAGE':'AppMessage'
+    'JAUS MESSAGE':'AppMessage',
+    'RAW':'uint8[]'
     }
 scalar_type_map = {
     'byte':'uint8',
