@@ -1,0 +1,79 @@
+service HealthMonitoring( id="urn:jaus:jss:health_monitoring",
+                          version="0.1" ) {
+  types HealthMonitoringTypes {
+    bit_field uint32 TimeStamp    {
+      Milliseconds [0:9] [0,999] one;
+      Seconds [10:15] [0,59] one;
+      Minutes [16:21] [0,59] one;
+      Hour [22:26] [0,23] one;
+      Day [27:31] [1,31] one;
+    }
+    field uint8 CriticalityType one {
+       WARNING = 0;
+       SERIOUS_1 = 1;
+       SERIOUS_2 = 2;
+       CATASTROPHIC = 3;
+      };
+    field uint8 ClearType one {
+       NO_ERROR = 0;
+       ERROR = 1;
+      };
+    record ErrorCode {      required uint32 error_code one  = 1;
+    }// record ErrorCode
+    record ErrorReport { // Decription of error (for human).
+      required uint8 health_monitoring_version one  = 1;
+      required bit_field uint8 error_info      {
+        default_criticality [0:1] [0,3] one;
+        reserved [2:6] [0,0] one;
+        set_clear [7:7] [0,1] one;
+      } = 2;
+      required uint8 module one  = 3;
+      required TimeStamp timestamp = 4;
+      required int32 error_code one  = 5;
+      required vstring error_description [ 0,64 ] = 6;
+    }// record ErrorReport
+    record ModuleInfo { // Available, TORC used to enumerate modules.
+      required uint8 health_monitoring_version one  = 1;
+      required uint8 module one  = 2;
+    }// record ModuleInfo
+    list ErrorList  {
+      uint8 count [0,255];
+      repeated ErrorCode code;
+    } // list ErrorList 
+    sequence ModuleErrors  {
+      required ModuleInfo module = 1;
+      required ErrorList errors = 2;
+    } // sequence ModuleErrors 
+    record ErrorSpec { // Error code.
+      required uint8 health_monitoring_version one  = 1;
+      required uint8 module one  = 2;
+      required int32 error_code one  = 3;
+    }// record ErrorSpec
+    record ErrorListSpec { // Available, TORC used to enumerate modules.
+      required uint8 health_monitoring_version one  = 1;
+      required uint8 module one  = 2;
+    }// record ErrorListSpec
+  }// types HealthMonitoringTypes
+  messages  {
+    command 0x0ff1 SetError {
+      description "Set an error";
+       ErrorReport new_error_report;
+    }
+    query 0x2ff1 QueryError {
+      description "Query for an error matching criteria";
+       ErrorSpec which_error;
+    }
+    query 0x2ff2 QueryErrorList {
+      description "Query for all errors for a given module code";
+       ErrorListSpec which_module;
+    }
+    inform 0x4ff1 ReportError {
+      description "Query for an error matching criteria";
+       ErrorReport error_report;
+    }
+    inform 0x4ff2 ReportErrorList {
+      description "Query for all errors for a given module code";
+       ErrorList error_list;
+    }
+  }// messages 
+}// service HealthMonitoring

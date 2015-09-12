@@ -1,0 +1,648 @@
+service MissionManagement( id="com:neya:mpms:MissionManagement",
+                           version="0.1" ) {
+  description "The Mission Management service provides the means to distribute, monitor,
+    and control Mission Task Packages that allow assets to perform parts of a
+    Mission Plan autonomously and collaboratively";
+  assumptions "All random deviations will tend in our favor.";
+  references {
+  }
+  messages  {
+    command 0x0FA5 DectivateMission {
+      description "Deactivate the designated Mission, Abort and Reset all Tasks,
+        unsubscribe all parameter subscriptions, etc.";
+      record mission {
+        required uint32 missionId one  = 1;
+      }// record mission
+    }
+    command 0x0FA6 AbortMission {
+      description "Equivalent to sending AbortTask to all Tasks in the mission.";
+      record mission {
+        required uint32 missionId one  = 1;
+      }// record mission
+    }
+    command 0x0FA7 PauseMission {
+      description "Equivalent to sending PauseTask to all Tasks in the mission.";
+      record mission {
+        required uint32 missionId one  = 1;
+      }// record mission
+    }
+    command 0x0FA8 ResumeMission {
+      description "Equivalent to sending ResumeTask to all Tasks in the mission.";
+      record mission {
+        required uint32 missionId one  = 1;
+      }// record mission
+    }
+    command 0x0FA9 AbortMission {
+      description "Equivalent to sending AbortTask to all Tasks in the mission.";
+      record mission {
+        required uint32 missionId one  = 1;
+      }// record mission
+    }
+    command 0x0FAA RunTask {
+      description "Command a task to begin executing.";
+      record task {
+        required uint32 taskId one  = 1;
+      }// record task
+    }
+    command 0x0FA1 AddTaskPackage {
+      description "Download a task package to the service";
+      variant package  {
+        uint8 vtag[0,0];
+        vtag 0: sequence stp {
+          required record missionId {
+            required uint32 missionId one  = 1;
+          } = 1;// record missionId
+          required record packageId {
+            required uint32 pid one  = 1;
+          } = 2;// record packageId
+          required record missionParameters {
+            required uint32 missionId one  = 1;
+            required vstring jsidl [ 0,16384 ] = 2;
+          } = 3;// record missionParameters
+          required sequence initialParams  {
+            required record missionId {
+              required uint32 missionId one  = 1;
+            } = 1;// record missionId
+            required list values  {
+              uint8 count [0,255];
+              repeated sequence assignment  {
+                required list item  {
+                  uint16 count [0,65535];
+                  repeated record item_index {
+                    required uint8 byte_field one  = 1;
+                  }// record item_index
+                } = 1; // list item 
+                required list encodedValue  {
+                  uint16 count [0,65535];
+                  repeated record bytes {
+                    required uint8 byte_field one  = 1;
+                  }// record bytes
+                } = 2; // list encodedValue 
+              } // sequence assignment 
+            } = 2; // list values 
+            required record timestamp {
+              required bit_field uint32 timeStamp              {
+                Milliseconds [0:9] [0,999] one;
+                Seconds [10:15] [0,59] one;
+                Minutes [16:21] [0,59] one;
+                Hour [22:26] [0,23] one;
+                Day [27:31] [1,31] one;
+              } = 1;
+            } = 3;// record timestamp
+          } // sequence initialParams 
+          required list publishers  {
+            uint8 count [0,255];
+            repeated sequence binding  {
+              required list item  {
+                uint16 count [0,65535];
+                repeated record item_index {
+                  required uint8 byte_field one  = 1;
+                }// record item_index
+              } = 1; // list item 
+              required list publishers  {
+                uint8 count [0,255];
+                repeated record jausId {
+                  required uint16 subsystem_id one  = 1;
+                  required uint8 node_id one  = 2;
+                  required uint8 component_id one  = 3;
+                }// record jausId
+              } = 2; // list publishers 
+            } // sequence binding 
+          } // list publishers 
+          required list tasks  {
+            uint8 count [0,255];
+            repeated sequence task  {
+              required record taskId {
+                required uint32 taskId one  = 1;
+              } = 1;// record taskId
+              required list encodedTask  {
+                uint16 count [0,65535];
+                repeated record bytes {
+                  required uint8 byte_field one  = 1;
+                }// record bytes
+              } = 2; // list encodedTask 
+            } // sequence task 
+          } // list tasks 
+          required record main {
+            required uint32 taskId one  = 1;
+          } = 4;// record main
+          required list exceptionListeners  {
+            uint8 count [0,255];
+            repeated record jausId {
+              required uint16 subsystem_id one  = 1;
+              required uint8 node_id one  = 2;
+              required uint8 component_id one  = 3;
+            }// record jausId
+          } // list exceptionListeners 
+          required list logListeners  {
+            uint8 count [0,255];
+            repeated record jausId {
+              required uint16 subsystem_id one  = 1;
+              required uint8 node_id one  = 2;
+              required uint8 component_id one  = 3;
+            }// record jausId
+          } // list logListeners 
+          required list requiredCapabilities  {
+            uint8 count [0,255];
+            repeated record capability {
+              required string jc3Code [ 6 ] = 1;
+              required vstring jc3Value [ 0,64 ] = 2;
+            }// record capability
+          } // list requiredCapabilities 
+        }// sequence stp
+      } // variant package 
+    }
+    command 0x0FA2 UpdateTaskPackage {
+      description "Selectively update contents of a loaded task package";
+      variant package  {
+        uint8 vtag[0,0];
+        vtag 0: sequence stp {
+          required record missionId {
+            required uint32 missionId one  = 1;
+          } = 1;// record missionId
+          required record packageId {
+            required uint32 pid one  = 1;
+          } = 2;// record packageId
+          required record missionParameters {
+            required uint32 missionId one  = 1;
+            required vstring jsidl [ 0,16384 ] = 2;
+          } = 3;// record missionParameters
+          required sequence initialParams  {
+            required record missionId {
+              required uint32 missionId one  = 1;
+            } = 1;// record missionId
+            required list values  {
+              uint8 count [0,255];
+              repeated sequence assignment  {
+                required list item  {
+                  uint16 count [0,65535];
+                  repeated record item_index {
+                    required uint8 byte_field one  = 1;
+                  }// record item_index
+                } = 1; // list item 
+                required list encodedValue  {
+                  uint16 count [0,65535];
+                  repeated record bytes {
+                    required uint8 byte_field one  = 1;
+                  }// record bytes
+                } = 2; // list encodedValue 
+              } // sequence assignment 
+            } = 2; // list values 
+            required record timestamp {
+              required bit_field uint32 timeStamp              {
+                Milliseconds [0:9] [0,999] one;
+                Seconds [10:15] [0,59] one;
+                Minutes [16:21] [0,59] one;
+                Hour [22:26] [0,23] one;
+                Day [27:31] [1,31] one;
+              } = 1;
+            } = 3;// record timestamp
+          } // sequence initialParams 
+          required list publishers  {
+            uint8 count [0,255];
+            repeated sequence binding  {
+              required list item  {
+                uint16 count [0,65535];
+                repeated record item_index {
+                  required uint8 byte_field one  = 1;
+                }// record item_index
+              } = 1; // list item 
+              required list publishers  {
+                uint8 count [0,255];
+                repeated record jausId {
+                  required uint16 subsystem_id one  = 1;
+                  required uint8 node_id one  = 2;
+                  required uint8 component_id one  = 3;
+                }// record jausId
+              } = 2; // list publishers 
+            } // sequence binding 
+          } // list publishers 
+          required list tasks  {
+            uint8 count [0,255];
+            repeated sequence task  {
+              required record taskId {
+                required uint32 taskId one  = 1;
+              } = 1;// record taskId
+              required list encodedTask  {
+                uint16 count [0,65535];
+                repeated record bytes {
+                  required uint8 byte_field one  = 1;
+                }// record bytes
+              } = 2; // list encodedTask 
+            } // sequence task 
+          } // list tasks 
+          required record main {
+            required uint32 taskId one  = 1;
+          } = 4;// record main
+          required list exceptionListeners  {
+            uint8 count [0,255];
+            repeated record jausId {
+              required uint16 subsystem_id one  = 1;
+              required uint8 node_id one  = 2;
+              required uint8 component_id one  = 3;
+            }// record jausId
+          } // list exceptionListeners 
+          required list logListeners  {
+            uint8 count [0,255];
+            repeated record jausId {
+              required uint16 subsystem_id one  = 1;
+              required uint8 node_id one  = 2;
+              required uint8 component_id one  = 3;
+            }// record jausId
+          } // list logListeners 
+          required list requiredCapabilities  {
+            uint8 count [0,255];
+            repeated record capability {
+              required string jc3Code [ 6 ] = 1;
+              required vstring jc3Value [ 0,64 ] = 2;
+            }// record capability
+          } // list requiredCapabilities 
+        }// sequence stp
+      } // variant package 
+    }
+    command 0x0FA3 RemoveTaskPackage {
+      description "Remove a loaded task package.";
+      record packageId {
+        required uint32 taskId one  = 1;
+      }// record packageId
+    }
+    command 0x0FA4 ActivateMission {
+      description "Make designated Mission the active mission and Run its main Task, if
+        any.";
+      record mission {
+        required uint32 missionId one  = 1;
+      }// record mission
+    }
+    command 0x0FAB AbortTask {
+      description "Command a task to failsafe and abort.";
+      record task {
+        required uint32 taskId one  = 1;
+      }// record task
+    }
+    command 0x0FAC PauseTask {
+      description "Command a task to pause in a failsafe manner.";
+      record task {
+        required uint32 taskId one  = 1;
+      }// record task
+    }
+    command 0x0FAD ResumeTask {
+      description "Command a task to resume.";
+      record task {
+        required uint32 taskId one  = 1;
+      }// record task
+    }
+    command 0x0FAE SetMissionParameters {
+      description "Push Mission Parameter updates to the service.";
+      sequence update  {
+        required record missionId {
+          required uint32 missionId one  = 1;
+        } = 1;// record missionId
+        required list values  {
+          uint8 count [0,255];
+          repeated sequence assignment  {
+            required list item  {
+              uint16 count [0,65535];
+              repeated record item_index {
+                required uint8 byte_field one  = 1;
+              }// record item_index
+            } = 1; // list item 
+            required list encodedValue  {
+              uint16 count [0,65535];
+              repeated record bytes {
+                required uint8 byte_field one  = 1;
+              }// record bytes
+            } = 2; // list encodedValue 
+          } // sequence assignment 
+        } = 2; // list values 
+        required record timestamp {
+          required bit_field uint32 timeStamp          {
+            Milliseconds [0:9] [0,999] one;
+            Seconds [10:15] [0,59] one;
+            Minutes [16:21] [0,59] one;
+            Hour [22:26] [0,23] one;
+            Day [27:31] [1,31] one;
+          } = 1;
+        } = 3;// record timestamp
+      } // sequence update 
+    }
+    query 0x2FA1 QueryAssetCapabilities {
+      description "Request a set of JC3IEDM asset capabilities. Each item in the list
+        should include only the code field. If the value field is included, it
+        is ignored. '*' and '?' wildcards are supported.";
+      list requestedCapabilities  {
+        uint8 count [0,255];
+        repeated record capability {
+          required string jc3Code [ 6 ] = 1;
+          required vstring jc3Value [ 0,64 ] = 2;
+        }// record capability
+      } // list requestedCapabilities 
+    }
+    query 0x2FA2 QueryMissionStatus {
+      description "Return status for overall Mission.";
+      record mission {
+        required uint32 missionId one  = 1;
+      }// record mission
+    }
+    query 0x2FA3 QueryTaskStatus {
+      description "Return status for all selected tasks.";
+      list tasks  {
+        uint8 count [0,255];
+        repeated record taskId {
+          required uint32 taskId one  = 1;
+        }// record taskId
+      } // list tasks 
+    }
+    query 0x2FA4 QueryStoredTasks {
+      description "Return a dump of all selected tasks.";
+      list tasks  {
+        uint8 count [0,255];
+        repeated record taskId {
+          required uint32 taskId one  = 1;
+        }// record taskId
+      } // list tasks 
+    }
+    query 0x2FA5 QueryMissionParameters {
+      description "Query current values of specific parameters";
+      sequence paramQuery  {
+        required record missionId {
+          required uint32 missionId one  = 1;
+        } = 1;// record missionId
+        required list refs  {
+          uint8 count [0,255];
+          repeated list ref  {
+            uint16 count [0,65535];
+            repeated record item_index {
+              required uint8 byte_field one  = 1;
+            }// record item_index
+          } // list ref 
+        } = 2; // list refs 
+      } // sequence paramQuery 
+    }
+    query 0x2FA6 QueryExtendedErrorInfo {
+      description "Query extended info for one or more commands invoked w/
+        CreateCommandEvent";
+      sequence req  {
+        required list requestIds  {
+          uint8 count [0,255];
+          repeated record reqId {
+            required uint8 rid one  = 1;
+          }// record reqId
+        } = 1; // list requestIds 
+        required record selection {
+          required uint8 infoSelect one {
+             EXTENDED_TEXT = 1;
+             TIMESTAMPS = 2;
+             ALL_INFO = 3;
+            } = 1;
+        } = 2;// record selection
+      } // sequence req 
+    }
+    query 0x4FA7 QueryTaskException {
+      description "Report task exceptions, will report to all listeners in TaskPackage
+        spec.";
+      sequence exceptReq  {
+        required list taskIds  {
+          uint8 count [0,255];
+          repeated record taskId {
+            required uint32 taskId one  = 1;
+          }// record taskId
+        } = 1; // list taskIds 
+        required record numExceptions {
+          required uint8 byte_field one  = 1;
+        } = 2;// record numExceptions
+        required record selection {
+          required uint8 infoSelect one {
+             EXTENDED_TEXT = 1;
+             TIMESTAMPS = 2;
+             ALL_INFO = 3;
+            } = 1;
+        } = 3;// record selection
+      } // sequence exceptReq 
+    }
+    query 0x4FA8 ReportTaskLog {
+      description "Report log info from specific tasks, will report to all listeners in
+        TaskPackage spec.";
+      sequence logReq  {
+        required list taskIds  {
+          uint8 count [0,255];
+          repeated record taskId {
+            required uint32 taskId one  = 1;
+          }// record taskId
+        } = 1; // list taskIds 
+        required record numEntries {
+          required uint8 byte_field one  = 1;
+        } = 2;// record numEntries
+        required record level {
+          required uint8 level one {
+             LOG_EMERG = 0;
+             LOG_ALERT = 1;
+             LOG_CRIT = 2;
+             LOG_ERR = 3;
+             LOG_WARNING = 4;
+             LOG_NOTICE = 5;
+             LOG_INFO = 6;
+             LOG_DEBUG = 7;
+            } = 1;
+        } = 3;// record level
+      } // sequence logReq 
+    }
+    inform 0x4FA1 ReportAssetCapabilities {
+      description "Report a set of JC3IEDM asset capabilities. If the optional value field
+        for any item in the list is missing, that means the capability is not
+        defined for this asset.";
+      list reportedCapabilities  {
+        uint8 count [0,255];
+        repeated record capability {
+          required string jc3Code [ 6 ] = 1;
+          required vstring jc3Value [ 0,64 ] = 2;
+        }// record capability
+      } // list reportedCapabilities 
+    }
+    inform 0x4FA2 ReportMissionStatus {
+      description "Report status of a mission.";
+      record missionStatus {
+        required uint32 mission one  = 1;
+        required uint8 status one {
+           READY = 2;
+           PAUSED = 3;
+           RUNNING = 4;
+           ABORTED = 5;
+           ERROR = 6;
+           INVALID = 0;
+           LOADED = 1;
+          } = 2;
+        required vstring extendedText [ 0,1024 ] = 3;
+        required bit_field uint32 theTime        {
+          Milliseconds [0:9] [0,999] one;
+          Seconds [10:15] [0,59] one;
+          Minutes [16:21] [0,59] one;
+          Hour [22:26] [0,23] one;
+          Day [27:31] [1,31] one;
+        } = 4;
+      }// record missionStatus
+    }
+    inform 0x4FA3 ReportTaskStatus {
+      description "Report status of tasks.";
+      list tasksStatus  {
+        uint8 count [0,255];
+        repeated record status {
+          required uint32 tid one  = 1;
+          required uint8 status one {
+             READY = 2;
+             PAUSED = 3;
+             RUNNING = 4;
+             ABORTED = 5;
+             ERROR = 6;
+             INVALID = 0;
+             LOADED = 1;
+            } = 2;
+          required vstring extendedText [ 0,1024 ] = 3;
+          required bit_field uint32 theTime          {
+            Milliseconds [0:9] [0,999] one;
+            Seconds [10:15] [0,59] one;
+            Minutes [16:21] [0,59] one;
+            Hour [22:26] [0,23] one;
+            Day [27:31] [1,31] one;
+          } = 4;
+        }// record status
+      } // list tasksStatus 
+    }
+    inform 0x4FA4 ReportStoredTasks {
+      description "Provide a dump of specified tasks.";
+      list tasks  {
+        uint8 count [0,255];
+        repeated sequence task  {
+          required record taskId {
+            required uint32 taskId one  = 1;
+          } = 1;// record taskId
+          required list encodedTask  {
+            uint16 count [0,65535];
+            repeated record bytes {
+              required uint8 byte_field one  = 1;
+            }// record bytes
+          } = 2; // list encodedTask 
+        } // sequence task 
+      } // list tasks 
+    }
+    inform 0x4FA5 ReportMissionParameters {
+      description "Report a set of current values for a specific Mission Parameters";
+      sequence report  {
+        required record missionId {
+          required uint32 missionId one  = 1;
+        } = 1;// record missionId
+        required list values  {
+          uint8 count [0,255];
+          repeated sequence assignment  {
+            required list item  {
+              uint16 count [0,65535];
+              repeated record item_index {
+                required uint8 byte_field one  = 1;
+              }// record item_index
+            } = 1; // list item 
+            required list encodedValue  {
+              uint16 count [0,65535];
+              repeated record bytes {
+                required uint8 byte_field one  = 1;
+              }// record bytes
+            } = 2; // list encodedValue 
+          } // sequence assignment 
+        } = 2; // list values 
+        required record timestamp {
+          required bit_field uint32 timeStamp          {
+            Milliseconds [0:9] [0,999] one;
+            Seconds [10:15] [0,59] one;
+            Minutes [16:21] [0,59] one;
+            Hour [22:26] [0,23] one;
+            Day [27:31] [1,31] one;
+          } = 1;
+        } = 3;// record timestamp
+      } // sequence report 
+    }
+    inform 0x4FA6 ReportExtendedErrorInfo {
+      description "Report extended error info for commands invoked with CommandEvent";
+      list report  {
+        uint8 count [0,255];
+        repeated record info {
+          required uint8 reqId one  = 1;
+          required uint64 extendedErrorCode one  = 2;
+          required vstring extendedText [ 0,1024 ] = 3;
+          required bit_field uint32 theTime          {
+            Milliseconds [0:9] [0,999] one;
+            Seconds [10:15] [0,59] one;
+            Minutes [16:21] [0,59] one;
+            Hour [22:26] [0,23] one;
+            Day [27:31] [1,31] one;
+          } = 4;
+        }// record info
+      } // list report 
+    }
+    inform 0x4FA7 ReportTaskException {
+      description "Report task exceptions, will report to all listeners in TaskPackage
+        spec.";
+      list exception  {
+        uint8 count [0,255];
+        repeated record info {
+          required uint32 tid one  = 1;
+          required uint64 exceptionCode one  = 2;
+          required vstring extendedText [ 0,1024 ] = 3;
+          required bit_field uint32 theTime          {
+            Milliseconds [0:9] [0,999] one;
+            Seconds [10:15] [0,59] one;
+            Minutes [16:21] [0,59] one;
+            Hour [22:26] [0,23] one;
+            Day [27:31] [1,31] one;
+          } = 4;
+        }// record info
+      } // list exception 
+    }
+    inform 0x4FA8 ReportTaskLog {
+      description "Report log info from specific tasks, will report to all listeners in
+        TaskPackage spec.";
+      sequence logReq  {
+        required list taskIds  {
+          uint8 count [0,255];
+          repeated record taskId {
+            required uint32 taskId one  = 1;
+          }// record taskId
+        } = 1; // list taskIds 
+        required record numEntries {
+          required uint8 byte_field one  = 1;
+        } = 2;// record numEntries
+        required record level {
+          required uint8 level one {
+             LOG_EMERG = 0;
+             LOG_ALERT = 1;
+             LOG_CRIT = 2;
+             LOG_ERR = 3;
+             LOG_WARNING = 4;
+             LOG_NOTICE = 5;
+             LOG_INFO = 6;
+             LOG_DEBUG = 7;
+            } = 1;
+        } = 3;// record level
+      } // sequence logReq 
+    }
+  }// messages 
+  events  {
+  }// events 
+  protocol {
+    start Init;
+    state_machine MissionManagement.fsm  {
+
+      state Init  {
+
+        AddTaskPackage( msg : AddTaskPackage )
+          next(Init) {
+
+          AddTaskPackageHandler( msg );
+        }
+        RunTask( msg : RunTask )
+          next(Init) {
+
+          RunTaskHandler( msg );
+        }
+      } // state Init
+      // removed pseudo_start_state element
+    } // state_machine MissionManagement.fsm 
+  }
+}// service MissionManagement

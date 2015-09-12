@@ -1,0 +1,1040 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service_def name="MissionManagement" id="com:neya:mpms:MissionManagement" version="0.1" xmlns:ns2="urn:jaus:jsidl:1.1" xmlns="urn:jaus:jsidl:1.0" xmlns:ns3="urn:jaus:jsidl:plus">
+    <description xml:space="preserve">The Mission Management service provides the means to distribute,
+	monitor, and control Mission Task Packages that allow assets to perform
+	parts of a Mission Plan autonomously and collaboratively</description>
+    <assumptions xml:space="preserve">All random deviations will tend in our favor.</assumptions>
+    <references/>
+    <message_set>
+        <input_set>
+            <message_def name="DectivateMission" message_id="0FA5" is_command="true">
+                <description xml:space="preserve">Deactivate the designated Mission, Abort and Reset all Tasks, unsubscribe all parameter subscriptions, etc.</description>
+                <header name="header"/>
+                <body name="body">
+                    <record name="mission" optional="false">
+                        <fixed_field name="missionId" optional="false" field_units="one" field_type="unsigned integer"/>
+                    </record>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+            <message_def name="AbortMission" message_id="0FA6" is_command="true">
+                <description xml:space="preserve">Equivalent to sending AbortTask to all Tasks in the mission.</description>
+                <header name="header"/>
+                <body name="body">
+                    <record name="mission" optional="false">
+                        <fixed_field name="missionId" optional="false" field_units="one" field_type="unsigned integer"/>
+                    </record>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+            <message_def name="PauseMission" message_id="0FA7" is_command="true">
+                <description xml:space="preserve">Equivalent to sending PauseTask to all Tasks in the mission.</description>
+                <header name="header"/>
+                <body name="body">
+                    <record name="mission" optional="false">
+                        <fixed_field name="missionId" optional="false" field_units="one" field_type="unsigned integer"/>
+                    </record>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+            <message_def name="ResumeMission" message_id="0FA8" is_command="true">
+                <description xml:space="preserve">Equivalent to sending ResumeTask to all Tasks in the mission.</description>
+                <header name="header"/>
+                <body name="body">
+                    <record name="mission" optional="false">
+                        <fixed_field name="missionId" optional="false" field_units="one" field_type="unsigned integer"/>
+                    </record>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+            <message_def name="AbortMission" message_id="0FA9" is_command="true">
+                <description xml:space="preserve">Equivalent to sending AbortTask to all Tasks in the mission.</description>
+                <header name="header"/>
+                <body name="body">
+                    <record name="mission" optional="false">
+                        <fixed_field name="missionId" optional="false" field_units="one" field_type="unsigned integer"/>
+                    </record>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+            <message_def name="RunTask" message_id="0FAA" is_command="true">
+                <description xml:space="preserve">Command a task to begin executing.</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_units="one" field_type="unsigned short integer"/>
+                    </record>
+                </header>
+                <body name="body">
+                    <record name="task" optional="false">
+                        <fixed_field name="taskId" optional="false" field_units="one" field_type="unsigned integer"/>
+                    </record>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+            <message_def name="AddTaskPackage" message_id="0FA1" is_command="true">
+                <description xml:space="preserve">Download a task package to the service</description>
+                <header name="JTS_DefaultHeader">
+                    <record name="DefaultHeaderRec" optional="false">
+                        <fixed_field name="MessageID" optional="false" field_units="one" field_type="unsigned short integer"/>
+                    </record>
+                </header>
+                <body name="body">
+                    <variant name="package" optional="false">
+                        <vtag_field min_count="0" max_count="0" field_type_unsigned="unsigned byte"/>
+                        <sequence name="stp" optional="false">
+                            <record name="missionId" optional="false">
+                                <fixed_field name="missionId" optional="false" field_units="one" field_type="unsigned integer"/>
+                            </record>
+                            <record name="packageId" optional="false">
+                                <fixed_field name="pid" optional="false" field_units="one" field_type="unsigned integer"/>
+                            </record>
+                            <record name="missionParameters" optional="false">
+                                <fixed_field name="missionId" optional="false" field_units="one" field_type="unsigned integer"/>
+                                <variable_length_string name="jsidl" optional="false">
+                                    <count_field min_count="0" max_count="16384" field_type_unsigned="unsigned short integer"/>
+                                </variable_length_string>
+                            </record>
+                            <sequence name="initialParams" optional="false">
+                                <record name="missionId" optional="false">
+                                    <fixed_field name="missionId" optional="false" field_units="one" field_type="unsigned integer"/>
+                                </record>
+                                <list name="values" optional="false">
+                                    <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                                    <sequence name="assignment" optional="false">
+                                        <list name="item" optional="false">
+                                            <count_field min_count="0" max_count="65535" field_type_unsigned="unsigned short integer"/>
+                                            <record name="item_index" optional="false">
+                                                <fixed_field name="byte_field" optional="false" field_units="one" field_type="unsigned byte"/>
+                                            </record>
+                                        </list>
+                                        <list name="encodedValue" optional="false">
+                                            <count_field min_count="0" max_count="65535" field_type_unsigned="unsigned short integer"/>
+                                            <record name="bytes" optional="false">
+                                                <fixed_field name="byte_field" optional="false" field_units="one" field_type="unsigned byte"/>
+                                            </record>
+                                        </list>
+                                    </sequence>
+                                </list>
+                                <record name="timestamp" optional="false">
+                                    <bit_field name="timeStamp" optional="false" field_type_unsigned="unsigned integer">
+                                        <sub_field name="Milliseconds">
+                                            <bit_range from_index="0" to_index="9"/>
+                                            <value_set offset_to_lower_limit="false">
+                                                <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="999" upper_limit_type="inclusive"/>
+                                            </value_set>
+                                        </sub_field>
+                                        <sub_field name="Seconds">
+                                            <bit_range from_index="10" to_index="15"/>
+                                            <value_set offset_to_lower_limit="false">
+                                                <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="59" upper_limit_type="inclusive"/>
+                                            </value_set>
+                                        </sub_field>
+                                        <sub_field name="Minutes">
+                                            <bit_range from_index="16" to_index="21"/>
+                                            <value_set offset_to_lower_limit="false">
+                                                <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="59" upper_limit_type="inclusive"/>
+                                            </value_set>
+                                        </sub_field>
+                                        <sub_field name="Hour">
+                                            <bit_range from_index="22" to_index="26"/>
+                                            <value_set offset_to_lower_limit="false">
+                                                <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="23" upper_limit_type="inclusive"/>
+                                            </value_set>
+                                        </sub_field>
+                                        <sub_field name="Day">
+                                            <bit_range from_index="27" to_index="31"/>
+                                            <value_set offset_to_lower_limit="false">
+                                                <value_range lower_limit="1" lower_limit_type="inclusive" upper_limit="31" upper_limit_type="inclusive"/>
+                                            </value_set>
+                                        </sub_field>
+                                    </bit_field>
+                                </record>
+                            </sequence>
+                            <list name="publishers" optional="false">
+                                <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                                <sequence name="binding" optional="false">
+                                    <list name="item" optional="false">
+                                        <count_field min_count="0" max_count="65535" field_type_unsigned="unsigned short integer"/>
+                                        <record name="item_index" optional="false">
+                                            <fixed_field name="byte_field" optional="false" field_units="one" field_type="unsigned byte"/>
+                                        </record>
+                                    </list>
+                                    <list name="publishers" optional="false">
+                                        <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                                        <record name="jausId" optional="false">
+                                            <fixed_field name="subsystem_id" optional="false" field_units="one" field_type="unsigned short integer"/>
+                                            <fixed_field name="node_id" optional="false" field_units="one" field_type="unsigned byte"/>
+                                            <fixed_field name="component_id" optional="false" field_units="one" field_type="unsigned byte"/>
+                                        </record>
+                                    </list>
+                                </sequence>
+                            </list>
+                            <list name="tasks" optional="false">
+                                <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                                <sequence name="task" optional="false">
+                                    <record name="taskId" optional="false">
+                                        <fixed_field name="taskId" optional="false" field_units="one" field_type="unsigned integer"/>
+                                    </record>
+                                    <list name="encodedTask" optional="false">
+                                        <count_field min_count="0" max_count="65535" field_type_unsigned="unsigned short integer"/>
+                                        <record name="bytes" optional="false">
+                                            <fixed_field name="byte_field" optional="false" field_units="one" field_type="unsigned byte"/>
+                                        </record>
+                                    </list>
+                                </sequence>
+                            </list>
+                            <record name="main" optional="false">
+                                <fixed_field name="taskId" optional="false" field_units="one" field_type="unsigned integer"/>
+                            </record>
+                            <list name="exceptionListeners" optional="false">
+                                <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                                <record name="jausId" optional="false">
+                                    <fixed_field name="subsystem_id" optional="false" field_units="one" field_type="unsigned short integer"/>
+                                    <fixed_field name="node_id" optional="false" field_units="one" field_type="unsigned byte"/>
+                                    <fixed_field name="component_id" optional="false" field_units="one" field_type="unsigned byte"/>
+                                </record>
+                            </list>
+                            <list name="logListeners" optional="false">
+                                <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                                <record name="jausId" optional="false">
+                                    <fixed_field name="subsystem_id" optional="false" field_units="one" field_type="unsigned short integer"/>
+                                    <fixed_field name="node_id" optional="false" field_units="one" field_type="unsigned byte"/>
+                                    <fixed_field name="component_id" optional="false" field_units="one" field_type="unsigned byte"/>
+                                </record>
+                            </list>
+                            <list name="requiredCapabilities" optional="false">
+                                <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                                <record name="capability" optional="false">
+                                    <fixed_length_string name="jc3Code" string_length="6" optional="false"/>
+                                    <variable_length_string name="jc3Value" optional="false">
+                                        <count_field min_count="0" max_count="64" field_type_unsigned="unsigned byte"/>
+                                    </variable_length_string>
+                                </record>
+                            </list>
+                        </sequence>
+                    </variant>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+            <message_def name="UpdateTaskPackage" message_id="0FA2" is_command="true">
+                <description xml:space="preserve">Selectively update contents of a loaded task package</description>
+                <header name="header"/>
+                <body name="body">
+                    <variant name="package" optional="false">
+                        <vtag_field min_count="0" max_count="0" field_type_unsigned="unsigned byte"/>
+                        <sequence name="stp" optional="false">
+                            <record name="missionId" optional="false">
+                                <fixed_field name="missionId" optional="false" field_units="one" field_type="unsigned integer"/>
+                            </record>
+                            <record name="packageId" optional="false">
+                                <fixed_field name="pid" optional="false" field_units="one" field_type="unsigned integer"/>
+                            </record>
+                            <record name="missionParameters" optional="false">
+                                <fixed_field name="missionId" optional="false" field_units="one" field_type="unsigned integer"/>
+                                <variable_length_string name="jsidl" optional="false">
+                                    <count_field min_count="0" max_count="16384" field_type_unsigned="unsigned short integer"/>
+                                </variable_length_string>
+                            </record>
+                            <sequence name="initialParams" optional="false">
+                                <record name="missionId" optional="false">
+                                    <fixed_field name="missionId" optional="false" field_units="one" field_type="unsigned integer"/>
+                                </record>
+                                <list name="values" optional="false">
+                                    <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                                    <sequence name="assignment" optional="false">
+                                        <list name="item" optional="false">
+                                            <count_field min_count="0" max_count="65535" field_type_unsigned="unsigned short integer"/>
+                                            <record name="item_index" optional="false">
+                                                <fixed_field name="byte_field" optional="false" field_units="one" field_type="unsigned byte"/>
+                                            </record>
+                                        </list>
+                                        <list name="encodedValue" optional="false">
+                                            <count_field min_count="0" max_count="65535" field_type_unsigned="unsigned short integer"/>
+                                            <record name="bytes" optional="false">
+                                                <fixed_field name="byte_field" optional="false" field_units="one" field_type="unsigned byte"/>
+                                            </record>
+                                        </list>
+                                    </sequence>
+                                </list>
+                                <record name="timestamp" optional="false">
+                                    <bit_field name="timeStamp" optional="false" field_type_unsigned="unsigned integer">
+                                        <sub_field name="Milliseconds">
+                                            <bit_range from_index="0" to_index="9"/>
+                                            <value_set offset_to_lower_limit="false">
+                                                <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="999" upper_limit_type="inclusive"/>
+                                            </value_set>
+                                        </sub_field>
+                                        <sub_field name="Seconds">
+                                            <bit_range from_index="10" to_index="15"/>
+                                            <value_set offset_to_lower_limit="false">
+                                                <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="59" upper_limit_type="inclusive"/>
+                                            </value_set>
+                                        </sub_field>
+                                        <sub_field name="Minutes">
+                                            <bit_range from_index="16" to_index="21"/>
+                                            <value_set offset_to_lower_limit="false">
+                                                <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="59" upper_limit_type="inclusive"/>
+                                            </value_set>
+                                        </sub_field>
+                                        <sub_field name="Hour">
+                                            <bit_range from_index="22" to_index="26"/>
+                                            <value_set offset_to_lower_limit="false">
+                                                <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="23" upper_limit_type="inclusive"/>
+                                            </value_set>
+                                        </sub_field>
+                                        <sub_field name="Day">
+                                            <bit_range from_index="27" to_index="31"/>
+                                            <value_set offset_to_lower_limit="false">
+                                                <value_range lower_limit="1" lower_limit_type="inclusive" upper_limit="31" upper_limit_type="inclusive"/>
+                                            </value_set>
+                                        </sub_field>
+                                    </bit_field>
+                                </record>
+                            </sequence>
+                            <list name="publishers" optional="false">
+                                <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                                <sequence name="binding" optional="false">
+                                    <list name="item" optional="false">
+                                        <count_field min_count="0" max_count="65535" field_type_unsigned="unsigned short integer"/>
+                                        <record name="item_index" optional="false">
+                                            <fixed_field name="byte_field" optional="false" field_units="one" field_type="unsigned byte"/>
+                                        </record>
+                                    </list>
+                                    <list name="publishers" optional="false">
+                                        <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                                        <record name="jausId" optional="false">
+                                            <fixed_field name="subsystem_id" optional="false" field_units="one" field_type="unsigned short integer"/>
+                                            <fixed_field name="node_id" optional="false" field_units="one" field_type="unsigned byte"/>
+                                            <fixed_field name="component_id" optional="false" field_units="one" field_type="unsigned byte"/>
+                                        </record>
+                                    </list>
+                                </sequence>
+                            </list>
+                            <list name="tasks" optional="false">
+                                <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                                <sequence name="task" optional="false">
+                                    <record name="taskId" optional="false">
+                                        <fixed_field name="taskId" optional="false" field_units="one" field_type="unsigned integer"/>
+                                    </record>
+                                    <list name="encodedTask" optional="false">
+                                        <count_field min_count="0" max_count="65535" field_type_unsigned="unsigned short integer"/>
+                                        <record name="bytes" optional="false">
+                                            <fixed_field name="byte_field" optional="false" field_units="one" field_type="unsigned byte"/>
+                                        </record>
+                                    </list>
+                                </sequence>
+                            </list>
+                            <record name="main" optional="false">
+                                <fixed_field name="taskId" optional="false" field_units="one" field_type="unsigned integer"/>
+                            </record>
+                            <list name="exceptionListeners" optional="false">
+                                <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                                <record name="jausId" optional="false">
+                                    <fixed_field name="subsystem_id" optional="false" field_units="one" field_type="unsigned short integer"/>
+                                    <fixed_field name="node_id" optional="false" field_units="one" field_type="unsigned byte"/>
+                                    <fixed_field name="component_id" optional="false" field_units="one" field_type="unsigned byte"/>
+                                </record>
+                            </list>
+                            <list name="logListeners" optional="false">
+                                <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                                <record name="jausId" optional="false">
+                                    <fixed_field name="subsystem_id" optional="false" field_units="one" field_type="unsigned short integer"/>
+                                    <fixed_field name="node_id" optional="false" field_units="one" field_type="unsigned byte"/>
+                                    <fixed_field name="component_id" optional="false" field_units="one" field_type="unsigned byte"/>
+                                </record>
+                            </list>
+                            <list name="requiredCapabilities" optional="false">
+                                <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                                <record name="capability" optional="false">
+                                    <fixed_length_string name="jc3Code" string_length="6" optional="false"/>
+                                    <variable_length_string name="jc3Value" optional="false">
+                                        <count_field min_count="0" max_count="64" field_type_unsigned="unsigned byte"/>
+                                    </variable_length_string>
+                                </record>
+                            </list>
+                        </sequence>
+                    </variant>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+            <message_def name="RemoveTaskPackage" message_id="0FA3" is_command="true">
+                <description xml:space="preserve">Remove a loaded task package.</description>
+                <header name="header"/>
+                <body name="body">
+                    <record name="packageId" optional="false">
+                        <fixed_field name="taskId" optional="false" field_units="one" field_type="unsigned integer"/>
+                    </record>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+            <message_def name="ActivateMission" message_id="0FA4" is_command="true">
+                <description xml:space="preserve">Make designated Mission the active mission and Run its main Task, if any.</description>
+                <header name="header"/>
+                <body name="body">
+                    <record name="mission" optional="false">
+                        <fixed_field name="missionId" optional="false" field_units="one" field_type="unsigned integer"/>
+                    </record>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+            <message_def name="AbortTask" message_id="0FAB" is_command="true">
+                <description xml:space="preserve">Command a task to failsafe and abort.</description>
+                <header name="header"/>
+                <body name="body">
+                    <record name="task" optional="false">
+                        <fixed_field name="taskId" optional="false" field_units="one" field_type="unsigned integer"/>
+                    </record>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+            <message_def name="PauseTask" message_id="0FAC" is_command="true">
+                <description xml:space="preserve">Command a task to pause in a failsafe manner.</description>
+                <header name="header"/>
+                <body name="body">
+                    <record name="task" optional="false">
+                        <fixed_field name="taskId" optional="false" field_units="one" field_type="unsigned integer"/>
+                    </record>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+            <message_def name="ResumeTask" message_id="0FAD" is_command="true">
+                <description xml:space="preserve">Command a task to resume.</description>
+                <header name="header"/>
+                <body name="body">
+                    <record name="task" optional="false">
+                        <fixed_field name="taskId" optional="false" field_units="one" field_type="unsigned integer"/>
+                    </record>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+            <message_def name="SetMissionParameters" message_id="0FAE" is_command="true">
+                <description xml:space="preserve">Push Mission Parameter updates to the service.</description>
+                <header name="header"/>
+                <body name="body">
+                    <sequence name="update" optional="false">
+                        <record name="missionId" optional="false">
+                            <fixed_field name="missionId" optional="false" field_units="one" field_type="unsigned integer"/>
+                        </record>
+                        <list name="values" optional="false">
+                            <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                            <sequence name="assignment" optional="false">
+                                <list name="item" optional="false">
+                                    <count_field min_count="0" max_count="65535" field_type_unsigned="unsigned short integer"/>
+                                    <record name="item_index" optional="false">
+                                        <fixed_field name="byte_field" optional="false" field_units="one" field_type="unsigned byte"/>
+                                    </record>
+                                </list>
+                                <list name="encodedValue" optional="false">
+                                    <count_field min_count="0" max_count="65535" field_type_unsigned="unsigned short integer"/>
+                                    <record name="bytes" optional="false">
+                                        <fixed_field name="byte_field" optional="false" field_units="one" field_type="unsigned byte"/>
+                                    </record>
+                                </list>
+                            </sequence>
+                        </list>
+                        <record name="timestamp" optional="false">
+                            <bit_field name="timeStamp" optional="false" field_type_unsigned="unsigned integer">
+                                <sub_field name="Milliseconds">
+                                    <bit_range from_index="0" to_index="9"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="999" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                                <sub_field name="Seconds">
+                                    <bit_range from_index="10" to_index="15"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="59" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                                <sub_field name="Minutes">
+                                    <bit_range from_index="16" to_index="21"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="59" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                                <sub_field name="Hour">
+                                    <bit_range from_index="22" to_index="26"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="23" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                                <sub_field name="Day">
+                                    <bit_range from_index="27" to_index="31"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="1" lower_limit_type="inclusive" upper_limit="31" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                            </bit_field>
+                        </record>
+                    </sequence>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+            <message_def name="QueryAssetCapabilities" message_id="2FA1" is_command="false">
+                <description xml:space="preserve">Request a set of JC3IEDM asset capabilities. Each item in the list should include only the code field. If the value field is included, it is ignored.  '*' and '?' wildcards are supported.</description>
+                <header name="header"/>
+                <body name="body">
+                    <list name="requestedCapabilities" optional="false">
+                        <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                        <record name="capability" optional="false">
+                            <fixed_length_string name="jc3Code" string_length="6" optional="false"/>
+                            <variable_length_string name="jc3Value" optional="false">
+                                <count_field min_count="0" max_count="64" field_type_unsigned="unsigned byte"/>
+                            </variable_length_string>
+                        </record>
+                    </list>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+            <message_def name="QueryMissionStatus" message_id="2FA2" is_command="false">
+                <description xml:space="preserve">Return status for overall Mission.</description>
+                <header name="header"/>
+                <body name="body">
+                    <record name="mission" optional="false">
+                        <fixed_field name="missionId" optional="false" field_units="one" field_type="unsigned integer"/>
+                    </record>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+            <message_def name="QueryTaskStatus" message_id="2FA3" is_command="false">
+                <description xml:space="preserve">Return status for all selected tasks.</description>
+                <header name="header"/>
+                <body name="body">
+                    <list name="tasks" optional="false">
+                        <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                        <record name="taskId" optional="false">
+                            <fixed_field name="taskId" optional="false" field_units="one" field_type="unsigned integer"/>
+                        </record>
+                    </list>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+            <message_def name="QueryStoredTasks" message_id="2FA4" is_command="false">
+                <description xml:space="preserve">Return a dump of all selected tasks.</description>
+                <header name="header"/>
+                <body name="body">
+                    <list name="tasks" optional="false">
+                        <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                        <record name="taskId" optional="false">
+                            <fixed_field name="taskId" optional="false" field_units="one" field_type="unsigned integer"/>
+                        </record>
+                    </list>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+            <message_def name="QueryMissionParameters" message_id="2FA5" is_command="false">
+                <description xml:space="preserve">Query current values of specific parameters</description>
+                <header name="header"/>
+                <body name="body">
+                    <sequence name="paramQuery" optional="false">
+                        <record name="missionId" optional="false">
+                            <fixed_field name="missionId" optional="false" field_units="one" field_type="unsigned integer"/>
+                        </record>
+                        <list name="refs" optional="false">
+                            <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                            <list name="ref" optional="false">
+                                <count_field min_count="0" max_count="65535" field_type_unsigned="unsigned short integer"/>
+                                <record name="item_index" optional="false">
+                                    <fixed_field name="byte_field" optional="false" field_units="one" field_type="unsigned byte"/>
+                                </record>
+                            </list>
+                        </list>
+                    </sequence>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+            <message_def name="QueryExtendedErrorInfo" message_id="2FA6" is_command="false">
+                <description xml:space="preserve">Query extended info for one or more commands invoked w/ CreateCommandEvent</description>
+                <header name="header"/>
+                <body name="body">
+                    <sequence name="req" optional="false">
+                        <list name="requestIds" optional="false">
+                            <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                            <record name="reqId" optional="false">
+                                <fixed_field name="rid" optional="false" field_units="one" field_type="unsigned byte"/>
+                            </record>
+                        </list>
+                        <record name="selection" optional="false">
+                            <fixed_field name="infoSelect" optional="false" field_units="one" field_type="unsigned byte">
+                                <value_set offset_to_lower_limit="false">
+                                    <value_enum enum_index="1" enum_const="EXTENDED_TEXT"/>
+                                    <value_enum enum_index="2" enum_const="TIMESTAMPS"/>
+                                    <value_enum enum_index="3" enum_const="ALL_INFO"/>
+                                </value_set>
+                            </fixed_field>
+                        </record>
+                    </sequence>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+            <message_def name="QueryTaskException" message_id="4FA7" is_command="false">
+                <description xml:space="preserve">Report task exceptions, will report to all listeners in TaskPackage spec.</description>
+                <header name="header"/>
+                <body name="body">
+                    <sequence name="exceptReq" optional="false">
+                        <list name="taskIds" optional="false">
+                            <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                            <record name="taskId" optional="false">
+                                <fixed_field name="taskId" optional="false" field_units="one" field_type="unsigned integer"/>
+                            </record>
+                        </list>
+                        <record name="numExceptions" optional="false">
+                            <fixed_field name="byte_field" optional="false" field_units="one" field_type="unsigned byte"/>
+                        </record>
+                        <record name="selection" optional="false">
+                            <fixed_field name="infoSelect" optional="false" field_units="one" field_type="unsigned byte">
+                                <value_set offset_to_lower_limit="false">
+                                    <value_enum enum_index="1" enum_const="EXTENDED_TEXT"/>
+                                    <value_enum enum_index="2" enum_const="TIMESTAMPS"/>
+                                    <value_enum enum_index="3" enum_const="ALL_INFO"/>
+                                </value_set>
+                            </fixed_field>
+                        </record>
+                    </sequence>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+            <message_def name="ReportTaskLog" message_id="4FA8" is_command="false">
+                <description xml:space="preserve">Report log info from specific tasks, will report to all listeners in TaskPackage spec.</description>
+                <header name="header"/>
+                <body name="body">
+                    <sequence name="logReq" optional="false">
+                        <list name="taskIds" optional="false">
+                            <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                            <record name="taskId" optional="false">
+                                <fixed_field name="taskId" optional="false" field_units="one" field_type="unsigned integer"/>
+                            </record>
+                        </list>
+                        <record name="numEntries" optional="false">
+                            <fixed_field name="byte_field" optional="false" field_units="one" field_type="unsigned byte"/>
+                        </record>
+                        <record name="level" optional="false">
+                            <fixed_field name="level" optional="false" field_units="one" field_type="unsigned byte">
+                                <value_set offset_to_lower_limit="false">
+                                    <value_enum enum_index="0" enum_const="LOG_EMERG"/>
+                                    <value_enum enum_index="1" enum_const="LOG_ALERT"/>
+                                    <value_enum enum_index="2" enum_const="LOG_CRIT"/>
+                                    <value_enum enum_index="3" enum_const="LOG_ERR"/>
+                                    <value_enum enum_index="4" enum_const="LOG_WARNING"/>
+                                    <value_enum enum_index="5" enum_const="LOG_NOTICE"/>
+                                    <value_enum enum_index="6" enum_const="LOG_INFO"/>
+                                    <value_enum enum_index="7" enum_const="LOG_DEBUG"/>
+                                </value_set>
+                            </fixed_field>
+                        </record>
+                    </sequence>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+        </input_set>
+        <output_set>
+            <message_def name="ReportAssetCapabilities" message_id="4FA1" is_command="false">
+                <description xml:space="preserve">Report a set of JC3IEDM asset capabilities. If the optional value field for any item in the list is missing, that means the capability is not defined for this asset.</description>
+                <header name="header"/>
+                <body name="body">
+                    <list name="reportedCapabilities" optional="false">
+                        <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                        <record name="capability" optional="false">
+                            <fixed_length_string name="jc3Code" string_length="6" optional="false"/>
+                            <variable_length_string name="jc3Value" optional="false">
+                                <count_field min_count="0" max_count="64" field_type_unsigned="unsigned byte"/>
+                            </variable_length_string>
+                        </record>
+                    </list>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+            <message_def name="ReportMissionStatus" message_id="4FA2" is_command="false">
+                <description xml:space="preserve">Report status of a mission.</description>
+                <header name="header"/>
+                <body name="body">
+                    <record name="missionStatus" optional="false">
+                        <fixed_field name="mission" optional="false" field_units="one" field_type="unsigned integer"/>
+                        <fixed_field name="status" optional="false" field_units="one" field_type="unsigned byte">
+                            <value_set offset_to_lower_limit="false">
+                                <value_enum enum_index="2" enum_const="READY"/>
+                                <value_enum enum_index="3" enum_const="PAUSED"/>
+                                <value_enum enum_index="4" enum_const="RUNNING"/>
+                                <value_enum enum_index="5" enum_const="ABORTED"/>
+                                <value_enum enum_index="6" enum_const="ERROR"/>
+                                <value_enum enum_index="0" enum_const="INVALID"/>
+                                <value_enum enum_index="1" enum_const="LOADED"/>
+                            </value_set>
+                        </fixed_field>
+                        <variable_length_string name="extendedText" optional="false">
+                            <count_field min_count="0" max_count="1024" field_type_unsigned="unsigned short integer"/>
+                        </variable_length_string>
+                        <bit_field name="theTime" optional="false" field_type_unsigned="unsigned integer">
+                            <sub_field name="Milliseconds">
+                                <bit_range from_index="0" to_index="9"/>
+                                <value_set offset_to_lower_limit="false">
+                                    <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="999" upper_limit_type="inclusive"/>
+                                </value_set>
+                            </sub_field>
+                            <sub_field name="Seconds">
+                                <bit_range from_index="10" to_index="15"/>
+                                <value_set offset_to_lower_limit="false">
+                                    <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="59" upper_limit_type="inclusive"/>
+                                </value_set>
+                            </sub_field>
+                            <sub_field name="Minutes">
+                                <bit_range from_index="16" to_index="21"/>
+                                <value_set offset_to_lower_limit="false">
+                                    <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="59" upper_limit_type="inclusive"/>
+                                </value_set>
+                            </sub_field>
+                            <sub_field name="Hour">
+                                <bit_range from_index="22" to_index="26"/>
+                                <value_set offset_to_lower_limit="false">
+                                    <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="23" upper_limit_type="inclusive"/>
+                                </value_set>
+                            </sub_field>
+                            <sub_field name="Day">
+                                <bit_range from_index="27" to_index="31"/>
+                                <value_set offset_to_lower_limit="false">
+                                    <value_range lower_limit="1" lower_limit_type="inclusive" upper_limit="31" upper_limit_type="inclusive"/>
+                                </value_set>
+                            </sub_field>
+                        </bit_field>
+                    </record>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+            <message_def name="ReportTaskStatus" message_id="4FA3" is_command="false">
+                <description xml:space="preserve">Report status of tasks.</description>
+                <header name="header"/>
+                <body name="body">
+                    <list name="tasksStatus" optional="false">
+                        <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                        <record name="status" optional="false">
+                            <fixed_field name="tid" optional="false" field_units="one" field_type="unsigned integer"/>
+                            <fixed_field name="status" optional="false" field_units="one" field_type="unsigned byte">
+                                <value_set offset_to_lower_limit="false">
+                                    <value_enum enum_index="2" enum_const="READY"/>
+                                    <value_enum enum_index="3" enum_const="PAUSED"/>
+                                    <value_enum enum_index="4" enum_const="RUNNING"/>
+                                    <value_enum enum_index="5" enum_const="ABORTED"/>
+                                    <value_enum enum_index="6" enum_const="ERROR"/>
+                                    <value_enum enum_index="0" enum_const="INVALID"/>
+                                    <value_enum enum_index="1" enum_const="LOADED"/>
+                                </value_set>
+                            </fixed_field>
+                            <variable_length_string name="extendedText" optional="false">
+                                <count_field min_count="0" max_count="1024" field_type_unsigned="unsigned short integer"/>
+                            </variable_length_string>
+                            <bit_field name="theTime" optional="false" field_type_unsigned="unsigned integer">
+                                <sub_field name="Milliseconds">
+                                    <bit_range from_index="0" to_index="9"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="999" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                                <sub_field name="Seconds">
+                                    <bit_range from_index="10" to_index="15"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="59" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                                <sub_field name="Minutes">
+                                    <bit_range from_index="16" to_index="21"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="59" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                                <sub_field name="Hour">
+                                    <bit_range from_index="22" to_index="26"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="23" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                                <sub_field name="Day">
+                                    <bit_range from_index="27" to_index="31"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="1" lower_limit_type="inclusive" upper_limit="31" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                            </bit_field>
+                        </record>
+                    </list>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+            <message_def name="ReportStoredTasks" message_id="4FA4" is_command="false">
+                <description xml:space="preserve">Provide a dump of specified tasks.</description>
+                <header name="header"/>
+                <body name="body">
+                    <list name="tasks" optional="false">
+                        <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                        <sequence name="task" optional="false">
+                            <record name="taskId" optional="false">
+                                <fixed_field name="taskId" optional="false" field_units="one" field_type="unsigned integer"/>
+                            </record>
+                            <list name="encodedTask" optional="false">
+                                <count_field min_count="0" max_count="65535" field_type_unsigned="unsigned short integer"/>
+                                <record name="bytes" optional="false">
+                                    <fixed_field name="byte_field" optional="false" field_units="one" field_type="unsigned byte"/>
+                                </record>
+                            </list>
+                        </sequence>
+                    </list>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+            <message_def name="ReportMissionParameters" message_id="4FA5" is_command="false">
+                <description xml:space="preserve">Report a set of current values for a specific Mission Parameters</description>
+                <header name="header"/>
+                <body name="body">
+                    <sequence name="report" optional="false">
+                        <record name="missionId" optional="false">
+                            <fixed_field name="missionId" optional="false" field_units="one" field_type="unsigned integer"/>
+                        </record>
+                        <list name="values" optional="false">
+                            <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                            <sequence name="assignment" optional="false">
+                                <list name="item" optional="false">
+                                    <count_field min_count="0" max_count="65535" field_type_unsigned="unsigned short integer"/>
+                                    <record name="item_index" optional="false">
+                                        <fixed_field name="byte_field" optional="false" field_units="one" field_type="unsigned byte"/>
+                                    </record>
+                                </list>
+                                <list name="encodedValue" optional="false">
+                                    <count_field min_count="0" max_count="65535" field_type_unsigned="unsigned short integer"/>
+                                    <record name="bytes" optional="false">
+                                        <fixed_field name="byte_field" optional="false" field_units="one" field_type="unsigned byte"/>
+                                    </record>
+                                </list>
+                            </sequence>
+                        </list>
+                        <record name="timestamp" optional="false">
+                            <bit_field name="timeStamp" optional="false" field_type_unsigned="unsigned integer">
+                                <sub_field name="Milliseconds">
+                                    <bit_range from_index="0" to_index="9"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="999" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                                <sub_field name="Seconds">
+                                    <bit_range from_index="10" to_index="15"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="59" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                                <sub_field name="Minutes">
+                                    <bit_range from_index="16" to_index="21"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="59" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                                <sub_field name="Hour">
+                                    <bit_range from_index="22" to_index="26"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="23" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                                <sub_field name="Day">
+                                    <bit_range from_index="27" to_index="31"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="1" lower_limit_type="inclusive" upper_limit="31" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                            </bit_field>
+                        </record>
+                    </sequence>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+            <message_def name="ReportExtendedErrorInfo" message_id="4FA6" is_command="false">
+                <description xml:space="preserve">Report extended error info for commands invoked with CommandEvent</description>
+                <header name="header"/>
+                <body name="body">
+                    <list name="report" optional="false">
+                        <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                        <record name="info" optional="false">
+                            <fixed_field name="reqId" optional="false" field_units="one" field_type="unsigned byte"/>
+                            <fixed_field name="extendedErrorCode" optional="false" field_units="one" field_type="unsigned long integer"/>
+                            <variable_length_string name="extendedText" optional="false">
+                                <count_field min_count="0" max_count="1024" field_type_unsigned="unsigned short integer"/>
+                            </variable_length_string>
+                            <bit_field name="theTime" optional="false" field_type_unsigned="unsigned integer">
+                                <sub_field name="Milliseconds">
+                                    <bit_range from_index="0" to_index="9"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="999" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                                <sub_field name="Seconds">
+                                    <bit_range from_index="10" to_index="15"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="59" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                                <sub_field name="Minutes">
+                                    <bit_range from_index="16" to_index="21"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="59" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                                <sub_field name="Hour">
+                                    <bit_range from_index="22" to_index="26"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="23" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                                <sub_field name="Day">
+                                    <bit_range from_index="27" to_index="31"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="1" lower_limit_type="inclusive" upper_limit="31" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                            </bit_field>
+                        </record>
+                    </list>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+            <message_def name="ReportTaskException" message_id="4FA7" is_command="false">
+                <description xml:space="preserve">Report task exceptions, will report to all listeners in TaskPackage spec.</description>
+                <header name="header"/>
+                <body name="body">
+                    <list name="exception" optional="false">
+                        <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                        <record name="info" optional="false">
+                            <fixed_field name="tid" optional="false" field_units="one" field_type="unsigned integer"/>
+                            <fixed_field name="exceptionCode" optional="false" field_units="one" field_type="unsigned long integer"/>
+                            <variable_length_string name="extendedText" optional="false">
+                                <count_field min_count="0" max_count="1024" field_type_unsigned="unsigned short integer"/>
+                            </variable_length_string>
+                            <bit_field name="theTime" optional="false" field_type_unsigned="unsigned integer">
+                                <sub_field name="Milliseconds">
+                                    <bit_range from_index="0" to_index="9"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="999" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                                <sub_field name="Seconds">
+                                    <bit_range from_index="10" to_index="15"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="59" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                                <sub_field name="Minutes">
+                                    <bit_range from_index="16" to_index="21"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="59" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                                <sub_field name="Hour">
+                                    <bit_range from_index="22" to_index="26"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="23" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                                <sub_field name="Day">
+                                    <bit_range from_index="27" to_index="31"/>
+                                    <value_set offset_to_lower_limit="false">
+                                        <value_range lower_limit="1" lower_limit_type="inclusive" upper_limit="31" upper_limit_type="inclusive"/>
+                                    </value_set>
+                                </sub_field>
+                            </bit_field>
+                        </record>
+                    </list>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+            <message_def name="ReportTaskLog" message_id="4FA8" is_command="false">
+                <description xml:space="preserve">Report log info from specific tasks, will report to all listeners in TaskPackage spec.</description>
+                <header name="header"/>
+                <body name="body">
+                    <sequence name="logReq" optional="false">
+                        <list name="taskIds" optional="false">
+                            <count_field min_count="0" max_count="255" field_type_unsigned="unsigned byte"/>
+                            <record name="taskId" optional="false">
+                                <fixed_field name="taskId" optional="false" field_units="one" field_type="unsigned integer"/>
+                            </record>
+                        </list>
+                        <record name="numEntries" optional="false">
+                            <fixed_field name="byte_field" optional="false" field_units="one" field_type="unsigned byte"/>
+                        </record>
+                        <record name="level" optional="false">
+                            <fixed_field name="level" optional="false" field_units="one" field_type="unsigned byte">
+                                <value_set offset_to_lower_limit="false">
+                                    <value_enum enum_index="0" enum_const="LOG_EMERG"/>
+                                    <value_enum enum_index="1" enum_const="LOG_ALERT"/>
+                                    <value_enum enum_index="2" enum_const="LOG_CRIT"/>
+                                    <value_enum enum_index="3" enum_const="LOG_ERR"/>
+                                    <value_enum enum_index="4" enum_const="LOG_WARNING"/>
+                                    <value_enum enum_index="5" enum_const="LOG_NOTICE"/>
+                                    <value_enum enum_index="6" enum_const="LOG_INFO"/>
+                                    <value_enum enum_index="7" enum_const="LOG_DEBUG"/>
+                                </value_set>
+                            </fixed_field>
+                        </record>
+                    </sequence>
+                </body>
+                <footer name="footer"/>
+            </message_def>
+        </output_set>
+    </message_set>
+    <internal_events_set/>
+    <protocol_behavior is_stateless="false">
+        <start state_machine_name="MissionManagement.fsm" state_name="Init"/>
+        <state_machine name="MissionManagement.fsm">
+            <state name="Init">
+                <transition name="AddTaskPackage">
+                    <parameter type="AddTaskPackage" value="msg"/>
+                    <simple>
+                        <end_state state="Init"/>
+                    </simple>
+                    <action name="AddTaskPackageHandler">
+                        <argument value="msg"/>
+                    </action>
+                    <ns3:mxCell id="6" parent="2" source="3" target="3" style="simpleTransition" value="AddTaskPackage(AddTaskPackage msg)/AddTaskPackageHandler(msg);RunTask(RunTask msg)/RunTaskHandler(msg);" edge="1">
+                        <ns3:mxGeometry relative="1" as="geometry" width="100.0" height="100.0">
+                            <ns3:mxPoint as="sourcePoint" x="320.0" y="190.0"/>
+                            <ns3:mxPoint as="targetPoint" x="420.0" y="90.0"/>
+                            <ns3:mxArray as="points">
+                                <ns3:mxPoint x="520.0" y="240.0"/>
+                            </ns3:mxArray>
+                        </ns3:mxGeometry>
+                    </ns3:mxCell>
+                </transition>
+                <transition name="RunTask">
+                    <parameter type="RunTask" value="msg"/>
+                    <simple>
+                        <end_state state="Init"/>
+                    </simple>
+                    <action name="RunTaskHandler">
+                        <argument value="msg"/>
+                    </action>
+                    <ns3:mxCell id="6" parent="2" source="3" target="3" style="simpleTransition" value="AddTaskPackage(AddTaskPackage msg)/AddTaskPackageHandler(msg);RunTask(RunTask msg)/RunTaskHandler(msg);" edge="1">
+                        <ns3:mxGeometry relative="1" as="geometry" width="100.0" height="100.0">
+                            <ns3:mxPoint as="sourcePoint" x="320.0" y="190.0"/>
+                            <ns3:mxPoint as="targetPoint" x="420.0" y="90.0"/>
+                            <ns3:mxArray as="points">
+                                <ns3:mxPoint x="520.0" y="240.0"/>
+                            </ns3:mxArray>
+                        </ns3:mxGeometry>
+                    </ns3:mxCell>
+                </transition>
+                <ns3:mxCell id="3" parent="2" style="state;" value="Init;   " vertex="1">
+                    <ns3:mxGeometry as="geometry" x="110.0" y="110.0" width="80.0" height="80.0"/>
+                </ns3:mxCell>
+            </state>
+            <pseudo_start_state>
+                <state>
+                    <ns3:mxCell id="4" parent="2" style="pseudoStartState;" value="" vertex="1">
+                        <ns3:mxGeometry as="geometry" x="70.0" y="70.0" width="20.0" height="20.0"/>
+                    </ns3:mxCell>
+                </state>
+                <transition>
+                    <ns3:mxCell id="5" parent="2" source="4" target="3" style="simpleTransition;" value="" edge="1">
+                        <ns3:mxGeometry as="geometry" x="70.0" y="70.0" width="20.0" height="20.0"/>
+                    </ns3:mxCell>
+                </transition>
+            </pseudo_start_state>
+            <ns3:mxCell id="2" parent="1" style="finiteStateMachine;" value="name = MissionManagement.fsm;   isStateless = false;  " vertex="1">
+                <ns3:mxGeometry as="geometry" width="850.0" height="400.0"/>
+            </ns3:mxCell>
+        </state_machine>
+    </protocol_behavior>
+</service_def>

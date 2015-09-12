@@ -1,0 +1,107 @@
+service PlatformSpecificationsService (id="urn:jaus:jss:uuv:PlatformSpecifications", version="1.0") {
+  description "This service provides platform specification data";
+  assumptions "None";
+
+  references {
+    inherits_from Events "urn:jaus:jss:core:Events" "1.0";
+  }
+
+  types Types {
+
+    // General platform specs
+    record PlatformSpecificationsRec {
+      required vstring MobilityPlatformName[0,15] = 1; // A human-readable string for the vehicle.
+      optional uint16 Front meter = 3; // Measured from the vehicle coordinate frame.
+      optional uint16 Back meter = 4; // Measured from the vehicle coordinate frame.
+      optional uint16 Right meter = 5; // Measured from the vehicle coordinate frame.
+      optional uint16 Left meter = 6; // Measured from the vehicle coordinate frame.
+      optional uint16 Bottom meter = 7; // Measured from the vehicle coordinate frame.
+      optional uint16 Top meter = 8; // Measured from the vehicle coordinate frame.
+    }
+
+    // This contains inertial information (speed and acceleration limits)
+    // All values in these scaled integers are rounded.
+    record PlatformInertialSpecificationsRec {
+      optional uint16 MaximumForwardSpeed meter_per_second <0.0, 90.0> = 1;
+      optional uint16 MaximumReverseSpeed meter_per_second <0.0, 90.0> = 2;
+      optional uint16 MaximumXRotationalSpeed radian_per_second <0.0, 6.28> = 3;
+      optional uint16 MaximumYRotationalSpeed radian_per_second <0.0, 6.28> = 4;
+      optional uint16 MaximumZRotationalSpeed radian_per_second <0.0, 6.28> = 5;
+      optional uint8 MaximumForwardAcceleration meter_per_second_squared <0.0, 40.0> = 7;
+      optional uint8 MaximumReverseAcceleration meter_per_second_squared <0.0, 40.0> = 8;
+      optional uint8 MaximumForwardDeceleration meter_per_second_squared <0.0, 40.0> = 9;
+      optional uint8 MaximumReverseDeceleration meter_per_second_squared <0.0, 40.0> = 10;
+      optional uint16 Xcg meter = 11; // Vehicle Center of Gravity X position
+                                      // Measured from the vehicle coordinate frame
+      optional uint16 Ycg meter = 12; // Vehicle Center of Gravity Y position
+                                      // Measured from the vehicle coordinate frame
+      optional uint16 Zcg meter = 13; // Vehicle Center of Gravity Z position
+                                      // Measured from the vehicle coordinate frame
+      optional uint16 Xcb meter = 14; // Vehicle Center of Bouyancy X position
+                                      // Measured from the vehicle coordinate frame
+      optional uint16 Ycb meter = 15; // Vehicle Center of Bouyancy Y position
+                                      // Measured from the vehicle coordinate frame
+      optional uint16 Zcb meter = 16; // Vehicle Center of Bouyancy Z position
+                                      // Measured from the vehicle coordinate frame
+      optional uint32 Mass meter = 17; // Mass of platform
+      optional uint32 Displacement meter = 18; // Displacement of the platform.
+      optional uint32 MaximumDepth meter = 19; // Maximum distance below instantaneous sealevel
+    }
+
+
+    // This is the main container for the ReportPlatformSpecs message
+    sequence PlatformDataSeq {
+      required PlatformSpecificationsRec platformSpec = 1;
+      required PlatformInertialSpecificationsRec platformInertial = 2;
+    }
+
+    record errorResponse {
+      required string errorResponse[255] = 1;
+    }
+
+    record QueryPresenceVector {
+      required uint16 presenceVector one = 1;
+    }
+  }
+
+  messages {
+
+    query 0x2510 QueryPlatformSpecifications {
+      description "Request PlatformSpecifications data";
+      QueryPresenceVector presenceVector;
+    }
+
+    inform 0x4510 ReportPlatformSpecifications {
+      description "Send a Report Platform Specification message to the component that sent the query";
+      PlatformDataSeq platformData;
+    }
+  }
+
+  events Event {
+
+  }
+
+  protocol {
+    start Receiving.Ready;
+    state_machine management.accessControl.events.transport.ReceiveFSM  {
+
+      state Receiving  {
+
+        initial state Ready  {
+
+          state Default  {
+
+            management.accessControl.events.transport.Receive(
+                 msg : QueryPlatformSpecifications,
+                 transportData : data ) {
+
+              management.accessControl.events.transport.Send(
+                'ReportPlatformSpecifications',
+                   msg.src_id );
+            }
+          } // state Default
+        } // initial state Ready
+      } // state Receiving
+    } // state_machine management.accessControl.events.transport.ReceiveFSM 
+  }
+}

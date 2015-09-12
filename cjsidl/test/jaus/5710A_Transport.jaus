@@ -1,0 +1,128 @@
+service Transport( id="urn:jaus:jss:core:Transport",
+                   version="1.1" ) {
+  description "The transport service acts as an interface to the JAUS transport layer. It
+    models an abstract bi-directional communication channel (input queue and
+    output queue) whose primary function is to provide the capability of
+    sending messages to a single destination endpoint or broadcasting messages
+    to all endpoints in the system, and to receive a message from any source
+    endpoint. It also provides the capability to prioritize the delivery of
+    sent messages. This service establishes a communication endpoint whose
+    address is defined by a triple {SubsystemID, NodeID, ComponentID} as
+    specified by the Send and Receive internal events. Other services that need
+    to utilize the communication channel provided by the transport service must
+    inherit from the transport service.";
+  assumptions "Messages may be delayed, lost or reordered.";
+  types TransportTypeSet {
+
+    // #include BasicTypes.jaus
+    using "urn:jaus:jss:core:MessageSet:BasicTypes" "1.1" as basicTypes;
+    record SendRec {
+      required uint8 ReliableDelivery one {
+         RESERVED = [0,1];
+         Unreliable = 0;
+         Reliable = 1;
+        } = 1;
+      required basicTypes.JausID DestinationID = 2; // Identifier of destination to
+        // send the message
+      optional basicTypes.JausID SourceID = 3; // Identifier of the sender of the
+        // message
+      optional uint8 Priority one {
+         RESERVED = [0,3];
+         LOW = 0;
+         NORMAL = 1;
+         HIGH = 2;
+         SAFETY = 3;
+        } = 4; // Priority level of this message. If not specified, the normal
+        // priority level is used.
+      required AppMessage MessagePayload = 5; // Message payload.
+    }// record SendRec
+    record BroadcastRec {
+      required basicTypes.JausID DestinationID = 1; // Identifier of destination to
+        // send the message
+      optional basicTypes.JausID SourceID = 2; // Identifier of the sender of the
+        // message
+      optional uint8 Priority one {
+         RESERVED = [0,3];
+         LOW = 0;
+         NORMAL = 1;
+         HIGH = 2;
+         SAFETY = 3;
+        } = 3; // Priority level of this message. If not specified, the normal
+        // priority level is used.
+      required AppMessage MessagePayload = 4; // Message payload.
+    }// record BroadcastRec
+  }// types TransportTypeSet
+  messages  {
+  }// messages 
+  events  {
+    event Send {
+      description "The Send event is used by a derived service to hand over the payload
+        data that it needs to send to a specified destination endpoint via the
+        transport layer. Upon receipt, this service prepares the message for
+        delivery (marshals the message) as specified by the transport layer
+        specification and attempts to deliver the encapsulated payload data to
+        the destination endpoint.";
+       SendRec SendRec;
+    }// event Send
+    event BroadcastLocal {
+      description "The Broadcast Local event is the same as the Send event except that
+        this service sends the payload to all endpoints within the subsystem.";
+       BroadcastRec BroadcastRec;
+    }// event BroadcastLocal
+    event BroadcastGlobal {
+      description "The Broadcast Global event is the same as the Send event except that
+        this service sends the payload to all endpoints on all subsystems.";
+       BroadcastRec BroadcastRec;
+    }// event BroadcastGlobal
+    event Receive {
+      description "The Receive event is used by derived services to hand over the data
+        that was sent by another service to an endpoint established by this
+        service.";
+      record ReceiveRec { // transport data
+        required basicTypes.JausID SourceID = 1; // Identifier of the sender of the
+          // message
+        required AppMessage MessagePayload = 2; // message payload
+      }// record ReceiveRec
+    }// event Receive
+  }// events 
+  protocol {
+    start Receiving;
+    start Sending;
+    state_machine ReceiveFSM  {
+
+      state Receiving  {
+
+        Receive() {
+
+        }
+      } // state Receiving
+    } // state_machine ReceiveFSM 
+    state_machine SendFSM  {
+
+      state Sending  {
+
+        Send( msg : Send ) {
+
+          Enqueue( msg ); // Convert the destination address into an unsigned to the
+            // next integer such that the ComponentID maps to the least
+            // significant byte, NodeID least significant byte and SubsystemID
+            // maps onto the remaining two bytes of the integer. Package the
+            // message as specified by the transport layer specification and send
+            // it to its destination as per the specified priority.
+        }
+        BroadcastLocal( msg : BroadcastLocal ) {
+
+          BroadcastLocalEnqueue( msg ); // Package the message asspecified by the
+            // transport layer specification and send it to all endpoints in the
+            // local subsystem.
+        }
+        BroadcastGlobal( msg : BroadcastGlobal ) {
+
+          BroadcastGlobalEnqueue( msg ); // Package the message as specified by the
+            // transport layer specification and send it to all endpoints in on
+            // all subsystems.
+        }
+      } // state Sending
+    } // state_machine SendFSM 
+  }
+}// service Transport

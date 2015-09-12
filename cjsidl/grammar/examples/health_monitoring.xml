@@ -1,0 +1,180 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<service_def name="HealthMonitoring" id="urn:jaus:jss:health_monitoring" version="0.1" xmlns="urn:jaus:jsidl:1.0">
+  <description>required by JSIDL</description>
+  <assumptions>required by JSIDL</assumptions>
+  <declared_type_set name="HealthMonitoringTypes">
+    <bit_field name="TimeStamp" field_type_unsigned="unsigned integer" optional="false">
+      <sub_field name="Milliseconds">
+        <bit_range from_index="0" to_index="9"/>
+        <value_set offset_to_lower_limit="false">
+          <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="999" upper_limit_type="inclusive"/>
+        </value_set>
+      </sub_field>
+      <sub_field name="Seconds">
+        <bit_range from_index="10" to_index="15"/>
+        <value_set offset_to_lower_limit="false">
+          <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="59" upper_limit_type="inclusive"/>
+        </value_set>
+      </sub_field>
+      <sub_field name="Minutes">
+        <bit_range from_index="16" to_index="21"/>
+        <value_set offset_to_lower_limit="false">
+          <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="59" upper_limit_type="inclusive"/>
+        </value_set>
+      </sub_field>
+      <sub_field name="Hour">
+        <bit_range from_index="22" to_index="26"/>
+        <value_set offset_to_lower_limit="false">
+          <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="23" upper_limit_type="inclusive"/>
+        </value_set>
+      </sub_field>
+      <sub_field name="Day">
+        <bit_range from_index="27" to_index="31"/>
+        <value_set offset_to_lower_limit="false">
+          <value_range lower_limit="1" lower_limit_type="inclusive" upper_limit="31" upper_limit_type="inclusive"/>
+        </value_set>
+      </sub_field>
+    </bit_field>
+    <fixed_field field_type="unsigned byte" optional="false" name="CriticalityType" field_units="one">
+      <value_set offset_to_lower_limit="false">
+        <value_enum enum_const="WARNING" enum_index="0"/>
+        <value_enum enum_const="SERIOUS_1" enum_index="1"/>
+        <value_enum enum_const="SERIOUS_2" enum_index="2"/>
+        <value_enum enum_const="CATASTROPHIC" enum_index="3"/>
+      </value_set>
+    </fixed_field>
+    <fixed_field field_type="unsigned byte" optional="false" name="ClearType" field_units="one">
+      <value_set offset_to_lower_limit="false">
+        <value_enum enum_const="NO_ERROR" enum_index="0"/>
+        <value_enum enum_const="ERROR" enum_index="1"/>
+      </value_set>
+    </fixed_field>
+    <record name="ErrorCode" optional="false" interpretation="">
+      <fixed_field field_type="unsigned integer" name="error_code" optional="false" field_units="one"/>
+    </record>
+    <record name="ErrorReport" optional="false" interpretation=" Decription of error (for human).">
+      <fixed_field field_type="unsigned byte" name="health_monitoring_version" optional="false" field_units="one"/>
+      <bit_field name="error_info" field_type_unsigned="unsigned byte" optional="false">
+        <sub_field name="default_criticality">
+          <bit_range from_index="0" to_index="1"/>
+          <value_set offset_to_lower_limit="false">
+            <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="3" upper_limit_type="inclusive"/>
+          </value_set>
+        </sub_field>
+        <sub_field name="reserved">
+          <bit_range from_index="2" to_index="6"/>
+          <value_set offset_to_lower_limit="false">
+            <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="0" upper_limit_type="inclusive"/>
+          </value_set>
+        </sub_field>
+        <sub_field name="set_clear">
+          <bit_range from_index="7" to_index="7"/>
+          <value_set offset_to_lower_limit="false">
+            <value_range lower_limit="0" lower_limit_type="inclusive" upper_limit="1" upper_limit_type="inclusive"/>
+          </value_set>
+        </sub_field>
+      </bit_field>
+      <fixed_field field_type="unsigned byte" name="module" optional="false" field_units="one"/>
+      <declared_bit_field name="timestamp" declared_type_ref="TimeStamp" optional="false"/>
+      <fixed_field field_type="integer" name="error_code" optional="false" field_units="one"/>
+      <variable_length_string name="error_description" optional="false">
+        <count_field min_count="0" max_count="64" field_type_unsigned="unsigned integer"/>
+      </variable_length_string>
+    </record>
+    <record name="ModuleInfo" optional="false" interpretation=" Available, TORC used to enumerate modules.">
+      <fixed_field field_type="unsigned byte" name="health_monitoring_version" optional="false" field_units="one"/>
+      <fixed_field field_type="unsigned byte" name="module" optional="false" field_units="one"/>
+    </record>
+    <list name="ErrorList" optional="false">
+      <count_field field_type_unsigned="unsigned byte" min_count="0" max_count="255"/>
+      <declared_record name="code" optional="false" declared_type_ref="ErrorCode"/>
+    </list>
+    <sequence name="ModuleErrors" optional="false">
+      <declared_record name="module" declared_type_ref="ModuleInfo" optional="false"/>
+      <declared_list name="errors" declared_type_ref="ErrorList" optional="false"/>
+    </sequence>
+    <record name="ErrorSpec" optional="false" interpretation=" Error code.">
+      <fixed_field field_type="unsigned byte" name="health_monitoring_version" optional="false" field_units="one"/>
+      <fixed_field field_type="unsigned byte" name="module" optional="false" field_units="one"/>
+      <fixed_field field_type="integer" name="error_code" optional="false" field_units="one"/>
+    </record>
+    <record name="ErrorListSpec" optional="false" interpretation=" Available, TORC used to enumerate modules.">
+      <fixed_field field_type="unsigned byte" name="health_monitoring_version" optional="false" field_units="one"/>
+      <fixed_field field_type="unsigned byte" name="module" optional="false" field_units="one"/>
+    </record>
+  </declared_type_set>
+  <message_set>
+    <input_set>
+      <message_def name="SetError" message_id="0ff1" is_command="true">
+        <description>Set an error</description>
+        <header name="header">
+          <record optional="false" name="HeaderRec">
+            <fixed_field field_type="unsigned short integer" field_units="one" optional="false" name="MessageID" interpretation="Two byte field to hold message ID"/>
+          </record>
+        </header>
+        <body name="body">
+          <declared_record name="new_error_report" optional="false" declared_type_ref="ErrorReport"/>
+        </body>
+        <footer name="footer"/>
+      </message_def>
+      <message_def name="QueryError" message_id="2ff1" is_command="false">
+        <description>Query for an error matching criteria</description>
+        <header name="header">
+          <record optional="false" name="HeaderRec">
+            <fixed_field field_type="unsigned short integer" field_units="one" optional="false" name="MessageID" interpretation="Two byte field to hold message ID"/>
+          </record>
+        </header>
+        <body name="body">
+          <declared_record name="which_error" optional="false" declared_type_ref="ErrorSpec"/>
+        </body>
+        <footer name="footer"/>
+      </message_def>
+      <message_def name="QueryErrorList" message_id="2ff2" is_command="false">
+        <description>Query for all errors for a given module code</description>
+        <header name="header">
+          <record optional="false" name="HeaderRec">
+            <fixed_field field_type="unsigned short integer" field_units="one" optional="false" name="MessageID" interpretation="Two byte field to hold message ID"/>
+          </record>
+        </header>
+        <body name="body">
+          <declared_record name="which_module" optional="false" declared_type_ref="ErrorListSpec"/>
+        </body>
+        <footer name="footer"/>
+      </message_def>
+    </input_set>
+    <output_set>
+      <message_def name="ReportError" message_id="4ff1" is_command="false">
+        <description>Query for an error matching criteria</description>
+        <header name="header">
+          <record optional="false" name="HeaderRec">
+            <fixed_field field_type="unsigned short integer" field_units="one" optional="false" name="MessageID" interpretation="Two byte field to hold message ID"/>
+          </record>
+        </header>
+        <body name="body">
+          <declared_record name="error_report" optional="false" declared_type_ref="ErrorReport"/>
+        </body>
+        <footer name="footer"/>
+      </message_def>
+      <message_def name="ReportErrorList" message_id="4ff2" is_command="false">
+        <description>Query for all errors for a given module code</description>
+        <header name="header">
+          <record optional="false" name="HeaderRec">
+            <fixed_field field_type="unsigned short integer" field_units="one" optional="false" name="MessageID" interpretation="Two byte field to hold message ID"/>
+          </record>
+        </header>
+        <body name="body">
+          <declared_list name="error_list" optional="false" declared_type_ref="ErrorList"/>
+        </body>
+        <footer name="footer"/>
+      </message_def>
+    </output_set>
+  </message_set>
+  <internal_events_set/>
+  <protocol_behavior>
+    <start state_name="init" state_machine_name="fsm"/>
+    <state_machine name="fsm">
+      <state name="init" interpretation=""/>
+    </state_machine>
+  </protocol_behavior>
+</service_def>
+

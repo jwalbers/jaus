@@ -1,0 +1,95 @@
+service PlatformSpecificationsService (id="AS4:AS6091:PlatformSpecifications", version="0.1") {
+  // First cut
+  // Parag Batavia
+  // Neya Systems, LLC
+
+  description "This service provides platform specification data";
+  assumptions "None";
+
+  types Types {
+
+// Skid-steer specific platform specs
+    record SkidSteerPlatformSpecificationsRec {
+      optional uint16 dummy one = 1;
+    }
+
+/// Ackerman specific platform specs
+    record AckermanPlatformSpecificationsRec {
+      optional uint16 SteeringAngleRange radian <-24.0, 24.0> = 1; // Minimum and maximum steering angle. Left is negative, right is positive. 
+    }
+
+// This variant is used to hold platform-specific specifications
+    variant PlatformSpecificSpecification {
+      uint8 vtag[1,2];
+      vtag 1: SkidSteerPlatformSpecificationsRec skidsteer;
+      vtag 2: AckermanPlatformSpecificationsRec ackerman;
+    }
+
+// This contains inertial information (speed and acceleration limits)
+    record PlatformInertialSpecificationsRec {
+      optional uint16 MaximumForwardSpeed meter_per_second <0.0, 90.0> = 1;
+      optional uint16 MaximumReverseSpeed meter_per_second <0.0, 90.0> = 2;
+      optional uint16 MaximumRotationalSpeed radian_per_second <0.0, 6.28> = 3;
+      optional uint8 MaximumForwardAcceleration meter_per_second_squared <0.0, 40.0> = 3;
+      optional uint8 MaximumReverseAcceleration meter_per_second_squared <0.0, 40.0> = 4;
+      optional uint8 MaximumForwardDeceleration meter_per_second_squared <0.0, 40.0> = 5;
+      optional uint8 MaximumReverseDeceleration meter_per_second_squared <0.0, 40.0> = 5;
+    }
+
+// General platform specs
+    record PlatformSpecificationsRec {
+      required string MobilityPlatformName[15] = 1;
+      optional uint16 Front meter = 3;
+      optional uint16 Back meter = 4;
+      optional uint16 Right meter = 5;
+      optional uint16 Left meter = 6;
+      optional uint16 Bottom meter = 7;
+      optional uint16 Top meter = 8;
+      optional uint16 Xcg meter = 10;
+      optional uint16 Ycg meter = 11;
+      optional uint16 Zcg meter = 12;
+      optional uint16 WheelBase meter = 13;
+      optional uint16 StaticPitchOver radian = 14;
+      optional uint16 StaticRollOver radian = 15;
+    }
+
+    // This is the main container for the ReportPlatformSpecs message
+    sequence PlatformSpecificationsSeq {
+      required PlatformSpecificSpecification platformSpecifics = 1;
+      required PlatformInertialSpecificationsRec platformInertial = 2;
+      required PlatformSpecificationsRec platformSpec = 3;
+    }
+
+    record errorResponse {
+      required string errorResponse[255] = 1;
+    }
+
+    record QueryPresenceVector {
+      required uint16 presenceVector one = 1;
+    }
+  }
+
+  messages {
+
+    query 0x2502 QueryPlatformSpecifications {
+      description "Request PlatformSpecifications data";
+      QueryPresenceVector presenceVector;
+    }
+
+    inform 0x4502 ReportPlatformSpecifications {
+      description "Sends PlatformSpecifications data";
+      PlatformSpecificationsSeq platformData;
+    }
+  }
+
+  events Event {
+
+  }
+
+  protocol {
+    start fsm.Init;
+    state_machine fsm {
+      state Init {}
+    }
+  }
+}

@@ -1,0 +1,12 @@
+Comments from CJSIDL fields are not making it into JSIDL interpretation.
+
+    record PlatformSpecificationsRec {
+      required string MobilityPlatformName = 1; // A human-readable string for the vehicle.
+      optional uint16 Front meter = 3; // Measured from the vehicle coordinate frame.
+
+
+      <variable_length_string name="MobilityPlatformName" optional="false">
+        <count_field min_count="0" max_count="15" field_type_unsigned="unsigned integer"/>
+      </variable_length_string>
+      <fixed_field field_type="unsigned short integer" name="Front" optional="true" field_units="meter"/>
+

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<locatingRules xmlns="http://thaiopensource.com/ns/locating-rules/1.0">
+  <uri resource="mms.xml" uri="../../schema/jaus_service_interface_definition_language.rnc"/>
+  <uri resource="das.xml" uri="../../schema/jaus_service_interface_definition_language.rnc"/>
+  <uri resource="hm.xml" uri="../../schema/jaus_service_interface_definition_language.rnc"/>
+  <uri resource="out2.xml" uri="../../schema/jaus_service_interface_definition_language.rnc"/>
+  <uri resource="out.xml" uri="../../schema/jaus_service_interface_definition_language.rnc"/>
+  <uri resource="BasicTypes.xml" uri="../../schema/jaus_service_interface_definition_language.rnc"/>
+  <uri resource="out.xml" uri="../../../../../svn/as4c/Documents/AS5684_new_stuff/new_schema/jaus_service_interface_definition_language.rnc"/>
+</locatingRules>

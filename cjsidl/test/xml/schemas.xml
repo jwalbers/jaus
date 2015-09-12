@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!-- examples showing how to set up schema map for RNC schema XML files -->
+<locatingRules xmlns="http://thaiopensource.com/ns/locating-rules/1.0">
+  <uri resource="BasicTypes.xml" uri="../schema/jaus_service_interface_definition_language.rnc"/>
+  <uri resource="MissionSpooler.xml" uri="../schema/jaus_service_interface_definition_language.rnc"/>
+  <uri resource="6091_AckermanDriver.xml" uri="../schema/jaus_service_interface_definition_language.rnc"/>
+</locatingRules>

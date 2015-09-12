@@ -1,0 +1,152 @@
+service GlobalWaypointDriver( id="urn:jaus:jss:mobility:GlobalWaypointDriver",
+                              version="1.0" ) {
+  description "The function of the Global Waypoint Driver is to move the platform given a
+    single target waypoint, desired travel speed, current platform pose and
+    current velocity state. A single waypoint is provided via the Set Global
+    Waypoint message. The waypoint remains unchanged until a new Set Global
+    Waypoint message is received. A waypoint consists of the desired position
+    and orientation of the platform. The second input consists of the desired
+    travel speed. The desired travel speed remains unchanged unless a new Set
+    Travel Speed Message is received. The travel speed may then be changed at
+    any time during waypoint navigation. The travel speed is reset to zero for
+    all transitions from the Ready State.";
+  assumptions "Messages may be delayed, lost or reordered.";
+  references {
+    inherits_from management "urn:jaus:jss:core:Management" "1.0";
+  }
+  types Types {
+    using "urn:jaus:jss:mobility:MessageSet" "1.0" as mobility;
+    record GlobalWaypointRec {
+      required uint32 Latitude degree <-90,90> = 1;
+      required uint32 Longitude degree <-180,180> = 2;
+      optional uint32 Altitude meter <-10000,35000> = 3;
+      optional uint16 Roll radian <-PI,PI> = 4;
+      optional uint16 Pitch radian <-PI,PI> = 5;
+      optional uint16 Yaw radian <-PI,PI> = 6;
+      optional uint16 WaypointTolerance meter <0,100> = 7;
+      optional uint32 PathTolerance meter <0,100000> = 8; // A value of zero (0) is
+        // used for infinite tolerance
+    }// record GlobalWaypointRec
+  }// types Types
+  messages  {
+    query 0x240C QueryGlobalWaypoint {
+      description "This message shall cause the receiving component to reply to the
+        requestor with a ID 440Ch: ReportGlobalWaypoint message. Field #1
+        specifies the fields to be returned in the Report Global Waypoint
+        message.";
+      record QueryGlobalWaypointRec {
+        required uint8 PresenceVector one  = 1; // See Report Global Waypoint
+          // Message
+      }// record QueryGlobalWaypointRec
+    }
+    command 0x040C SetGlobalWaypoint {
+      description "This message is used to set waypoint data based on the global
+        coordinate system. A global waypoint can have up to six fields to
+        describe it completely. The waypoint is defined in the global
+        coordinate system using the latitude, longitude, and altitude, fields.
+        The desired orientation of the platform at the waypoint is defined
+        using the roll, pitch, and yaw fields. Only fields 1-3 (presence
+        vector, latitude, and longitude) are required for each waypoint. Field
+        #4 sets the desired Altitude in accordance with the WGS 84 standard.
+        The presence vector is used to specify if the remaining fields, i.e.,
+        altitude, roll, pitch, and yaw, are used to further describe the
+        waypoint and the desired orientation at that point.";
+       mobilityTypes.GlobalWaypointRec GlobalWaypointRec;
+    }
+    inform 0x440C ReportGlobalWaypoint {
+      description "This message is used to provide the receiver the values of the current
+        waypoint fields as specified by the data in ID 240C:
+        QueryGlobalWaypoint. The message data and mapping of the presence
+        vector of this message are identical to ID 040Ch: SetGlobalWaypoint.";
+       mobilityTypes.GlobalWaypointRec GlobalWaypointRec;
+    }
+  }// messages 
+  events  {
+  }// events 
+  protocol {
+    start Receiving.Ready.NotControlled.StateA.Init;
+    state_machine management.accessControl.events.transport.ReceiveFSM  {
+           // extending ReceiveFSM of base service (transport)
+      state Receiving  {
+             // redefine state in order to extend
+        initial state Ready  {
+               // redefine state in order to extend
+          initial state NotControlled  {
+                 // redefine state in order to extend
+            initial state StateA  {
+                   // redefine state in order to extend
+              state Default  {
+
+                management.accessControl.events.transport.Receive(
+                     msg : QueryTravelSpeed,
+                     transportData : TransportRec ) {
+
+                  management.accessControl.events.transport.Send(
+                       'ReportTravelSpeed',
+                       msg.src_id ); // Send a Report Travel Speed message
+                }
+                management.accessControl.events.transport.Receive(
+                     msg : QueryGlobalWaypoint,
+                     transportData : TransportRec )
+                  [ waypointExists( msg ) ] {
+
+                  management.accessControl.events.transport.Send(
+                       'ReportGlobalWaypoint',
+                       msg.src_id ); // Send a Report Global Waypoint message
+                }
+              } // state Default
+            } // initial state StateA
+          } // initial state NotControlled
+          state Controlled  {
+                 // redefine state in order to extend
+            initial state StateB  {
+                   // redefine state in order to extend
+              state Ready  {
+
+                exit {
+
+                  resetTravelSpeed(); // When leaving the Ready state, reset the
+                    // travel speed to zero.
+                }
+                management.accessControl.events.transport.Receive(
+                     msg : SetTravelSpeed,
+                     transportData : TransportRec )
+                  [ isControllingClient( transportRec ) && waypointExists( msg ) ] {
+
+                  setTravelSpeed(); // Set the travel speed for the platform.
+                }
+              } // state Ready
+              state Default  {
+
+                management.accessControl.events.transport.Receive(
+                     msg : SetGlobalWaypoint,
+                     transportData : TransportRec )
+                  [ isControllingClient( transportRec ) ] {
+
+                  setWaypoint(); // Set the target destination of the platform.
+                }
+                management.accessControl.events.transport.Receive(
+                     msg : QueryTravelSpeed,
+                     transportData : TransportRec ) {
+
+                  management.accessControl.events.transport.Send(
+                       'ReportTravelSpeed',
+                       msg.src_id ); // Send a Report Travel Speed message
+                }
+                management.accessControl.events.transport.Receive(
+                     msg : QueryGlobalWaypoint,
+                     transportData : TransportRec )
+                  [ waypointExists( msg ) ] {
+
+                  management.accessControl.events.transport.Send(
+                       'ReportGlobalWaypoint',
+                       msg.src_id ); // Send a Report Global Waypoint message
+                }
+              } // state Default
+            } // initial state StateB
+          } // state Controlled
+        } // initial state Ready
+      } // state Receiving
+    } // state_machine management.accessControl.events.transport.ReceiveFSM 
+  }
+}// service GlobalWaypointDriver
