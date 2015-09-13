@@ -30,7 +30,7 @@ SJSIDL_NS = '{urn:jaus:sjsidl:1.0}'
 JSIDL_PLUS_NS = '{urn:jaus:jsidl:plus}'
 
 # Defaults
-show_item_index_g=False   # Not showing item indices in CJSIDL now, since events no longer reference fields.
+show_item_index_g=False   # Not showing item indices in CJSIDL now, since events no longer reference individual fields.
 indent_g=2
 ns_g = JSIDL_NS     # override with --ns command line arg.
 is_jsidl_g = False
@@ -45,10 +45,55 @@ type_declarations_g = {}
 
 fsm_start_map = {}
 field_format_map = {
-    'JAUS Message':'AppMessage',
-    'JAUS MESSAGE':'AppMessage',
-    'RAW':'uint8[]'
+    # This map originally to fixup errors in early JSIDL
+    'JAUS Message':'JAUS_MESSAGE',
+    'JAUS MESSAGE':'JAUS_MESSAGE',
     }
+valid_field_formats = [
+      'AU',  'BMP',  'JPEG',  'MJPEG',  'MPEG-1',  'MPEG-2',
+      'MP2',  'MP3',  'MP4',  'RAW',  'WAV',  'JAUS_MESSAGE',
+      'XML',  'RNC',  'RNG',  'XSD',  'User_defined' ]
+valid_field_units = [
+# base units
+
+"meter", "kilogram", 
+ # unit of time
+ "second", 
+ "ampere", "kelvin", "mole", "candela", 
+
+# derived units
+
+"square meter", "cubic meter", "meter per second", "meter per second squared", 
+"reciprocal meter", "kilogram per cubic meter", "cubic meter per kilogram", 
+"liters per second", "liters per hour", 
+"ampere per square meter", "ampere per meter", "mole per cubic meter", 
+"candela per square meter", "one", "percent", 
+
+# derived units with special names and symbols
+
+"radian", "steradian", "hertz", "newton", "pascal", "joule", "watt", 
+"coulomb", "volt", "farad", "ohm", "siemens", "weber", "tesla", "henry", 
+"degree Celsius", "lumen", "lux", "becquerel", "sievert", "katal", 
+"pascal second", "newton meter", "newton per meter", "radian per second", 
+"radian per second squared", "watt per square meter", "joule per kelvin", 
+"joule per kilogram", "kelvin", "joule per kilogram", "watt per meter kelvin", 
+"joule per cubic meter", "volt per meter", "coulomb per cubic meter", 
+"coulomb per square meter", "farad per meter", "henry per meter", 
+"joule per mole", "joule per mole kelvin", "coulomb per kilogram", 
+"gray per second", "watt per square meter steradian", "katal per cubic meter", 
+"rotations per minute", "ampere hour", 
+
+# Non-SI units accepted for use with the International System
+
+# units of time
+"minute", "hour", "day", 
+"degree", "minute", 
+# unit of angle measurement
+"second", 
+"liter", "metric ton", 
+"neper", "bel", "nautical mile", "knot", "are", "hectare", "bar", "angstro", 
+"barn", "curie", "roentgen", "rad", "rem" 
+  ]
 scalar_type_map = {
     'byte':'uint8',
     'unsigned byte':'uint8',
@@ -353,6 +398,7 @@ def escape_quotes(s):
 def emit_description(node,level,outf):
     global indent_g
     prefix = ' '*(level+1)*indent_g
+    desc = ''
     if node.text is not None:
         if type(node.text) == type(u''):
             t = unicode_to_ascii(node.text)
@@ -360,8 +406,8 @@ def emit_description(node,level,outf):
             t = node.text
         # Fill the description block, but remove the initial prefix.
         desc = fill(escape_quotes(t),RIGHT_MARGIN,prefix)[len(prefix):]
-        emit(outf,' '*(level)*indent_g
-                         +'description "'+desc+'";\n')
+    # emit a description, even if it is empty.
+    emit(outf,' '*(level)*indent_g+'description "'+desc+'";\n')
 
 def emit_explicit_interpretation(node,level,outf):
     global indent_g
@@ -545,6 +591,7 @@ def emit_const(e,level,outf):
     if 'const_value' in e.attrib:
         value = e.attrib['const_value']
     if 'field_units' in e.attrib:
+        # Use underscores to support parsing.
         units = e.attrib['field_units'].replace(' ','_')
     const_indent = ' '*level*indent_g
     emit(outf,const_indent+'%s %s = %s %s;'% \
@@ -582,9 +629,10 @@ def emit_field(e,level,outf,prefix='',suffix='',parent_type=''):
         if c.tag == ns_g+'value_set':
             value_set_node = c  # Have to call its special emit_fn later
         elif c.tag == ns_g+'scale_range':
-            scale = '<%s,%s>' % \
+            scale = '<%s,%s>.%s' % \
                     (c.attrib['real_lower_limit'],
-                     c.attrib['real_upper_limit'])
+                     c.attrib['real_upper_limit'],
+                     c.attrib['integer_function'])
     if 'field_type' in e.attrib:
         type = scalar_type_map[normalize_whitespace(e.attrib['field_type'])]
     if 'name' in e.attrib:
@@ -624,9 +672,10 @@ def emit_tagged_field(e,level,outf,prefix='',suffix=''):
         units = e.attrib['field_units'].replace(' ','_')
     for c in e:
         if c.tag == ns_g+'scale_range':
-            scale = '<%s,%s>' % \
+            scale = '<%s,%s>.%s' % \
                     (c.attrib['real_lower_limit'],
-                     c.attrib['real_upper_limit'])
+                     c.attrib['real_upper_limit'],
+                     c.attrib['integer_function'])
     info = 'tag %s: %s %s %s'% \
            (e.attrib['index'],
             type,
@@ -653,12 +702,23 @@ def emit_variable_length_field(e,level,outf,prefix='',suffix='',parent_type=''):
     global show_item_index_g
     type = name = '?'
     if 'field_format' in e.attrib:
-        type = field_format_map[e.attrib['field_format']]
+        type = e.attrib['field_format']
+        if type not in valid_field_formats:
+            if type in field_format_map:
+                # fixup misspelled field_format code.
+                type = field_format_map[type]
     if 'name' in e.attrib:
         name = e.attrib['name']
-    info = '%s %s'% \
+    length_spec = ''
+    for c in e:
+        stag = c.tag.replace(ns_g,'')
+        if stag == 'count_field':
+            count_type, count_name, count_min, count_max = get_count_field(c)
+            length_spec = "%s,%s"%(count_min,count_max)
+    info = '%s %s [ %s ]'% \
            (type,
-            name)
+            name,
+            length_spec)
     if parent_type == 'list':
         info = 'repeated %s'%info
     elif parent_type != 'variant':
@@ -737,7 +797,7 @@ def emit_bit_field(e,level,outf,prefix='',suffix='',parent_type=''):
         if c.tag == ns_g+'sub_field':
             emit_sub_field(c,level+1,outf)
 
-    emit(outf,leader+'}')
+    emit(outf,leader+'};')
     if show_item_index_g and ('item_index' in e.attrib):
         suffix = suffix + ' = %s;'%e.attrib['item_index']
     emit(outf,'%s'%suffix)
@@ -759,49 +819,61 @@ def get_value_range(e):
 def get_value_enum(e,level):
     name =  normalize_name(e.attrib['enum_const'])
     value = e.attrib['enum_index']
-    return '%s = %s'%(name, value)
+    return '%s=%s'%(name, value)
 
 def emit_sub_field(e,level,outf,prefix='',suffix=''):
     global indent_g
-    type = name = value = units = '?'
+    name = value = ''
     if 'name' in e.attrib:
         name = e.attrib['name']
-    if 'field_units' in e.attrib:
-        units = e.attrib['field_units'].replace(' ','_')
     else:
-        units = 'one'
-    for c in e:
-        if c.tag == ns_g+'bit_range':
-            bit_range = '[%s:%s]' % \
+        name = 'UNDEF'
+    leader = ' '*level*indent_g
+    emit(outf,leader+name)
+    # First child must be a bit_range
+    c = e[0]
+    if c.tag == ns_g+'bit_range':
+        bit_range = '[%s:%s]' % \
                     (c.attrib['from_index'],
                      c.attrib['to_index'])
-        if c.tag == ns_g+'value_set':
-            if 'name' in c.attrib and c.attrib['name'] in value_map:
-                # We've seen this before in a type def.
-                value = c.attrib['name']
-            else:
-                for d in c:
-                    if d.tag == ns_g+'value_enum':
-                        value = get_value_enum(d,level+1)
-                    elif d.tag == ns_g+'value_range':
-                        value = get_value_range(d)
-
-    info = '%s %s %s %s'%(name, bit_range, value, units)
-    leader = ' '*level*indent_g
-    emit(outf,leader+info)
+    else:
+        bit_range = 'UNDEF_BITRANGE'
+    emit(outf,' '+bit_range)
+    # Second child must be value_set or declared_value_set
+    c = e[1]
+    if c.tag == ns_g+'value_set':
+        emit_value_set(c,level+1,outf,parent_type='sub_field') # 'sub_field'
+    elif c.tag == ns_g+'declared_value_set':
+        name = 'UNDEF'
+        if 'name' in c.attrib:
+            name = c.attrib['name']
+        # Handle optional declared_type_ref
+        typename = ''
+        if 'declared_type_ref' in e.attrib:
+            typename = e.attrib['declared_type_ref']
+            # Can we remove unneeded scope prefix on our type?
+            type_elements = typename.split('.')
+            if len(type_elements) > 1 and type_elements[:-1] == current_ns_scope_g:
+                typename = type_elements[-1]
+            typename += ' '    
+        emit(outf,leader+''*indent_g+typename+name)
+        emit_interpretation(c,level,outf)
+    else:
+        emit(outf,'UNDEF_VALUE_SET')
     emit(outf,'%s;'%suffix)
     emit_interpretation(e,level,outf)
 
 def emit_value_set(e,level,outf,prefix='',suffix='', parent_type=''):
     global indent_g
     global value_map
-    type = name = '?'
+    type = name = ''  # We allow anonymous value_set
     if 'name' in e.attrib:
         name = e.attrib['name']
         value_map[name] = e
     leader = ' '*level*indent_g
-    if parent_type == 'field':
-        emit(outf,'{\n')
+    if parent_type in ['field','sub_field']:
+        # No enum keyword here.
+        emit(outf,' {\n')
     else:
         # This is a type enum definition.
         emit(outf,leader+'enum %s {\n'%name)
@@ -884,7 +956,10 @@ def emit_variant(e,level,outf,prefix='',suffix='',parent_type=''):
     name = '?'
     if 'name' in e.attrib:
         name = e.attrib['name']
-    block_open = ' '*level*indent_g+'%svariant %s '%(prefix, name)
+    opt = ''
+    if parent_type == 'list':
+        opt = 'repeated '
+    block_open = ' '*level*indent_g+'%s%svariant %s '%(prefix,opt,name)
     emit(outf,block_open)
     attr_indent = ' '*len(block_open)
     emit(outf,' {\n')
@@ -1222,19 +1297,20 @@ def emit_transition(e,level,outf,prefix='',suffix=''):
                         emit(outf,',\n'+sub_indent+'%s : data %s'%(msg_param,msg_comment))
             emit(outf,') ')
             emit_end_state(e,level+1,outf)
-            emit(outf,' {\n')
+            emit_interpretation(e,level+1,outf)
+            emit(outf,indent+'{\n')
         else:
             emit(outf,indent+name)
             emit_params(e,level+1,outf)
             emit_guard(e,level+1,outf)
             emit_end_state(e,level+1,outf)
-            emit(outf,' {\n')
+            emit_interpretation(e,level+1,outf)
+            emit(outf,indent+'{\n')
     elif cstag in ['entry', 'exit']:
         block_open = indent+'%s {\n'%(cstag)
         emit(outf,block_open)
     else:
         raise ValueError('Unknown tag in emit_transition: %s'%cstag)
-    emit_interpretation(e,level+1,outf)
     for c in e:
         cstag = c.tag.replace(ns_g,'')
         if cstag == 'action':
@@ -1243,7 +1319,7 @@ def emit_transition(e,level,outf,prefix='',suffix=''):
             emit_send_action(c, level+1, outf)
         else:
             pass # TODO: all other children already processed
-    emit(outf,' '*level*indent_g+'}%s\n'%suffix)
+    emit(outf,indent+'}%s\n'%suffix)
 
 def emit_guard(node,level,outf):
     global indent_g
@@ -1547,7 +1623,7 @@ def emit_type(e,level,outf,prefix='',suffix='', parent_type=''):
                     if item_index >= 0:
                         item_index += 1;
                 elif cstag == 'value_set':
-                    emit_value_set(c,level+1,outf)
+                    emit_value_set(c,level+1,outf,parent_type=stag)
                 elif cstag == 'enum':
                     # 'enum' is a synonym for a value_set that contains only value_enums.
                     emit_enum(c,level+1,outf)
@@ -1596,7 +1672,7 @@ def emit_type(e,level,outf,prefix='',suffix='', parent_type=''):
         # Close generic type.
         if show_item_index_g and ('item_index' in e.attrib):
             suffix = suffix + ' = %s;'%e.attrib['item_index']
-        emit(outf,' '*level*indent_g+'}%s// %s %s\n'%(suffix,tag_map[stag],name))
+        emit(outf,' '*level*indent_g+'}%s // %s %s\n'%(suffix,tag_map[stag],name))
 
     # Disable collecting types and pop current ns
     if stag == 'declared_type_set':
