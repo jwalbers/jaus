@@ -491,7 +491,9 @@ def emit_args(node,level,outf):
     elif len(arg_list) == 1:
         emit(outf,' %s )'%arg_list[0])
     elif len(arg_list) > 1:
-        emit(outf,'\n'+indent+'%s,'%arg_list[0])
+        # emit(outf,'\n'+indent+'%s,'%arg_list[0])
+        # suppress \n before first arg
+        emit(outf,'%s,'%arg_list[0])
         for v in arg_list[1:-1]:
             emit(outf,'\n'+indent+'%s,'%(v))
         emit(outf,'\n'+indent+'%s )'%arg_list[-1])
@@ -1134,8 +1136,12 @@ def emit_sequence(e,level,outf,prefix='',suffix='',parent_type=''):
     emit(outf,' {\n')
     item_index = 1
     for c in e:
-        if c.tag.find(JSIDL_PLUS_NS) == 0:
-            #TODO: Ignore JSIDL_PLUS_NS elements?
+        try: 
+            if c.tag.find(JSIDL_PLUS_NS) == 0:
+                #TODO: Ignore JSIDL_PLUS_NS elements?
+                continue
+        except:
+            # Ignore elements like <!-- --> comments with no tag.
             continue
         try:
             stag = c.tag.replace(ns_g,'')
