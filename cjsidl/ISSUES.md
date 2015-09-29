@@ -1,4 +1,6 @@
-Comments from CJSIDL fields are not making it into JSIDL interpretation.
+
+
+1. jaus2jsidl: Comments from CJSIDL fields are not making it into JSIDL interpretation.
 
     record PlatformSpecificationsRec {
       required string MobilityPlatformName = 1; // A human-readable string for the vehicle.
@@ -10,3 +12,4 @@ Comments from CJSIDL fields are not making it into JSIDL interpretation.
       </variable_length_string>
       <fixed_field field_type="unsigned short integer" name="Front" optional="true" field_units="meter"/>
 
+2. jsidl2jaus: not fully supporting protocol_behavior grammar yet.  e.g. guard_condition.
