@@ -1,9 +1,8 @@
 // Grammar for Compact JSIDL
 //
-// Copyright 2011, Jim Albers
+// Copyright 2011-2015, Jim Albers
 // All rights reserved.
 // 
-// $Id: jaus2jsidl.g 450 2014-04-13 15:53:25Z jalbers $
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
@@ -76,7 +75,8 @@ def get_pv_unsigned_field(count,map):
     elif count <= 64:
         ftu = map['uint64']
     return ftu
-
+JSIDL_NS="urn:jaus:jsidl:1.1"
+JSIDL_NS_EXP="urn:jaus:jsidl:exp"
 }
 
 @init {
@@ -84,8 +84,8 @@ def get_pv_unsigned_field(count,map):
 self.comment = ''
 self.item_index = None
 self.vtag_stack = []
-self.jsidl_ns = "urn:jaus:jsidl:1.0"
-# self.jsidl_ns = "urn:jaus:jsidl:exp"
+self.jsidl_ns = JSIDL_NS
+# self.jsidl_ns = JSIDL_NS_EXP
 
 # Init the output tree.
 self.tree = None
@@ -127,7 +127,7 @@ jaus
 for k,v in self.second_pass_tag_resolution.items():
     if v in self.type_map:
         k.tag='declared_'+self.type_map[ v ].tag
-        if self.jsidl_ns == "urn:jaus:jsidl:1.0" and k.tag == 'declared_variant':
+        if self.jsidl_ns == JSIDL_NS and k.tag == 'declared_variant':
             # Quirk in JSIDL, need to fix.
             # debug(4, "Removing disallowed 'optional' attr in declared_variant \%s\n"\%(k.attrib['name']))
             #if 'optional' in k.attrib:
@@ -284,7 +284,7 @@ if self.tree is None:
     p = None
     self.tree = etree.ElementTree()
     n = etree.Element('declared_type_set')
-    n.attrib['xmlns'] = 'urn:jaus:jsidl:1.0'
+    n.attrib['xmlns'] = JSIDL_NS
     self.tree._setroot(n)
 else:
     p = self.current_node
@@ -332,10 +332,9 @@ internal_event_set
         {
 p = self.current_node
 n = etree.SubElement(p,'internal_events_set')
-if $ID and self.jsidl_ns == "urn:jaus:jsidl:exp":
+if $ID and self.jsidl_ns == JSIDL_NS_EXP:
     n.attrib['name'] = $ID.text  # JSIDL does not have a name attr for internal_event_set
 self.current_node = n
-debug(4, "internal_event_set: Current node is a \%s\n"\%self.current_node.tag)
         }
         '{'
         // TODO: pick up an ml_comment as an interpretation here?
@@ -343,7 +342,6 @@ debug(4, "internal_event_set: Current node is a \%s\n"\%self.current_node.tag)
         '}' ';'?
         {
 self.current_node = p
-debug(4, "Leaving internal_event_set: Current node is a \%s\n"\%self.current_node.tag)
     }
     ;
 
@@ -358,7 +356,7 @@ self.current_node = n
 self.comment = ''
     }
     (ml_comment | ML_COMMENT)?
-     start_state state_machine
+     start_state+ state_machine+
    '}' ';'?
     {
 if $ML_COMMENT:
@@ -406,6 +404,7 @@ self.current_node = n
     }
     ( ml_comment | mlc1=ML_COMMENT )?
      state+
+     default_state?          
     '}'  ';'?  ( ml_comment | mlc2=ML_COMMENT )?
     {
 if $mlc1:
@@ -517,7 +516,9 @@ self.comment = p_comment
 
 transition
     :
-	scoped_id parameters? guard? ( 'nil' | next=next_state )? '{'
+	scoped_id parameters? guard? ( 'nil' | next=next_state )?
+                                 ( ml_comment | mlc2=ML_COMMENT )?
+   '{'
     {
 p_comment = self.comment
 self.comment = ''
@@ -669,7 +670,7 @@ parameters
 
 parameter
     :
-	type=ID ':' name=ID  ML_COMMENT?
+	type=ID ':' name=scoped_id  ML_COMMENT?
     ;
 
 	////////////////////////////////////////////////////////////////////////////////
@@ -759,7 +760,7 @@ else:
     n.attrib['is_command'] = 'false'
 self.current_node = n
         }
-        description    // description is not optional for message_def in JSIDL 1.0
+        description    // description is not optional for message_def in JSIDL 1.1
         ( ml_comment | ML_COMMENT)?
         {
 h = etree.SubElement(n,'header',attrib={'name':'header'})
@@ -806,7 +807,7 @@ else:
     n.attrib['is_command'] = 'false'
 self.current_node = n
         }
-        description    // description is not optional for message_def in JSIDL 1.0
+        description    // description is not optional for message_def in JSIDL 1.1
         ( ml_comment | ML_COMMENT)?
         {
 h = etree.SubElement(n,'header',attrib={'name':'header'})
@@ -823,7 +824,7 @@ f = etree.SubElement(n,'footer')
 f.attrib['name'] = 'footer'
 self.current_node = b
     }
-        (type_reference)?
+        ((container_type_def) | (type_reference))?
         return_spec?     // Don't add RPC info w/ real JSIDL
         '}' ';'?
         {
@@ -878,6 +879,31 @@ numeric_literal
     :
         '-'? ( INTLITERAL | DOUBLELITERAL)
     ;
+
+////////////////////////////////////////////////////////////////////////////////
+value_set
+    :
+    {
+p = self.current_node
+n = etree.SubElement(p,'value_set')
+# Always "false" for value_set?
+n.attrib['offset_to_lower_limit'] = "false"
+self.current_node = n
+self.comment = ''
+debug(7,"Processing value_set\n")
+    }
+    '{'
+    value_spec*
+    '}' ';'? ml_comment?
+    {
+if self.comment != '':
+    comment = self.comment.replace('//',' ').strip()
+    n.attrib['interpretation'] = compress_ws(comment)
+    self.comment = ''
+self.current_node = p
+    }
+ ;
+ 
 ////////////////////////////////////////////////////////////////////////////////
 value_set_type_def
     : 'enum' ID
@@ -916,19 +942,28 @@ self.current_node = n
 self.comment = ''
     }
     ( string_def
-    | ( simple_numeric_type v2= ID UNIT ( value_range_set | scaled_range_def | value_set_def )?
+    | ( ff=FIELD_FORMAT v1=ID '[' len1=(INTLITERAL|ID) ',' len2=(INTLITERAL|ID) ']' )
+    {
+n.tag = 'variable_length_field'
+n.attrib['name'] = $v1.text
+n.attrib['field_format'] = $ff.text
+nn = etree.SubElement(self.current_node,'count_field')
+nn.attrib['min_count'] = $len1.text
+nn.attrib['max_count'] = $len2.text
+nn.attrib['field_type_unsigned'] = self.scalar_map['uint32'] # TODO: fix
+    }
+    | ( simple_numeric_type v2= ID UNIT ( value_range_set | scaled_range_def | value_set_def )?)
     {
 n.attrib['name'] = $v2.text
     }
-       )
-    | ( scoped_id v3= ID
+    | ( scoped_id v3= ID )
     {
 n.attrib['name'] = $v3.text
 self.second_pass_tag_resolution[n] = $scoped_id.text
 n.attrib['declared_type_ref'] = $scoped_id.text
     }
-        ) )
-    '=' INTLITERAL ';' ( ml_comment | ML_COMMENT )?
+    )
+    ( '=' idx=INTLITERAL )? ';' ( ml_comment | mlc2= ML_COMMENT )?
     {
 name = n.attrib['name']
 if $ITEM_CARDINALITY.text == 'optional':
@@ -956,8 +991,8 @@ elif n.tag == 'bit_field':
 else:
     # This is identified as a *_length_string
     pass
-if $INTLITERAL and self.jsidl_ns == "urn:jaus:jsidl:exp":
-    n.attrib['item_index'] = $INTLITERAL.text
+if $idx and self.jsidl_ns == JSIDL_NS_EXP:
+    n.attrib['item_index'] = $idx.text
 self.current_node = p
     }
     ;
@@ -1043,7 +1078,7 @@ elif n.tag == 'bit_field':
 else:
     # This is identified as a *_length_string
     pass
-if self.jsidl_ns == "urn:jaus:jsidl:1.0":
+if self.jsidl_ns == JSIDL_NS:
    n.attrib['optional'] = 'false'  # Required by JSIDL 1.0 even for unenclosed field typedef.
 self.comment = p_comment
 self.current_node = p
@@ -1077,8 +1112,7 @@ self.comment = ''
     }
     ( ml_comment | mlc1= ML_COMMENT )?
     ( tagged_type_units_enum_def )+
-    '}'
-    ( '=' INTLITERAL )? ';' ( ml_comment | mlc2= ML_COMMENT )?
+    '}' ( '=' INTLITERAL )? ';' ( ml_comment | mlc2= ML_COMMENT )?
     {    
 if len(self.comment) > 0:
     comment = self.comment.replace('//',' ').strip()
@@ -1089,7 +1123,7 @@ if $mlc1:
 if $mlc2:
     s = $mlc2.text[2:-2].strip()
     n.attrib['interpretation'] += compress_ws(s)
-if $INTLITERAL and self.jsidl_ns == "urn:jaus:jsidl:exp":
+if $INTLITERAL and self.jsidl_ns == JSIDL_NS_EXP:
     n.attrib['item_index'] = $INTLITERAL.text
 self.current_node = p
 self.comment = p_comment
@@ -1111,7 +1145,7 @@ self.current_node = n  # so the following rule updates the right node.
          ':' id=ID simple_numeric_type UNIT
     {
 n.attrib['name'] = $id.text
-n.attrib['field_units'] = $UNIT.text
+n.attrib['field_units'] = $UNIT.text.replace('_',' ')
     }
     ( value_set_def | declared_value_set_def | scaled_range_def )?
     {
@@ -1172,8 +1206,7 @@ self.comment = ''
 self.current_node = n1
     }     
        ( format_enum_def )+
-       '}' (( '=' INTLITERAL ';') | ';')?
-       ( ml_comment | mlc2= ML_COMMENT )?
+       '}' ( '=' INTLITERAL )? ';' ( ml_comment | mlc2= ML_COMMENT )?
     {
 if len(self.comment) > 0:
     comment = self.comment.replace('//',' ').strip()
@@ -1184,7 +1217,7 @@ if mlc1:
 if $mlc2:
     s = $mlc2.text[2:-2].strip()
     n.attrib['interpretation'] += compress_ws(s)
-if $INTLITERAL and self.jsidl_ns == "urn:jaus:jsidl:exp":
+if $INTLITERAL and self.jsidl_ns == JSIDL_NS_EXP:
     n.attrib['item_index'] = $INTLITERAL.text
 self.comment = p_comment
 self.current_node = p
@@ -1220,7 +1253,7 @@ enum_type_def
         'enum' type=( 'uint8' | 'uint16' | 'uint32' ) ID UNIT 
         {
 p = self.current_node
-if self.jsidl_ns == "urn:jaus:jsidl:1.0":
+if self.jsidl_ns == JSIDL_NS:
    n = etree.SubElement(p,'fixed_field')
    n.attrib['field_type'] = self.scalar_map[$type.text]
    n.attrib['optional'] = 'false' # required by JSIDL even for typedefs
@@ -1293,8 +1326,7 @@ self.current_node = n
 
         '{'
           sub_field*
-         '}' ( ( '=' INTLITERAL ';' ) | ';' )?
-         (ml_comment | mlc2=ML_COMMENT)?
+        '}' ( '=' INTLITERAL )? ';' ( ml_comment | mlc2= ML_COMMENT )?
         {
 if $mlc1:
     if not 'interpretation' in n.attrib:
@@ -1306,7 +1338,7 @@ if $mlc2:
         n.attrib['interpretation'] = ''
     s=$mlc2.text[2:-2].strip()
     n.attrib['interpretation'] += compress_ws(s)
-if $INTLITERAL and self.jsidl_ns == "urn:jaus:jsidl:exp":
+if $INTLITERAL and self.jsidl_ns == JSIDL_NS_EXP:
     n.attrib['item_index'] = $INTLITERAL.text
 self.current_node = p
         }
@@ -1350,22 +1382,26 @@ value_spec
     :
     ID '='
     {
+p = self.current_node
 name = $ID.text
+debug(7,"Processing value_spec \%s\n"\%name)
     }
     ( INTLITERAL | value_range )
     {
 # value_range does not use the name field.
 if $INTLITERAL:
-    n = etree.SubElement(self.current_node, 'value_enum')
+    n = etree.SubElement(p, 'value_enum')
     value = $INTLITERAL.text
     n.attrib['enum_const'] =  name
     n.attrib['enum_index'] = value
+    debug(7,"Found value_enum \%s = \%s\n"\%(name,value))
         }
     ';' (ml_comment | ML_COMMENT )?
     {
 if $ML_COMMENT:
     s=$ML_COMMENT.text[2:-2].strip()
     n.attrib['interpretation'] = compress_ws(s)
+self.current_node = p
     }
     ;
 
@@ -1403,12 +1439,11 @@ m.attrib['from_index'] = $v2.text
 m.attrib['to_index'] = $v3.text
 self.current_node = n
         }
-    (value_range_set | v4=ID )?
-    UNIT ';' v5=((ml_comment | ML_COMMENT)?)
+    (value_set | v4=ID )? ';'
+    v5=((ml_comment | ML_COMMENT)?)
         {
 if $v4:
-    # JSIDL cannot reference value_sets, so copy what we have seen in the type_set.
-    n.remove(v)
+    # $v4 is the name of a declared value_set
     n.append(deepcopy(self.value_set_map[$v4.text]))
 if $v5:
     comment = $v5.text.replace('//',' ').strip()
@@ -1437,6 +1472,7 @@ indexed_container_type_def
         | sequence_type_def
         | record_type_def) '=' INTLITERAL ';' SL_COMMENT?
         {
+debug(4,'Processing an indexed_container_type_def')
 self.item_index = $INTLITERAL.text
     }
     ;
@@ -1448,10 +1484,10 @@ list_type_def
         {
 p = self.current_node
 n = etree.SubElement(p,'list')
-if self.jsidl_ns == "urn:jaus:jsidl:exp" and self.item_index:
+if self.jsidl_ns == JSIDL_NS_EXP and self.item_index:
     # item indices are implicit in JSIDL 1.0
     n.attrib['item_index'] = self.item_index
-if self.jsidl_ns == "urn:jaus:jsidl:1.0":
+if self.jsidl_ns == JSIDL_NS:
     if self.vtag_stack:
         n.attrib['vtag'] = self.vtag_stack.pop()
 self.current_node = n
@@ -1462,7 +1498,7 @@ if $ITEM_CARDINALITY:
       else:
           n.attrib['optional'] = 'true'
           self.optional_count += 1
-elif self.jsidl_ns == "urn:jaus:jsidl:1.0":
+elif self.jsidl_ns == JSIDL_NS:
     n.attrib['optional'] = 'false'  # required by JSIDL.
 if $mlc2:
     s=$mlc2.text[2:-2].strip()
@@ -1480,7 +1516,7 @@ self.type_map[$v1.text] = n
     {
 m = etree.SubElement(n,'count_field')
 m.attrib['field_type_unsigned'] = self.scalar_map[$v2.text]
-if self.jsidl_ns == "urn:jaus:jsidl:exp":
+if self.jsidl_ns == JSIDL_NS_EXP:
    # JSIDL 1.0 does not provide a name by which we can reference
    # the count field.
    m.attrib['name'] = $v3.text
@@ -1503,10 +1539,10 @@ variant_type_def
         {
 p = self.current_node
 n = etree.SubElement(p,'variant')
-if self.jsidl_ns == "urn:jaus:jsidl:exp" and self.item_index:
+if self.jsidl_ns == JSIDL_NS_EXP and self.item_index:
     # item indices are implicit in JSIDL 1.0
     n.attrib['item_index'] = self.item_index
-if self.jsidl_ns == "urn:jaus:jsidl:1.0":
+if self.jsidl_ns == JSIDL_NS:
     if self.vtag_stack:
         n.attrib['vtag'] = self.vtag_stack.pop()
 self.current_node = n
@@ -1517,7 +1553,7 @@ if $ITEM_CARDINALITY:
       else:
           n.attrib['optional'] = 'true'
           self.optional_count += 1
-elif self.jsidl_ns == "urn:jaus:jsidl:1.0":
+elif self.jsidl_ns == JSIDL_NS:
     n.attrib['optional'] = 'false'  # required by JSIDL.
 self.type_map[$v1.text] = n
     }
@@ -1550,7 +1586,7 @@ self.current_node = p
 tagged_item_def:
     'vtag' ( tag=(INTLITERAL | ID)
     {
-if self.jsidl_ns == "urn:jaus:jsidl:exp":
+if self.jsidl_ns == JSIDL_NS_EXP:
     self.vtag_stack.append($tag.text)
     })
         ':' (container_type_def | type_reference )
@@ -1563,10 +1599,10 @@ sequence_type_def
         {
 p = self.current_node
 n = etree.SubElement(p,'sequence')
-if self.jsidl_ns == "urn:jaus:jsidl:exp" and self.item_index:
+if self.jsidl_ns == JSIDL_NS_EXP and self.item_index:
     # item indices are implicit in JSIDL 1.0
     n.attrib['item_index'] = self.item_index
-if self.jsidl_ns == "urn:jaus:jsidl:exp":
+if self.jsidl_ns == JSIDL_NS_EXP:
     if self.vtag_stack:
         n.attrib['vtag'] = self.vtag_stack.pop()
 n.attrib['name'] = $v1.text
@@ -1576,7 +1612,7 @@ if $ITEM_CARDINALITY:
       else:
           n.attrib['optional'] = 'true'
           self.optional_count += 1
-elif self.jsidl_ns == "urn:jaus:jsidl:1.0":
+elif self.jsidl_ns == JSIDL_NS:
     n.attrib['optional'] = 'false'  # required by JSIDL.
 self.type_map[$v1.text] = n
 p_optional_count = self.optional_count
@@ -1585,7 +1621,7 @@ self.current_node = n
     }
     '{'
     (ml_comment | ml1=ML_COMMENT)?
-    (indexed_container_type_def | indexed_type_reference )+
+    (container_type_def | type_reference)+
     '}' (ml_comment | ml2=ML_COMMENT)?
     {
 # \todo - What interpretation does $ml1 correspond to?
@@ -1609,10 +1645,10 @@ record_type_def
 p = self.current_node
 self.optional_count = 0
 n = etree.SubElement(p,'record')
-if self.jsidl_ns == "urn:jaus:jsidl:exp" and self.item_index:
+if self.jsidl_ns == JSIDL_NS_EXP and self.item_index:
     # item indices are implicit in JSIDL 1.0
     n.attrib['item_index'] = self.item_index
-if self.jsidl_ns == "urn:jaus:jsidl:exp":
+if self.jsidl_ns == JSIDL_NS_EXP:
     if self.vtag_stack:
         n.attrib['vtag'] = self.vtag_stack.pop()
 n.attrib['name'] = $ID.text
@@ -1622,13 +1658,13 @@ if $ITEM_CARDINALITY:
       else:
           n.attrib['optional'] = 'true'
           self.optional_count += 1
-elif self.jsidl_ns == "urn:jaus:jsidl:1.0":
+elif self.jsidl_ns == JSIDL_NS:
     n.attrib['optional'] = 'false'  # Required by JSIDL in all cases
 self.type_map[$ID.text] = n
 p_optional_count = self.optional_count
 self.optional_count = 0
 self.current_node = n
-# debug(4,"Looking at record "+$ID.text+"\n")
+debug(4,"Looking at record "+$ID.text+"\n")
     }
      '{' ( ml_comment | mlc1= ML_COMMENT )?
          ( field_def
@@ -1665,11 +1701,11 @@ p = self.current_node
 n = etree.SubElement(p, 'tag_tbd')
 self.current_node = n
 self.second_pass_tag_resolution[n] = $scoped_id.text
-if self.jsidl_ns == "urn:jaus:jsidl:exp":
+if self.jsidl_ns == JSIDL_NS_EXP:
     if self.vtag_stack:
         n.attrib['vtag'] = self.vtag_stack.pop()
 n.attrib['name'] = $ID.text
-if self.jsidl_ns == "urn:jaus:jsidl:1.0":
+if self.jsidl_ns == JSIDL_NS:
     if True:
        n.attrib['optional'] = 'false'  # more recent JSIDL requires optional for all?
     elif n.tag != 'declared_variant':
@@ -1705,7 +1741,7 @@ if $ITEM_CARDINALITY.text == 'optional':
     self.optional_count += 1
 else:
     n.attrib['optional'] = 'false'  # For repeated or required.
-if self.jsidl_ns == "urn:jaus:jsidl:exp":
+if self.jsidl_ns == JSIDL_NS_EXP:
     n.attrib['item_index'] = $INTLITERAL.text
 if $ML_COMMENT:
     comment = $ML_COMMENT.text[2:-2].strip()  # strip the '/*' '*/' delims.
@@ -1723,7 +1759,7 @@ self.second_pass_tag_resolution[n] = $scoped_id.text
 n.attrib['name'] = $ID.text
 n.attrib['declared_type_ref'] = $scoped_id.text
 self.type_map[$ID.text] = n
-if self.jsidl_ns == "urn:jaus:jsidl:exp":
+if self.jsidl_ns == JSIDL_NS_EXP:
     n.attrib['item_index'] = $INTLITERAL.text
 if $ITEM_CARDINALITY.text == 'required':
     n.attrib['optional'] = 'false'
@@ -1835,7 +1871,7 @@ UNIT
             // 'second' is already SI | 
 
             'minute' | 'hour' | 'day' | 'degree' | 'liter' | 'metric ton' | 
-            'neper' | 'bel' | 'nautical mile' | 'knot' | 'are' | 'hectare' | 'bar' | 'angstrom' | 
+            'neper' | 'bel' | 'nautical_mile' | 'knot' | 'are' | 'hectare' | 'bar' | 'angstrom' | 
             'barn' | 'curie' | 'roentgen' | 'rad' | 'rem' |
 
             // JAUS relevant units

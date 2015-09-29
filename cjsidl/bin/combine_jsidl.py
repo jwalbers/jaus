@@ -260,6 +260,12 @@ def move_message_element_defs_to_type_set(root):
                     type_set_node.append(c)
 
 
+def print_usage():
+    usage = """combine_jsidl.py <dir>
+       Process all XML files in <dir>, recursively, resolve declared_type_set refs,
+       and produce one referentially complete XML file for each service_def."""
+    print usage
+
 def output_combined(tree):
     r = tree.getroot()
     name = r.attrib['name']
@@ -279,9 +285,15 @@ def main():
     ns_aliases = {}
     typeset_defs = {}
     constset_defs = {}
-    print "Combining JSIDL XML files in: %s"%(sys.argv[1:])
+    if len(sys.argv) < 2:
+        print_usage
+        raise "Must have a sequence of directories as command line arguments."
+    print "Combining JSIDL XML files in directory(ies): %s"%(sys.argv[1:])
     for dir in sys.argv[1:]:
-        os.path.walk(dir,visit,0)
+        if os.path.isdir(dir):
+            os.path.walk(dir,visit,0)
+        else:
+            raise "%s is not a directory."%dir
     # extract definitions
     for tree in jsidl_trees:
         r = tree.getroot()
