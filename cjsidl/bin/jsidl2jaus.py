@@ -972,7 +972,7 @@ def emit_variant(e,level,outf,prefix='',suffix='',parent_type=''):
         if stag ==  'description':
             emit_description(c,level+1,outf)
         elif stag == 'vtag_field':
-            # assume vtag_field will proceed all other fields.
+            # assume vtag_field will precede all other fields.
             if 'min_count' in c.attrib:
                 implied_vtag = int(c.attrib['min_count'],10)
             emit_vtag_field(c,level+1,outf)
@@ -991,6 +991,11 @@ def emit_variant(e,level,outf,prefix='',suffix='',parent_type=''):
     emit(outf,' '*level*indent_g+'}%s // variant %s %s\n'%(idx,name,suffix))
 
 def emit_variant_field(e,level,outf,prefix='',suffix='',parent_type=''):
+    # TODO: review the CJSIDL syntax for a variant_field, make it more
+    # consistent with variant. e.g. should have specific 'tag' or 'vtag'
+    # data item.  Also see how DDS IDL handles the same structure, known
+    # as a 'discriminated union' with the discriminator (tag) specifed in
+    # parends, parameter-like, before the block open.
     global indent_g
     global show_item_index_g
     name = '?'
