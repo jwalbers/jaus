@@ -81,10 +81,18 @@ def highlight2rtf(ifname, ofname):
     highlight(code,lexer,fmter,outf)
     outf.close()
 
-
+def print_usage():
+     print "jaus2rtf.py <fname>.jaus"
+     print "   Produce colored RTF in <fname>.rtf"
+     
 if __name__ == '__main__':
 
-    ifname = sys.argv[1]
-    if ifname[-5:] == '.jaus':
-        rtfname = ifname[:-5]+'.rtf'
+    arg1 = sys.argv[1]
+    if arg1 in ['--help','-h']:
+        print_usage()
+    elif arg1[-5:] == '.jaus':
+        rtfname = arg1[:-5]+'.rtf'
         highlight2rtf(sys.argv[1], rtfname);
+    else:
+        print "Unrecognized command line argument: %s"%arg1
+        print_usage()
