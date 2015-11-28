@@ -80,6 +80,8 @@ def extract_defs_from_type_set(id,c):
         if tag in ['declared_type_set_ref']:
             # remember this namespace alias. TODO: remember version?
             print "Found type_set_ref: %s %s in %s"%(name,dtsc.attrib['id'],id)
+            if name in aliases and aliases[name] != dtsc.attrib['id']:
+                print "WARN, Overwriting existing alias: %s -> %s"%(name, aliases[name])
             aliases[name] = dtsc.attrib['id']  
         elif tag in ['declared_const_set_ref']:
             # remember this namespace alias. TODO: remember version?
@@ -90,7 +92,7 @@ def extract_defs_from_type_set(id,c):
             # Collect type definitions to expand later.
             full_name = id+'.'+name
             if full_name in typeset_defs:
-                print "WARN, %s(%s) replacing %s(%s)"% \
+                print "WARN, %s(%s) replacing existing %s(%s)"% \
                       (full_name,stag(typeset_defs[full_name]),
                        full_name,tag)
             typeset_defs[full_name] = dtsc
@@ -150,36 +152,47 @@ def get_typedef(ns_id,s):
     if len(ns_path) == 1:
         # push 'self' to front of path
         ns_path.insert(0,'self')
-    # Walk ns_path to get ns in which name is defined.
+    # Walk ns_path to get ns and aliases in which name is defined.
     # Elements i= 0..n-2 are aliases, element n-1 is the
     # type name.
+    print "INFO, ns_aliases = %s"%pformat(ns_aliases)
     aliases = ns_aliases[ns_id]
     next_ns_id = ns_id
-    print "%s\n%s"%(pformat(ns_path),pformat(aliases))
-    for i in range(len(ns_path)-1):
-        if ns_path[i] in aliases:
+    print "Finding ns and aliases for %s in:\n%s"%(pformat(ns_path),pformat(aliases))
+    pos = 0
+    while pos < len(ns_path):
+        print "pos = %d"%pos
+        # May need to increment path pos in loop.
+        token = ns_path[pos]
+        if token in aliases:
             # This ns_path component defines an alias in next_ns_id
             # so move to next referenced ns_id and get its aliases.
-            next_ns_id = aliases[ns_path[i]]
-        else:    
-            print "ERROR, Can't resolve %s within %s"%(s,ns_id)
-            print "ERROR, ns %s has no ref %s defined in it."%(next_ns_id,ns_path[i])
-            return (None,None)
+            next_ns_id = aliases[token]
+            print "INFO, next_ns_id = %s"%next_ns_id
         if next_ns_id in ns_aliases:
             aliases = ns_aliases[next_ns_id]
         else:
-            aliases = {}  # If this was last iteration, don't need.
-        print "%s -> \n%s"%(next_ns_id,pformat(aliases))
+            if pos < len(ns_path)-1:
+                # We have non-terminal namespace, at least
+                # one more namespace token.
+                check_id = next_ns_id+':'+ns_path[pos]
+                if check_id in ns_aliases:
+                    aliases = ns_aliases[check_id]
+                    next_ns_id = check_id
+                    print "Extending next_ns_id -> %s"%(next_ns_id)
+        pos += 1
 
+    print "INFO, Found ns, aliases for %s:\n%s, %s"%(pformat(ns_path),
+                                                     next_ns_id,
+                                                     pformat(aliases))
     # Now should have final set of aliases to look at.
     # Substitute full namespace id for s.
     fqn = next_ns_id+'.'+ns_path[-1]
-    print fqn
     if fqn in typeset_defs:
-        print 'Resolved %s'%(fqn)
+        print 'Resolved fqn %s'%(fqn)
         return (typeset_defs[fqn],next_ns_id)
     else:
-        print "ERROR, No typeset_def for: %s"%fqn
+        print "ERROR, No typeset_def for fqn %s"%fqn
         return (None,None)
 
 def expand(ns_id,element):
@@ -193,7 +206,8 @@ def expand(ns_id,element):
             # Don't expand declared_message_defs.
             if stag(c) in ['declared_message_def','declared_fixed_field','declared_list',
                            'declared_sequence', 'declared_variant',
-                           'declared_record','declared_variable_length_string']:
+                           'declared_record','declared_variable_length_string',
+                           'declared_variable_field']:
                 # TODO: Add all 'declared_' types here.
                 # print "Looking at %s %s"%(name,stag(c))
                 realname = c.attrib['name']
