@@ -44,8 +44,8 @@ class JausLexer(JavascriptLexer):
             'milliradian', 'milliradian_per_second',
             'millimeter', 'millimeter_per_second' ]
 
-     RESERVED_KEYWORDS = [ 'service', 'references', 'messages', 'query', 'inform', 'command', 'description', 'assumptions', 'inherits_from',
-                           'record', 'sequence', 'variant', 'list', 'bit_field',
+     RESERVED_KEYWORDS = [ 'service', 'references', 'using', 'description', 'assumptions', 'messages', 'query', 'inform', 'command', 'inherits_from',
+                           'record', 'sequence', 'variant', 'list', 'bit_field', 'types',
                            'events', 'protocol', 'start', 'state', 'state_machine', 'initial']
      PSEUDO_KEYWORDS = PRIMITIVE_TYPES + UNIT_KEYWORDS + [ 'required', 'optional', 'repeated' ]
 
