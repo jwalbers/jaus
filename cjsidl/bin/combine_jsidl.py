@@ -97,8 +97,8 @@ def extract_defs_from_type_set(id,c):
                        full_name,tag)
             typeset_defs[full_name] = dtsc
             print "Added typeset def for tag: %s, name:%s"%(tag,full_name)
-        elif tag in ['header', 'footer','comment']:
-            pass # explicitly ignore these
+        elif tag in ['header', 'footer', 'comment']:
+            pass # should never see these in a typeset?
         else:
             # Ignore now, add support later.
             print "ERROR, >>>>>>>>>>>>>>>>>>> Ignoring def %s:%s"%(tag,name)
@@ -161,7 +161,7 @@ def get_typedef(ns_id,s):
     print "Finding ns and aliases for %s in:\n%s"%(pformat(ns_path),pformat(aliases))
     pos = 0
     while pos < len(ns_path):
-        print "pos = %d"%pos
+        # print "pos = %d"%pos
         # May need to increment path pos in loop.
         token = ns_path[pos]
         if token in aliases:
@@ -223,7 +223,7 @@ def expand(ns_id,element):
                     continue
                 new_element, new_element_ns = get_typedef(ns_id,ref)
                 if new_element is None:
-                    print "ERROR, No typedef for ns_id: %s, ref: %s"%(ns_id,ref)
+                    print "ERROR, No typedef for ns_id: %s, ref: %s in %s"%(ns_id,ref,name)
                 else:
                     print "Replacing %s:%s with %s:%s"%(stag(c),name,stag(new_element),new_element.attrib['name'])
                     replacements.append( (c,new_element,new_element_ns,realname,realoptional) )
@@ -236,8 +236,11 @@ def expand(ns_id,element):
         newchild.attrib['optional'] = realoptional
         oldchild.getparent().replace(oldchild,newchild)
         # Also need to merge the defining ns aliases with parent's
+        # Never change the 'self' reference in ns_aliases.
         ns_aliases[ns_id].update(ns_aliases[newns_id])
-        print "Upated aliases for %s: %s"%(ns_id,pformat(ns_aliases[ns_id]))
+        # So fix here.  Cleaner way to code than using update()?
+        ns_aliases[ns_id] = ns_id;
+        print "Updated aliases for %s: %s"%(ns_id,pformat(ns_aliases[ns_id]))
 
 def fix_type_set_refs(root):
     """Make sure all the qualified names we've sucked up in this service have
@@ -275,7 +278,8 @@ def move_message_element_defs_to_type_set(root):
 
 
 def print_usage():
-    usage = """combine_jsidl.py <dir>
+    usage = """combine_jsidl.py [-i|--ignore] <ignore_list> <dir> <dir> <dir>
+       ignore_list = comma separated list of files or directories
        Process all XML files in <dir>, recursively, resolve declared_type_set refs,
        and produce one referentially complete XML file for each service_def."""
     print usage
@@ -302,8 +306,18 @@ def main():
     if len(sys.argv) < 2:
         print_usage
         raise "Must have a sequence of directories as command line arguments."
-    print "Combining JSIDL XML files in directory(ies): %s"%(sys.argv[1:])
-    for dir in sys.argv[1:]:
+    dirs = []
+    ignore_items = []
+    i = 1
+    while i < len(sys.argv):
+        if sys.argv[i] in ['-i','--ignore']:
+            ignore_items = sys.argv[i+1].split(',')
+            i += 1
+        else:
+            dirs = sys.argv[i]
+        i += 1
+    print "Combining JSIDL XML files in directory(ies): %s"%(dirs)
+    for dir in dirs:
         if os.path.isdir(dir):
             os.path.walk(dir,visit,0)
         else:
