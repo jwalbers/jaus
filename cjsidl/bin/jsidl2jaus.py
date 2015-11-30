@@ -114,6 +114,7 @@ scalar_max = {
     'uint16':pow(2,16)-1,
     'int32':pow(2,31)-1,
     'uint32':pow(2,32)-1
+    'uint64':pow(2,64)-1
     }
 msg_type_map = {
     'input':'query',  # but overridden to 'command' if is-command="true"
