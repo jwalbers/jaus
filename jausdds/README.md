@@ -8,9 +8,9 @@ The standard is available for purchase from SAE International via the link provi
 
 Tools currently include:
 
-src/parser: Parse DDS IDL to confirm correct operation of the JSIDL to IDL translator.
-src/pygments:  Produce readable, colored IDL and XML for documentation.
-src/translator:  Translate JSIDL into DDS IDL.
+* src/parser: Parse DDS IDL to confirm correct operation of the JSIDL to IDL translator.
+* src/pygments:  Produce readable, colored IDL and XML for documentation.
+* src/translator:  Translate JSIDL into DDS IDL.
 
 For more information, or to collaborate, please contact me!
 
