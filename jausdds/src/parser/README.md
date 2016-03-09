@@ -70,11 +70,15 @@ If you edit the grammar file ucs_idl_2_1_dds_xtypes.g, you can change the DEBUG_
 
 If you want to add debug code, just follow the existing examples in the grammar file.
 
-
 KNOWN ISSUES:
+
+1. Need to fix an ambiguity in real number parsing::
 
 $ java org.antlr.Tool dds_idl.g
 warning(200): dds_idl.g:717:2: Decision can match input such as "'0'..'9'{'E', 'e'}{'+', '-'}'0'..'9'{'D', 'F', 'd', 'f'}" using multiple alternatives: 3, 4
+
+2. Need to fix the FIXED_PT_LITERAL terminal definition::
+
 As a result, alternative(s) 4 were disabled for that input
 error(208): dds_idl.g:723:1: The following token definitions can never be matched because prior tokens match the same input: FIXED_PT_LITERAL
 
