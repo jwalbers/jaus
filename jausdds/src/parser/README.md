@@ -1,13 +1,11 @@
-# README.txt
-# 
-# Based on: $Id: README.txt 95 2013-08-26 16:27:28Z jalbers $
+# README.md
 
 Valiating parser for DDS IDL produced using the jsidl2idl translator.
 
 INSTALL THE ANTLR 3.1.3 DISTRIBUTION
 ====================================
 
-This parser uses 3.1.3 since it is the latest release to support Python 2.x.
+This parser uses ANTLR 3.1.3 since it is the latest release to support Python 2.x.
 
 Download http://www.antlr.org/download/antlr-3.1.3.tar.gz and unpack
 into the runtime subdirectory, so you see ./runtime/antlr-3.1.3/antlr.config.
@@ -72,13 +70,12 @@ If you want to add debug code, just follow the existing examples in the grammar 
 
 KNOWN ISSUES:
 
-1. Need to fix an ambiguity in real number parsing::
+1. Need to fix an ambiguity in fixed point parsing:
 
+```
 $ java org.antlr.Tool dds_idl.g
 warning(200): dds_idl.g:717:2: Decision can match input such as "'0'..'9'{'E', 'e'}{'+', '-'}'0'..'9'{'D', 'F', 'd', 'f'}" using multiple alternatives: 3, 4
-
-2. Need to fix the FIXED_PT_LITERAL terminal definition::
-
 As a result, alternative(s) 4 were disabled for that input
 error(208): dds_idl.g:723:1: The following token definitions can never be matched because prior tokens match the same input: FIXED_PT_LITERAL
+```
 
