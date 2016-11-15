@@ -113,7 +113,7 @@ scalar_max = {
     'int16':pow(2,15)-1,
     'uint16':pow(2,16)-1,
     'int32':pow(2,31)-1,
-    'uint32':pow(2,32)-1
+    'uint32':pow(2,32)-1,
     'uint64':pow(2,64)-1
     }
 msg_type_map = {
@@ -1530,6 +1530,11 @@ def emit_type(e,level,outf,prefix='',suffix='', parent_type=''):
         else:
             # If declared item, don't recurse.
             emit_variable(e, level ,outf, parent_type=parent_type)
+    elif stag == 'body':
+        # CJSIDL doesn't use <body/>, but body element is reconstituted
+        # on conversion back to JSIDL.
+        for c in e:
+            emit_type(c, level+1 ,outf, parent_type=stag)
     else:
         # Use generic emitter.
         opt = ''
