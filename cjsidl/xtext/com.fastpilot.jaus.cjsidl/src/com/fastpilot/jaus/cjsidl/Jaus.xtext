@@ -1,0 +1,663 @@
+// Grammar for Compact JSIDL
+// (c) 2011 Jim Albers
+// Creative Commons Attribute/ShareAlike license 3.0.
+// License text is available at: http://creativecommons.org/licenses/by-sa/3.0/us/
+//
+// grammar com.fastpilot.jaus.Jaus hidden(WS, ML_COMMENT, SL_COMMENT)
+grammar com.fastpilot.jaus.cjsidl.Jaus hidden(WS, ML_COMMENT, SL_COMMENT)
+// with org.eclipse.xtext.common.Terminals
+
+// Needed for 'terminal' and some other stuff.
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+// Uses modified version of grammar org.eclipse.xtext.common.Terminals
+//
+generate jaus "http://www.fastpilot.com/jaus/Jaus"
+
+////////////////////////////////////////////////////////////////////////////////
+Jaus:
+	(ServiceSet | TypeSet);
+
+	////////////////////////////////////////////////////////////////////////////////
+ServiceSet:
+	'service' name=ID
+	'(' 'id' '=' id=URI ',' 'version' '=' version=VERSION ')'
+	'{'
+	SL_COMMENT*
+	(desc=Description SL_COMMENT*)?
+	(assumptions=Assumptions SL_COMMENT*)?
+	(references=References SL_COMMENT*)?
+	(cs=ConstantSet SL_COMMENT*)?
+	(ts=TypeSet SL_COMMENT*)?
+	(ms=MessageSet SL_COMMENT*)?
+	(ies=InternalEventsSet SL_COMMENT*)?
+	(sm=ProtocolBehavior SL_COMMENT*)?
+	'}' ';'?;
+
+	////////////////////////////////////////////////////////////////////////////////
+Description:
+	'description' desc=STRING ';';
+
+	////////////////////////////////////////////////////////////////////////
+Interpretation:
+	'interpretation' interp=STRING ';';
+
+	////////////////////////////////////////////////////////////////////////////////
+Assumptions:
+	'assumptions' assume=STRING ';';
+
+
+References:
+    {References}
+    'references' '{'
+	(extends=ExtendRef SL_COMMENT*)?
+    (requires+=RequiresRef SL_COMMENT*)*
+    '}' ';'?;
+
+	////////////////////////////////////////////////////////////////////////////////
+ExtendRef:
+	{ExtendRef}
+	'inherits_from'  parent_service+=RefAttr ';';
+
+	////////////////////////////////////////////////////////////////////////////////
+RequiresRef:
+	{RequiresRef}
+	 'client_of' required_service+=RefAttr ';';
+
+RefAttr:
+    {RefAttr}
+    alias=Identifier id=URI version=VERSION (interp+=SL_COMMENT)*;
+
+	////////////////////////////////////////////////////////////////////////////////
+ConstantSet:
+	'constants' name=Identifier
+	('(' 'id' '=' id=URI ',' 'version' '=' version=VERSION ')')?
+	'{'
+	// In AS5684A, no interpretation or description here. 
+	SL_COMMENT?
+	(typeRefs+=DeclaredTypeSetRef)*
+	(constantDefs+=ConstantDef)*
+	'}' ';'?;
+
+	////////////////////////////////////////////////////////////////////////////////
+TypeSet:
+	'types' name=Identifier
+	('(' 'id' '=' id=URI ',' 'version' '=' version=VERSION ')')?
+	'{'
+	// In AS5684A, no interpretation or description here. 
+	SL_COMMENT*
+	(typeRefs+=DeclaredTypeSetRef)*
+	(typeDefs+=TypeDef)*
+	'}' ';'?;
+
+	////////////////////////////////////////////////////////////////////////////////
+MessageSet:
+	{MessageSet}
+	'messages' '{'
+	(interpretation+=SL_COMMENT)*
+	(messages+=(MessageRef|MessageDef))*
+	'}' ';'?;
+
+	////////////////////////////////////////////////////////////////////////////////
+InternalEventsSet:
+	{InternalEventsSet}
+	'events' name=Identifier? '{'
+	(interpretation+=SL_COMMENT)*
+	(events+=EventDef)*
+	'}' ';'?;
+
+	////////////////////////////////////////////////////////////////////////////////
+// SMC: map : '%map' WORD '%%' state* '%%' ;
+// Need FQN so we can reference a parent state machine that we can
+// override.
+//
+ProtocolBehavior:
+    'protocol' '{'
+    start=StartState fsm=StateMachine
+    '}'
+    ;
+
+StateMachine:
+	'state_machine' name=Identifier '{'
+	SL_COMMENT?
+	interp=Interpretation?
+	(states+=State)*
+	'}' ';'?;
+
+	////////////////////////////////////////////////////////////////////////////////
+StartState:
+	'start' name=Identifier ';' SL_COMMENT?;
+
+State:
+	('initial')? 'state' name=Identifier '{'
+	interp=Interpretation?
+	entry=Entry?
+	exit=Exit?
+	(transitions+=Transition)*
+	default_transition=DefaultTransition?
+	(substates+=State)*
+	default_state=DefaultState?
+	'}' ';'?;
+
+// TODO: formerly: 	'state' 'Default' attrs=Attrs '{'
+DefaultState:
+	{DefaultState}
+	'state' 'Default' '{'
+	interp=Interpretation?
+	(transitions+=Transition)*
+	default=DefaultTransition?
+	'}' ';'?;
+
+	////////////////////////////////////////////////////////////////////////////////
+// SMC: entry : 'Entry' '{' action* '}';
+Entry:
+	{Entry} 'entry' '{' (actions+=Action)* '}' ';'?;
+
+	////////////////////////////////////////////////////////////////////////////////
+// SMC: exit : 'Exit' '{' action* '}';
+Exit:
+	{Exit} 'exit' '{' (actions+=Action)* '}' ';'?;
+
+	////////////////////////////////////////////////////////////////////////////////
+// SMC: transition : WORD transition_args? guard? next_state '{' action* '}';
+// SMC: transition_args : '(' parameters ')';
+Transition:
+	name=Identifier (params=Parameters)? (guard=Guard)? ( 'nil' | next=NextState )? '{'
+	(actions+=Action)*
+	'}' ';'?;
+// TODO: args=Arguments used to be attrs=Attrs
+//
+DefaultTransition:
+	'Default' (params=Parameters)? guard=Guard? next=NextState '{'
+	(actions+=Action)*
+	'}' ';'?;
+
+	////////////////////////////////////////////////////////////////////////////////
+// SMC: guard : '[' expression ']';
+Guard:
+	'[' Expression ']';
+
+	////////////////////////////////////////////////////////////////////////////////
+// SMC: next_state : WORD | 'nil' | push_transition | pop_transition;
+NextState:
+	{NextState}
+    simple=SimpleTransition
+    | push=PushTransition
+    | pop=PopTransition
+    | internal=InternalTransition;
+
+SimpleTransition:
+	{SimpleTransition}
+    // simple transition, in SMC is just '<Identifier>'.  We use
+    // 'next(<Identifier>)' to make more consistent with push and pop.
+	'next' '(' name=Identifier ')';
+
+	////////////////////////////////////////////////////////////////////////////////
+// SMC: push_transition : WORD '/' 'push(' QUALIFIED_ID ')'
+//                        | 'nil/push(' QUALIFIED_ID ')'
+//                        | 'push(' QUALIFIED_ID ')';
+PushTransition:
+	{PushTransition}
+	( ( name=Identifier | 'nil') '/')? 'push' '(' push_to=Identifier ')';
+	
+	////////////////////////////////////////////////////////////////////////////////
+// SMC: pop_transition : 'pop' | 'pop' '(' WORD? ')' | 'pop' '(' WORD ',' arguments ')';
+PopTransition:
+	{PopTransition}
+	'pop' '(' (pop_to=Identifier | ( pop_to=Identifier ',' params=Parameters ))? ')';
+
+InternalTransition:
+	{InternalTransition}
+	'internal' '(' (pop_to=Identifier | ( pop_to=Identifier ',' params=Parameters ))? ')';
+
+Action:
+	DotnetAssignment | (ReferenceExpression ';');
+
+DotnetAssignment:
+	name=Identifier '=' expr=Expression ';';
+
+	////////////////////////////////////////////////////////////////////////////////
+//
+// Expression grammar, not specified by SMC grammar, which just reads in chunks of raw
+// target code for expressions.
+//
+// Derived roughly from Java.g grammar, with same expression precedence.
+// Need to check vs. python.  Use python keywords.
+//
+// TODO: Add bitwise operators in correct order.
+//
+Expression:
+	expr=OrExpression | ('(' expr=OrExpression ')');
+
+OrExpression:
+	lh=AndExpression (('||' | 'or') rhExprs+=AndExpression)*;
+
+AndExpression:
+	lh=RelationalExpression (('&&' | 'and') rhExprs+=RelationalExpression)*;
+
+RelationalExpression:
+	lh=AddExpression (RELATIONAL_OP rhExprs+=AddExpression)*;
+
+AddExpression:
+	lh=MultExpression (('+' | '-') rhExprs+=MultExpression)*;
+
+	// Can't use '//' for truncating division, since it will be lexed like a comment line.
+//
+MultExpression:
+	lh=UnaryExpression (('*' | '/' | '%') rhExprs+=UnaryExpression)*;
+
+	// Include negation
+UnaryExpression:
+	negate='!'? (ref=ReferenceExpression | const=NumericConstant);
+
+ReferenceExpression:
+	refs+=SingleRef ('.' refs+=SingleRef)*;
+
+SingleRef:
+	name=Identifier args=Arguments?;
+
+	////////////////////////////////////////////////////////////////////////////////
+// Empty parends are used to explictly indicate no parameters for the element.
+Parameters:
+	{Parameters}
+	'(' (params+=Parameter (',' params+=Parameter)*)? ')';
+
+Parameter:
+	type=Identifier ':' name=Identifier;
+
+	////////////////////////////////////////////////////////////////////////////////
+// Empty parends are used to explictly indicate no parameters for the element.
+Arguments:
+	{Arguments} '(' (args+=Expression (',' args+=Expression)*)? ')';
+
+NumericConstant:
+	 { NumericConstant } (NumericLiteral | STRING | 'True' | 'False') ;
+
+NumericLiteral:
+	(INT | DOUBLE);
+
+	////////////////////////////////////////////////////////////////////////////////
+ConstantDef:
+	(('string' name=ID '=' string=STRING ';')
+	| (numericType=SimpleNumericType name=ID '=' value=NumericLiteral unit=UNIT ';'))
+	interpretation=SL_COMMENT?;
+
+	////////////////////////////////////////////////////////////////////////////////
+TypeDef:
+	def=(ValueSetTypeDef
+	| FieldTypeDef
+	| ContainerTypeDef
+	| VariantFieldTypeDef
+    | VariableFormatFieldTypeDef
+	| EnumTypeDef
+	| BitfieldTypeDef );
+
+	////////////////////////////////////////////////////////////////////////////////
+DeclaredTypeSetRef:
+	'using' uri=URI version=VERSION ('as' alias=ID)? ';';
+
+	////////////////////////////////////////////////////////////////////////////////
+MessageRef:
+        {MessageRef}
+	'message' name=FQN ';';
+
+	////////////////////////////////////////////////////////////////////////////////
+MessageDef:
+    {MessageDef}
+	class=MessageClass code=MESSAGE_CODE name=ID '{'
+	desc=Description?
+	(item=(ContainerTypeDef | TypeReference))?
+	( 'returns' return=TypeReference )?  // Can add *TypeDef later.
+	'}' ';'?;
+
+	////////////////////////////////////////////////////////////////////////////////
+EventDef:
+    'event' name=ID '{'
+	desc=Description?
+	item=(ContainerTypeDef | TypeReference)?
+	// ReturnSpec?     Don't add RPC info w/ real JSIDL
+	'}' ';'?;
+
+SimpleNumericType:
+    {SimpleNumericType}
+	name=('uint8' | 'uint16' | 'uint32' | 'uint64'
+	| 'uint24' // for RGB data
+	| 'int16' | 'int32' | 'int64'
+	| 'float' | 'double');
+
+
+	////////////////////////////////////////////////////////////////////////////////
+ValueSetTypeDef:
+	'enum' name=ID
+	attrs=Attrs
+	'{'
+	(valueList+=ValueSpec)*
+	'}' ';'? (interpretation+=SL_COMMENT)*;
+
+///////////////////////////////////////////////////////////////////////////////
+FieldDef:
+	card=ITEM_CARDINALITY
+	( stringDef=StringDef
+	 |(numericType=SimpleNumericType name=ID unit=UNIT constraint=ConstraintRef?))
+	('=' itemIndex=INT)? ';' (interpretation+=SL_COMMENT)*;
+
+StringDef:
+    ('string' name=ID '[' len=NumericLiteralOrID ']' )
+	 |('vstring' name=ID '[' min_len=NumericLiteralOrID ',' max_len=NumericLiteralOrID ']' );
+
+NumericLiteralOrID:
+	{NumericLiteralOrID}
+	(literal=NumericLiteral | id=Identifier)
+;
+
+////////////////////////////////////////////////////////////////////////
+ConstraintRef:
+	{ConstraintRef}
+	(valRange=ValueRange | scaleRange=ScaledRangeConstraint | value=ValueSetDef)
+        ;
+
+////////////////////////////////////////////////////////////////////////////////
+FieldTypeDef:
+	'field'
+	( ('string' name=ID '[' len=NumericLiteralOrID ']' )
+	  |('vstring' name=ID '[' min_len=NumericLiteralOrID ',' max_len=NumericLiteralOrID ']' )
+	  | (numericType=SimpleNumericType name=ID unit=UNIT constraint=ConstraintRef?))
+	// TODO: Will change tag to bit_field in this rule.
+	';' (interpretation+=SL_COMMENT)*
+	;
+
+////////////////////////////////////////////////////////////////////////////////
+// Called a "variable_field" in JSIDL
+//
+VariantFieldTypeDef:
+	card=ITEM_CARDINALITY? 'variant_field' name=ID '{'
+    (interpretation +=SL_COMMENT)*
+	(items+=TaggedTypeUnitsEnumDef)+
+    '}' ( ('=' itemIndex=INT ';') | ';')?
+    (interpretation+=SL_COMMENT)*;
+
+
+////////////////////////////////////////////////////////////////////////////////
+TaggedTypeUnitsEnumDef:
+	'tag' (constTag=INT | tag=Identifier) ':' numericType=SimpleNumericType unit=UNIT
+     constraint=ConstraintRef?
+	';' (interpretation+=SL_COMMENT)*
+     ;       
+
+////////////////////////////////////////////////////////////////////////
+DeclaredValueSetDef
+    : type=Identifier name=ID ';'
+    (interpretation+=SL_COMMENT)*
+    ;
+
+////////////////////////////////////////////////////////////////////////////////
+VariableFormatFieldTypeDef:
+    (card=ITEM_CARDINALITY)?
+	'variable_format_field' name=ID '{'
+	desc=Description?
+	countType=('uint8' | 'uint16' | 'uint32') 'tag' ';'
+	(items+=FormatEnumDef)+
+    '}' ( ('=' itemIndex=INT ';') | ';')?
+    (interpretation+=SL_COMMENT)*;
+
+////////////////////////////////////////////////////////////////////////
+FormatEnumDef:
+	'tag' (constTag=INT | tag=Identifier) ':' (ff=FIELD_FORMAT | txt=STRING) ';' ;
+
+
+////////////////////////////////////////////////////////////////////////////////
+EnumTypeDef:
+	'enum'
+	numericType=( 'uint8' | 'uint16' | 'uint32' ) name=ID unit=UNIT
+    '{' (interpretation+=SL_COMMENT)*
+     (enums+=ValueSpec)+
+    '}' ';'? (interpretation+=SL_COMMENT)*
+	;
+
+////////////////////////////////////////////////////////////////////////////////
+ValueSetDef:
+    {ValueSetDef}
+    '{' (interpretation+=SL_COMMENT)*
+     (values+=ValueSpec)*
+    '}' (interpretation+=SL_COMMENT)*
+    ;
+
+	////////////////////////////////////////////////////////////////////////////////
+BitfieldTypeDef:
+    (card=ITEM_CARDINALITY)? 'bit_field'
+	numericType=( 'uint8' | 'uint16' | 'uint32' | 'uint64' ) name=ID
+        '{'
+        (subfields+=Subfield)+
+        '}' ( ('=' itemIndex=INT ';') | ';')?
+	(interpretation+=SL_COMMENT)*
+	;
+
+	////////////////////////////////////////////////////////////////////////////////
+ValueRange:
+	minBound=('(' | '[')
+	minVal=NumericLiteralOrID
+	','
+	maxVal=NumericLiteralOrID
+	maxBound=(')' | ']');
+
+	////////////////////////////////////////////////////////////////////////////////
+ValueSpec:
+	name=ID '='
+	// TODO: Xtext should allow 'value=( ValueRange | NumericLiteral )'
+	(range=ValueRange | value=NumericLiteral | id=Identifier ) ';'
+	(interpretation+=SL_COMMENT)*;
+
+	////////////////////////////////////////////////////////////////////////////////
+ScaledRangeConstraint:
+	'<'
+	minVal=NumericLiteralOrID
+	','
+	maxVal=NumericLiteralOrID
+	'>';
+
+	////////////////////////////////////////////////////////////////////////////////
+Subfield:
+	name=ID '[' fromIndex=INT ':' toIndex=INT ']'
+	// val=( ValueRange | ID )?    TODO!  Resolve error: "Cannot find type for 'ValueRange | ID' 
+	(val=ValueRange | id=ID)?
+	unit=UNIT ';' (interpretation+=SL_COMMENT)*;
+
+	////////////////////////////////////////////////////////////////////////////////
+// Assign to container elements to avoid complaint about cycle in hierarchy.
+ContainerTypeDef:
+	typeDef=(ListTypeDef | VariantTypeDef | SequenceTypeDef | RecordTypeDef)
+	 (interpretation+=SL_COMMENT)*  ';'?;
+
+IndexedContainerTypeDef:
+	typeDef=(ListTypeDef | VariantTypeDef | SequenceTypeDef | RecordTypeDef) '=' itemIndex=INT
+	';' (interpretation+=SL_COMMENT)*;
+
+	////////////////////////////////////////////////////////////////////////////////
+ListTypeDef:
+	'list' name=ID '{'
+	countType=('uint8' | 'uint16' | 'uint32') countName=ID
+	('[' _count_min=INT ',' _count_max=INT ']')? ';' (count_interpretation+=SL_COMMENT)*
+	'repeated' item=(ContainerTypeDef | TypeReference)
+	'}';
+
+	////////////////////////////////////////////////////////////////////////////////
+VariantTypeDef:
+	'variant' name=ID '{'
+	desc=Description?
+	countType=('uint8' | 'uint16' | 'uint32') 'vtag'
+	'[' _count_min=INT ',' _count_max=INT ']' ';' (vtag_interpretation+=SL_COMMENT)*
+	// Empty variants are allowed.
+	(items+=TaggedItemDef)*
+	'}';
+
+TaggedItemDef:
+// Xtext bug?  tag=( INT | Identifier ) yields error: 'Cannot find type for 'INT | Identifier'
+	'vtag' (constTag=INT | tag=Identifier) ':' item=(ContainerTypeDef | TypeReference) ;
+
+////////////////////////////////////////////////////////////////////////////////
+SequenceTypeDef:
+	'sequence' name=ID '{' (items+=SequenceItemDef)+ '}';
+
+SequenceItemDef:
+    card=ITEM_CARDINALITY
+    item=(IndexedContainerTypeDef | IndexedTypeReference);
+
+////////////////////////////////////////////////////////////////////////////////
+// TODO: Should we allow a record with an empty body?
+RecordTypeDef:
+    (card=ITEM_CARDINALITY)?
+	'record' name=ID '{' SL_COMMENT?
+        (fields+=(FieldDef
+                  | BitfieldTypeDef
+                  | FieldTypeReference
+                  | VariantFieldTypeDef
+                  | VariableFormatFieldTypeDef
+                  | IndexedContainerTypeDef ))*
+        '}';
+
+////////////////////////////////////////////////////////////////////////////////
+TypeReference:
+	type=Identifier name=ID ';' (interpretation+=SL_COMMENT)*;
+
+////////////////////////////////////////////////////////////////////////////////
+IndexedTypeReference:
+	type=Identifier name=ID '=' itemIndex=INT ';' (interpretation+=SL_COMMENT)*;
+
+////////////////////////////////////////////////////////////////////////////////
+FieldTypeReference:
+	card=ITEM_CARDINALITY type=Identifier name=ID '=' INT ';' (interpretation=SL_COMMENT)?;
+
+////////////////////////////////////////////////////////////////////////////////
+ArrayTypeReference:
+	name=ID '[' dimension=Identifier ']' ';' SL_COMMENT?;
+
+////////////////////////////////////////////////////////////////////////////////
+// Empty parends are used to explictly indicate no attributes for the element.
+Attrs:
+	{Attrs} '(' (assigns+=AttribAssignment (',' assigns+=AttribAssignment)*)? ')';
+
+	////////////////////////////////////////////////////////////////////////////////
+AttribAssignment:
+	name=ID '=' value=STRING;
+
+////////////////////////////////////////////////////////////////////////
+// Identifier must be a production, not terminal, which would mask ID.
+Identifier:
+	{ Identifier } (ID | FQN );
+
+// Make MessageClass a production, not a terminal, so editor identifies instances as 'keyword'.
+MessageClass:
+	{ MessageClass } ( 'query' | 'inform' | 'command' );
+
+// Lexer
+//
+terminal FIELD_FORMAT:
+      'AU' | 'BMP' | 'JPEG' | 'MJPEG' | 'MPEG-1' | 'MPEG-2'
+     | 'MP2' | 'MP3' | 'MP4' | 'RAW' | 'WAV' | 'JAUS_MESSAGE' 
+     | 'XML' | 'RNC' | 'RNG' | 'XSD' | 'User_defined'
+     ;
+
+terminal UNIT:
+	('meter' | 'kilogram' | 'second' | 'ampere' | 'kelvin' | 'mole' | 'candela' |
+	// derived units
+	'square_meter' | 'cubic_meter' | 'meter_per_second' | 'meter_per_second_squared' |
+	'reciprocal_meter' | 'kilogram_per_cubic_meter' | 'cubic_meter_per_kilogram' |
+	'ampere_per_square_meter' | 'ampere_per_meter' | 'mole_per_cubic_meter' |
+	'candela_per_square_meter' | 'one' |
+	// derived units with special names and symbols
+	'radian' | 'steradian' | 'hertz' | 'newton' | 'pascal' | 'joule' | 'watt' |
+	'coulomb' | 'volt' | 'farad' | 'ohm' | 'siemens' | 'weber' | 'tesla' | 'henry' |
+	'degree_Celsius' | 'lumen' | 'lux' | 'becquerel' | 'sievert' | 'katal' |
+	'pascal_second' | 'newton_meter' | 'newton_per_meter' | 'radian_per_second' |
+	'radian_per_second_squared' | 'watt_per_square_meter' | 'joule_per_kelvin' |
+	'joule_per_kilogram' | 'watt_per_meter_kelvin' |
+	'joule_per_cubic_meter' | 'volt_per_meter' | 'coulomb_per_cubic_meter' |
+	'coulomb_per_square_meter' | 'farad_per_meter' | 'henry_per_meter' |
+	'joule_per_mole' | 'joule_per_mole_kelvin' | 'coulomb_per_kilogram' |
+	'gray_per_second' | 'watt_per_square_meter steradian' | 'katal_per_cubic_meter' |
+	// Non-SI units accepted for use with the International System 
+	'minute' | 'hour' | 'day' | 'degree' | 'liter' | 'metric ton' |
+	'neper' | 'bel' | 'nautical mile' | 'knot' | 'are' | 'hectare' | 'bar' | 'angstrom' |
+	'barn' | 'curie' | 'roentgen' | 'rad' | 'rem' |
+	// JAUS relevant units
+	'pixel' | 'frame' | 'frames_per_second' | 'millisecond' | 'month' | 'year' |
+	'milliradian' | 'milliradian_per_second' |
+	'millimeter' | 'millimeter_per_second');
+
+	// Define before INT, so we can match.
+//
+terminal MESSAGE_CODE: HEX_PREFIX HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT;
+
+terminal ITEM_CARDINALITY: 'optional' | 'required' | 'repeated';
+
+// Refine INT to handle negative numbers.
+terminal INT returns ecore::EInt : '0' | ('-'? ('1'..'9') ('0'..'9')*) ;
+
+// Handle double-precision floating point.
+terminal DOUBLE returns ecore::EDouble : '-'? (('0'..'9')+ '.' ('0'..'9')+
+           | '.' ('0'..'9')+ | ('0'..'9')+ '.')('e' | 'E' ('-'|'+') ('0'..'9')+)? ;
+
+terminal HEX_INT: (HEX_PREFIX HEX_DIGIT+);
+
+terminal HEX_PREFIX:	'0x' | '0X';
+    
+terminal HEX_DIGIT: ('0'..'9') | ('a'..'f') | ('A'..'F');
+
+terminal CHARLITERAL:
+	'\''
+	(ESCAPE_SEQUENCE
+	| !('\'' | '\\' | '\r' | '\n'))
+	'\'';
+
+terminal ESCAPE_SEQUENCE:
+	'\\' ('b'
+	| 't'
+	| 'n'
+	| 'f'
+	| 'r'
+	| '\"'
+	| '\''
+	| '\\'
+	| (('0'..'3') ('0'..'7') ('0'..'7'))
+	| (('0'..'7') ('0'..'7'))
+	| ('0'..'7'));
+	// RAW_CODE_NO_QUOTES : !('"')+ ;
+
+// RAW_CODE_ESCAPED_QUOTES : ( !('"')+  | '\"' )+ ;
+
+terminal RELATIONAL_OP:
+	('<=' | '>=' | '<' | '>' | '==');
+
+terminal ID:
+	'^'? ('a'..'z' | 'A'..'Z' | '_') ('a'..'z' | 'A'..'Z' | '_' | '0'..'9')*;
+
+	// URI and FQN must minimally match ID:ID or ID.ID, else they will hide ID
+//
+terminal URI:
+	('"' ID (':' ID)+ '"')
+	| ("'" ID (':' ID)+ "'");
+
+terminal FQN:
+	ID ('.' ID)+;
+
+	// Need a 'v' prefix to distinguish M.N from a floating point number.
+terminal VERSION:
+	('"' INT ('.' INT)+ '"')
+	| ("'" INT ('.' INT)+ "'");
+
+terminal ML_COMMENT:
+	'/*'->'*/';
+
+terminal SL_COMMENT:
+	'//' !('\n' | '\r')* ('\r'? '\n')?;
+
+terminal STRING:
+	('"' (ESCAPE_SEQUENCE | !('\\' | '"'))* '"')
+	| ("'" (ESCAPE_SEQUENCE | !('\\' | "'"))* "'");
+
+terminal WS:
+	(' ' | '\t' | '\r' | '\n')+;
+
+terminal ANY_OTHER:
+	.;
+	
