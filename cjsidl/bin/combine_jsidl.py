@@ -239,7 +239,7 @@ def expand(ns_id,element):
         # Never change the 'self' reference in ns_aliases.
         ns_aliases[ns_id].update(ns_aliases[newns_id])
         # So fix here.  Cleaner way to code than using update()?
-        ns_aliases[ns_id] = ns_id;
+        ns_aliases[ns_id]['self'] = ns_id;
         print "Updated aliases for %s: %s"%(ns_id,pformat(ns_aliases[ns_id]))
 
 def fix_type_set_refs(root):
