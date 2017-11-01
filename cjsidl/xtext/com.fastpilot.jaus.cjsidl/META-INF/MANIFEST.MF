@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: com.fastpilot.jaus.cjsidl
+Bundle-Vendor: Fastpilot, Inc.
+Bundle-Version: 1.0.0.BETA
+Bundle-SymbolicName: com.fastpilot.jaus.cjsidl; singleton:=true
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: com.fastpilot.jaus.cjsidl,
+ com.fastpilot.jaus.cjsidl.generator,
+ com.fastpilot.jaus.cjsidl.jaus,
+ com.fastpilot.jaus.cjsidl.jaus.impl,
+ com.fastpilot.jaus.cjsidl.jaus.util,
+ com.fastpilot.jaus.cjsidl.parser.antlr,
+ com.fastpilot.jaus.cjsidl.parser.antlr.internal;x-internal:=true,
+ com.fastpilot.jaus.cjsidl.scoping,
+ com.fastpilot.jaus.cjsidl.serializer,
+ com.fastpilot.jaus.cjsidl.services,
+ com.fastpilot.jaus.cjsidl.validation
+Require-Bundle: org.eclipse.emf.ecore,
+ org.eclipse.xtext.xbase.lib,
+ org.antlr.runtime,
+ org.eclipse.xtext.util,
+ org.eclipse.xtend.lib,
+ org.eclipse.emf.common,
+ org.eclipse.xtext
+Import-Package: org.apache.log4j

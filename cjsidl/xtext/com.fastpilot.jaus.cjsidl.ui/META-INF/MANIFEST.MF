@@ -1,0 +1,27 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: com.fastpilot.jaus.cjsidl.ui
+Bundle-Vendor: Fastpilot, Inc.
+Bundle-Version: 1.0.0.BETA
+Bundle-SymbolicName: com.fastpilot.jaus.cjsidl.ui; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: com.fastpilot.jaus.cjsidl,
+ com.fastpilot.jaus.cjsidl.ide,
+ org.eclipse.ui,
+ org.eclipse.xtext.ui,
+ org.eclipse.ui.editors,
+ org.eclipse.compare,
+ org.eclipse.xtext.builder,
+ org.eclipse.xtend.lib;resolution:=optional,
+ org.eclipse.xtext.ui.codetemplates.ui,
+ org.eclipse.xtext.xbase.lib,
+ org.eclipse.xtext.ui.shared
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: com.fastpilot.jaus.cjsidl.ui,
+ com.fastpilot.jaus.cjsidl.ui.contentassist,
+ com.fastpilot.jaus.cjsidl.ui.internal;x-internal:=true,
+ com.fastpilot.jaus.cjsidl.ui.labeling,
+ com.fastpilot.jaus.cjsidl.ui.outline,
+ com.fastpilot.jaus.cjsidl.ui.quickfix
+Bundle-Activator: com.fastpilot.jaus.cjsidl.ui.internal.CjsidlActivator
+Import-Package: org.apache.log4j
