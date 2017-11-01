@@ -35,12 +35,14 @@
 #
 import os
 import sys
+import optparse
 from lxml import etree
 from pprint import pformat
 from copy import deepcopy
 
 jaus_ns = '{urn:jaus:jsidl:1.1}'
 suffixes = ['.xml']
+ignores = []
 jsidl_trees = []
 ns_aliases = {}
 typeset_defs = {} # {typeset_id:{ name:<element>, ...} , ...}
@@ -55,22 +57,24 @@ def stag(c):
 
 def visit(arg, dirname, names):
     global jsidl_trees
+    global ignores
     for fn in names:
-        base, ext = os.path.splitext(fn)
-        if ext in suffixes:
-            olddir = os.getcwd()
-            os.chdir(dirname)
-            print "Combining XML in: " + dirname + os.sep + fn
-            try:
-                jsidl_trees.append(etree.parse(fn))
-            except Exception,e:
-                print "ERROR Can't parse %s: %s"%(fn,repr(e))
-            os.chdir(olddir)
+        if fn not in ignores:
+            base, ext = os.path.splitext(fn)
+            if ext in suffixes:
+                olddir = os.getcwd()
+                os.chdir(dirname)
+                print "Combining XML in: " + dirname + os.sep + fn
+                try:
+                    jsidl_trees.append(etree.parse(fn))
+                except Exception,e:
+                    print "ERROR Can't parse %s: %s"%(fn,repr(e))
+                os.chdir(olddir)
 
-def extract_defs_from_type_set(id,c):
+def extract_defs_from_type_set(ns_id,c):
     global ns_aliases
-    aliases = ns_aliases[id]
-    print "Extracting defs from typeset: %s"%id
+    aliases = ns_aliases[ns_id]
+    print "Extracting defs from typeset: %s"%ns_id
     for dtsc in c:
         tag = stag(dtsc)
         try:
@@ -79,7 +83,7 @@ def extract_defs_from_type_set(id,c):
             name = '?'
         if tag in ['declared_type_set_ref']:
             # remember this namespace alias. TODO: remember version?
-            print "Found type_set_ref: %s %s in %s"%(name,dtsc.attrib['id'],id)
+            print "Found type_set_ref: %s %s in %s"%(name,dtsc.attrib['id'],ns_id)
             if name in aliases and aliases[name] != dtsc.attrib['id']:
                 print "WARN, Overwriting existing alias: %s -> %s"%(name, aliases[name])
             aliases[name] = dtsc.attrib['id']  
@@ -90,13 +94,14 @@ def extract_defs_from_type_set(id,c):
                      'variable_length_string',
                      'record','list','variant','sequence']:
             # Collect type definitions to expand later.
-            full_name = id+'.'+name
-            if full_name in typeset_defs:
+            fqn = ns_id+'.'+name
+            if fqn in typeset_defs:
                 print "WARN, %s(%s) replacing existing %s(%s)"% \
-                      (full_name,stag(typeset_defs[full_name]),
-                       full_name,tag)
-            typeset_defs[full_name] = dtsc
-            print "Added typeset def for tag: %s, name:%s"%(tag,full_name)
+                      (fqn,stag(typeset_defs[fqn]),
+                       fqn,tag)
+            else:
+                typeset_defs[fqn] = dtsc
+                print "INFO, Added typeset def for tag: %s, name:%s"%(tag,fqn)
         elif tag in ['header', 'footer', 'comment']:
             pass # should never see these in a typeset?
         else:
@@ -108,6 +113,8 @@ def extract_defs(element):
     global jaus_ns
     global constset_defs
     global typeset_defs
+    name = element.attrib['name']
+    print 'INFO, extract_defs from %s'%name
     if stag(element) == 'declared_const_set':
         constset = element.attrib['id']
         if constset not in constset_defs:
@@ -125,11 +132,18 @@ def extract_defs(element):
                           (name,stag(oldc),name,stag(c))
                 cs[name] = c
     elif stag(element) in ['service_def','declared_type_set']:
-        id = element.attrib['id']
+        # id and version are optional
+        if 'id' in element.attrib:
+            id = element.attrib['id']
+        else:
+            # Default name.
+            print 'WARN, element %s has no id, using default'%name
+            id = name
         if id not in ns_aliases:
             ns_aliases[id] = {}
         aliases = ns_aliases[id]
-        # Add a reference to self, useful later for resolving non-qualified names.
+        # Add a reference to self, useful later for resolving first
+        # directly referenced non-qualified names.
         aliases['self'] = id
         if stag(element) == 'declared_type_set':
             extract_defs_from_type_set(id,element)
@@ -143,6 +157,14 @@ def get_typedef(ns_id,s):
        If there is no alias qualification, use the 'self.' prefix to
        resolve in the current namespace.
        '''
+    # TODO: Nested typedefs:
+    # Issue with non-qualified typedef names:  All we know is the fqn namespace
+    # in which these non-qualified names are defined.   We do not know in advance what
+    # aliases might be defined for these namespaces.
+    #
+    # Therefore in recursive expansion, we cannot just prefix some local alias, as we do
+    # below.
+    
     global ns_aliases
     global typeset_defs
     print "get_typedef: ns = %s, s = %s"%(ns_id,s)
@@ -155,7 +177,7 @@ def get_typedef(ns_id,s):
     # Walk ns_path to get ns and aliases in which name is defined.
     # Elements i= 0..n-2 are aliases, element n-1 is the
     # type name.
-    print "INFO, ns_aliases = %s"%pformat(ns_aliases)
+    # print "INFO, ns_aliases = %s"%pformat(ns_aliases)
     aliases = ns_aliases[ns_id]
     next_ns_id = ns_id
     print "Finding ns and aliases for %s in:\n%s"%(pformat(ns_path),pformat(aliases))
@@ -168,7 +190,11 @@ def get_typedef(ns_id,s):
             # This ns_path component defines an alias in next_ns_id
             # so move to next referenced ns_id and get its aliases.
             next_ns_id = aliases[token]
-            print "INFO, next_ns_id = %s"%next_ns_id
+            print "INFO, alias %s yields next_ns_id = %s"%(token,next_ns_id)
+        elif token in ns_aliases:
+            # This is an fqn ns name.
+            next_ns_id = token
+            print "INFO, next_ns_id = %s"%(next_ns_id)
         if next_ns_id in ns_aliases:
             aliases = ns_aliases[next_ns_id]
         else:
@@ -184,7 +210,8 @@ def get_typedef(ns_id,s):
 
     print "INFO, Found ns, aliases for %s:\n%s, %s"%(pformat(ns_path),
                                                      next_ns_id,
-                                                     pformat(aliases))
+                                                     pformat(ns_aliases[ns_id]))
+
     # Now should have final set of aliases to look at.
     # Substitute full namespace id for s.
     fqn = next_ns_id+'.'+ns_path[-1]
@@ -207,7 +234,7 @@ def expand(ns_id,element):
             if stag(c) in ['declared_message_def','declared_fixed_field','declared_list',
                            'declared_sequence', 'declared_variant',
                            'declared_record','declared_variable_length_string',
-                           'declared_variable_field']:
+                           'declared_variable_field', 'declared_bit_field']:
                 # TODO: Add all 'declared_' types here.
                 # print "Looking at %s %s"%(name,stag(c))
                 realname = c.attrib['name']
@@ -222,9 +249,20 @@ def expand(ns_id,element):
                     print "ERROR, No typeref for %s in node: %s"%(ns_id,name)
                     continue
                 new_element, new_element_ns = get_typedef(ns_id,ref)
+
                 if new_element is None:
-                    print "ERROR, No typedef for ns_id: %s, ref: %s in %s"%(ns_id,ref,name)
+                    print "ERROR, No typedef for %s.%s : %s"%(ns_id,name,ref)
                 else:
+                    # new_element_ns_alias is the alias for the original ns in which new_element
+                    # was evaluated.  Must prepend this to each non-qualified declared_type_ref.
+                    for c1 in new_element.iterdescendants():
+                        if 'declared_type_ref' in c1.attrib:
+                            oldref = c1.attrib['declared_type_ref']
+                            if oldref.find('.') == -1:
+                                # Nonqualified type references.
+                                newref = new_element_ns+'.'+oldref
+                                print 'DEBUG, %s.%s : %s -> %s'%(ns_id,name,oldref,newref)
+                                c1.attrib['declared_type_ref'] = newref
                     print "Replacing %s:%s with %s:%s"%(stag(c),name,stag(new_element),new_element.attrib['name'])
                     replacements.append( (c,new_element,new_element_ns,realname,realoptional) )
 
@@ -239,8 +277,9 @@ def expand(ns_id,element):
         # Never change the 'self' reference in ns_aliases.
         ns_aliases[ns_id].update(ns_aliases[newns_id])
         # So fix here.  Cleaner way to code than using update()?
-        ns_aliases[ns_id]['self'] = ns_id;
-        print "Updated aliases for %s: %s"%(ns_id,pformat(ns_aliases[ns_id]))
+        if ns_aliases[ns_id]['self'] != ns_id:
+            ns_aliases[ns_id]['self'] = ns_id;
+            print "Updated aliases for %s: %s"%(ns_id,pformat(ns_aliases[ns_id]))
 
 def fix_type_set_refs(root):
     """Make sure all the qualified names we've sucked up in this service have
@@ -284,18 +323,19 @@ def print_usage():
        and produce one referentially complete XML file for each service_def."""
     print usage
 
-def output_combined(tree):
+def output_combined(dirname,tree):
     r = tree.getroot()
     name = r.attrib['name']
-    f = file(name+'Combined.xml','wb')
+    f = file(dirname+os.sep+name+'Combined.xml','wb')
     move_message_element_defs_to_type_set(r)
     fix_type_set_refs(r)
     f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
     f.write(etree.tostring(tree,pretty_print=True))
     f.close()
 
-def main():
+def main(indirs,outdirname,ignore):
     global jsidl_trees
+    global ignores
     global ns_aliases
     global typeset_defs
     global constset_defs
@@ -303,19 +343,8 @@ def main():
     ns_aliases = {}
     typeset_defs = {}
     constset_defs = {}
-    if len(sys.argv) < 2:
-        print_usage
-        raise "Must have a sequence of directories as command line arguments."
-    dirs = []
-    ignore_items = []
-    i = 1
-    while i < len(sys.argv):
-        if sys.argv[i] in ['-i','--ignore']:
-            ignore_items = sys.argv[i+1].split(',')
-            i += 1
-        else:
-            dirs = sys.argv[i]
-        i += 1
+    dirs = indirs.split(',')
+    ignores = ignore.split(',')
     print "Combining JSIDL XML files in directory(ies): %s"%(dirs)
     for dir in dirs:
         if os.path.isdir(dir):
@@ -334,17 +363,51 @@ def main():
         r = tree.getroot()
         if stag(r) in ['service_def']:
             ns = r.attrib['id']
+            print 'INFO, Expand level 1'
             expand(ns,r)
+            print 'INFO, Expand level 2'
             expand(ns,r)
+            print 'INFO, Expand level 3'
             expand(ns,r)
+            print 'INFO, Expand level 4'
             expand(ns,r)
+            print 'INFO, Expand level 5'
             expand(ns,r)
+            # Presumably, no more type_refs
     for tree in jsidl_trees:
         r = tree.getroot()
         if stag(r) == 'service_def':
             # Need to add any inherited typedef references.
             # print "Looking at %s %s"%(stag(r),r.attrib['name'])
-            output_combined(tree)
+            output_combined(outdirname,tree)
     
 if __name__=='__main__':
-    main()
+    p = optparse.OptionParser()
+    p.add_option("-i", action="store", dest="indirs")
+    p.add_option("--indirs", action="store", dest="indirs")
+    p.add_option("-o", action="store", dest="outdir")
+    p.add_option("--outdir", action="store", dest="outdir")
+    p.add_option("-x", action="store", dest="ignore")
+    p.add_option("--excludes", action="store", dest="ignore")
+
+    # Defaults
+    outd = '..'+os.sep+'tmp'
+    ind = '.'
+    
+    opts, args = p.parse_args()
+    if opts.outdir:
+        outd = opts.outdir
+    if not opts.indirs:
+        ind = opts.indirs
+
+    # Create output dir if needed.
+    try:
+        os.lstat(outd)
+    except OSError,e:
+        try:
+            print "Attempting to create %s"%outd
+            os.mkdir(outd)
+        except:
+            print "Cannot create output directory %s"%outd
+
+    main(opts.indirs, opts.outdir, opts.ignore)
